@@ -1,17 +1,51 @@
 import json
+import logging
 
 from langchain.tools import tool
 from tavily import TavilyClient
 
 from deerflow.config import get_app_config
 
+logger = logging.getLogger(__name__)
+
+# Tavily API: ultra-fast minimizes latency; advanced is slower (2 credits). See:
+# https://docs.tavily.com/documentation/api-reference/endpoint/search
+_DEFAULT_SEARCH_DEPTH = "ultra-fast"
+_DEFAULT_INCLUDE_ANSWER = False
+_DEFAULT_INCLUDE_IMAGES = False
+
+
+def _tool_extra(config) -> dict:
+    """Extra fields from ToolConfig (Pydantic v2 may use __pydantic_extra__ or model_extra)."""
+    if config is None:
+        return {}
+    ex = getattr(config, "__pydantic_extra__", None)
+    if isinstance(ex, dict) and ex:
+        return ex
+    ex = getattr(config, "model_extra", None)
+    if isinstance(ex, dict) and ex:
+        return ex
+    return {}
+
 
 def _get_tavily_client() -> TavilyClient:
     config = get_app_config().get_tool_config("web_search")
-    api_key = None
-    if config is not None and "api_key" in config.model_extra:
-        api_key = config.model_extra.get("api_key")
+    extra = _tool_extra(config)
+    api_key = extra.get("api_key")
     return TavilyClient(api_key=api_key)
+
+
+def _search_params_from_config(config) -> dict:
+    """Build Tavily search kwargs from tool config (model_extra)."""
+    extra = _tool_extra(config)
+    depth = extra.get("search_depth", _DEFAULT_SEARCH_DEPTH)
+    include_answer = extra.get("include_answer", _DEFAULT_INCLUDE_ANSWER)
+    include_images = extra.get("include_images", _DEFAULT_INCLUDE_IMAGES)
+    return {
+        "search_depth": depth,
+        "include_answer": include_answer,
+        "include_images": include_images,
+    }
 
 
 @tool("web_search", parse_docstring=True)
@@ -22,22 +56,33 @@ def web_search_tool(query: str) -> str:
         query: The query to search for.
     """
     config = get_app_config().get_tool_config("web_search")
-    max_results = 5
-    if config is not None and "max_results" in config.model_extra:
-        max_results = config.model_extra.get("max_results")
+    extra = _tool_extra(config)
+    max_results = int(extra.get("max_results") or 5)
 
     client = _get_tavily_client()
-    res = client.search(query, max_results=max_results)
+    search_kwargs = _search_params_from_config(config)
+    search_kwargs["max_results"] = max_results
+
+    try:
+        res = client.search(query, **search_kwargs)
+    except Exception as exc:
+        # Older SDKs or API quirks: fall back to basic depth once
+        if search_kwargs.get("search_depth") not in (None, "basic"):
+            logger.warning("Tavily search with depth=%s failed (%s); retrying with basic", search_kwargs.get("search_depth"), exc)
+            search_kwargs["search_depth"] = "basic"
+            res = client.search(query, **search_kwargs)
+        else:
+            raise
     normalized_results = [
         {
-            "title": result["title"],
-            "url": result["url"],
-            "snippet": result["content"],
+            "title": result.get("title", ""),
+            "url": result.get("url", ""),
+            "snippet": result.get("content", ""),
         }
-        for result in res["results"]
+        for result in res.get("results", [])
     ]
-    json_results = json.dumps(normalized_results, indent=2, ensure_ascii=False)
-    return json_results
+    # Compact JSON — less token overhead for the model
+    return json.dumps({"query": query, "results": normalized_results}, ensure_ascii=False)
 
 
 @tool("web_fetch", parse_docstring=True)

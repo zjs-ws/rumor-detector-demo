@@ -4,12 +4,16 @@ Web Search Tool - Search the web using DuckDuckGo (no API key required).
 
 import json
 import logging
+import os
 
 from langchain.tools import tool
 
 from deerflow.config import get_app_config
 
 logger = logging.getLogger(__name__)
+
+# DDGS uses this for HTTP; 30s feels very slow in agents. Override with DDGS_TIMEOUT (seconds).
+_DEFAULT_DDGS_TIMEOUT = 15
 
 
 def _search_text(
@@ -36,7 +40,8 @@ def _search_text(
         logger.error("ddgs library not installed. Run: pip install ddgs")
         return []
 
-    ddgs = DDGS(timeout=30)
+    timeout = int(os.getenv("DDGS_TIMEOUT", str(_DEFAULT_DDGS_TIMEOUT)))
+    ddgs = DDGS(timeout=timeout)
 
     try:
         results = ddgs.text(
