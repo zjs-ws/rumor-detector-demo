@@ -1,0 +1,66 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-04-03T12:08:27.959162Z",
+  "user": {
+    "workContext": {
+      "summary": "",
+      "updatedAt": ""
+    },
+    "personalContext": {
+      "summary": "User communicates in Chinese (Simplified). They have shown an interest in verifying information about public figures, specifically in the education sector, and are aware of current events in China.",
+      "updatedAt": "2026-04-03T12:08:27.954225Z"
+    },
+    "topOfMind": {
+      "summary": "User's immediate focus has shifted from exploring the assistant's capabilities to actively using the RumorBuster service for a specific fact-checking request. They are seeking verification on the death of a prominent Chinese educator, Zhang Xuefeng, indicating a current interest in news and information accuracy regarding public figures. The user is now engaged in the practical application of the assistant's rumor detection function, moving beyond introductory interaction.",
+      "updatedAt": "2026-04-03T12:08:27.954225Z"
+    }
+  },
+  "history": {
+    "recentMonths": {
+      "summary": "User's recent activity began with an initial interaction to establish contact with the RumorBuster assistant. This was immediately followed by a substantive request to verify the death of Zhang Xuefeng, a well-known Chinese education influencer and founder of Suzhou Fengxue Weilai Education Technology Co., Ltd. The user demonstrated awareness of a significant current event (reported on March 24, 2026) and proactively sought authoritative confirmation, indicating an interest in media literacy and factual accuracy.",
+      "updatedAt": "2026-04-03T12:08:27.954225Z"
+    },
+    "earlierContext": {
+      "summary": "",
+      "updatedAt": ""
+    },
+    "longTermBackground": {
+      "summary": "",
+      "updatedAt": ""
+    }
+  },
+  "facts": [
+    {
+      "id": "fact_ada845c7",
+      "content": "User's primary communication language is Chinese (Simplified).",
+      "category": "context",
+      "confidence": 0.9,
+      "createdAt": "2026-04-03T12:00:56.530080Z",
+      "source": "f28fb010-26ab-4c1a-a9b8-b79c5a833dd2"
+    },
+    {
+      "id": "fact_87fce58a",
+      "content": "User is interacting with the RumorBuster agent, which is part of the DeerFlow multi-agent system.",
+      "category": "context",
+      "confidence": 0.9,
+      "createdAt": "2026-04-03T12:00:56.530080Z",
+      "source": "f28fb010-26ab-4c1a-a9b8-b79c5a833dd2"
+    },
+    {
+      "id": "fact_962235ff",
+      "content": "User sought verification on the death of Zhang Xuefeng, founder of Suzhou Fengxue Weilai Education Technology Co., Ltd., indicating awareness of and interest in current events related to Chinese public figures.",
+      "category": "behavior",
+      "confidence": 0.9,
+      "createdAt": "2026-04-03T12:08:27.954225Z",
+      "source": "68fa5ee6-275d-44cb-a7ad-8a026843e0e6"
+    },
+    {
+      "id": "fact_f83e1c78",
+      "content": "User is actively using the RumorBuster service for its intended purpose of fact-checking specific claims, moving beyond introductory exploration.",
+      "category": "behavior",
+      "confidence": 0.8,
+      "createdAt": "2026-04-03T12:08:27.954225Z",
+      "source": "68fa5ee6-275d-44cb-a7ad-8a026843e0e6"
+    }
+  ]
+}

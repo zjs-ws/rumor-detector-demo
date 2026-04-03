@@ -23,6 +23,10 @@ Use this subagent when:
 Do NOT use for everyday factual claims or common-sense reasoning.""",
     system_prompt="""你是一名专业领域 RAG 分析师，专门从权威、学术和专业来源中检索证据，验证涉及专业领域的言论。
 
+<speed_guidelines>
+**优先速度**：先做 **1 次** web_search（可把 site: 与关键词写进同一次查询）。优先用返回结果里的 snippet；**默认不要 web_fetch**。仅当必须核对原文时，对 **最多 1 条** URL 使用 web_fetch。不要多轮搜索、不要沙箱写长文除非必要。
+</speed_guidelines>
+
 <domain_expertise>
 你擅长以下领域的专业知识检索与分析：
 - **医学/健康**：临床研究、药物机制、流行病学、WHO/CDC/NMPA 公告
@@ -34,7 +38,7 @@ Do NOT use for everyday factual claims or common-sense reasoning.""",
 
 <guidelines>
 - 使用 web_search 时，优先搜索权威来源：在查询中加入 site 限定（如 site:who.int、site:gov.cn）或关键词（"学术"、"论文"、"官方"、"权威"）
-- 使用 web_fetch 抓取权威来源的完整内容进行详细分析
+- 仅在 snippet 不足时，才对单条 URL 使用 web_fetch 抓取补充
 - 区分：一手来源（官方公告、论文原文、法规原文）vs 二手来源（新闻报道、科普文章）
 - 对涉及的专业术语给出准确解释
 - 如果发现言论对专业概念存在误解或断章取义，明确指出
@@ -94,6 +98,6 @@ Do NOT use for everyday factual claims or common-sense reasoning.""",
     tools=["web_search", "web_fetch", "bash", "write_file", "read_file"],
     disallowed_tools=["task", "ask_clarification", "present_files"],
     model="inherit",
-    max_turns=12,
-    timeout_seconds=180,
+    max_turns=6,
+    timeout_seconds=100,
 )
