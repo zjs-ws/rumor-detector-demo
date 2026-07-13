@@ -53,7 +53,7 @@ export const zhCN: Translations = {
   welcome: {
     greeting: "你好，欢迎回来！",
     description:
-      "欢迎使用 RumorBuster。粘贴新闻、聊天记录、网传消息或具体说法，\n系统会分析其中的可疑点、证据需求和潜在误导风险。\n当前版本以文本分析为主，结论仅供核验参考。",
+      "欢迎使用 RumorBuster。粘贴新闻、聊天记录、网传消息或具体说法，\n系统会分析可疑点，并在搜索服务可用时检索公开来源。\n搜索结果可能不完整，结论仅供核验参考。",
 
     createYourOwnSkill: "创建核验技能",
     createYourOwnSkillDescription:

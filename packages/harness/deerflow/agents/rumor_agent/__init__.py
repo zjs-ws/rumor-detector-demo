@@ -72,6 +72,18 @@ def _build_middlewares():
     return middlewares
 
 
+def _select_main_agent_tools(base_tools, *, classifier_enabled: bool):
+    """Keep evidence retrieval behind the bounded web-researcher delegation."""
+    tools = [
+        tool
+        for tool in base_tools
+        if tool.name not in {"web_search", "web_fetch"}
+    ]
+    if classifier_enabled and all(tool.name != "rumor_check" for tool in tools):
+        tools.append(rumor_check_tool)
+    return tools
+
+
 def make_rumor_agent(config: RunnableConfig):
     """Factory function referenced by ``langgraph.json``."""
     from deerflow.tools import get_available_tools
@@ -102,7 +114,10 @@ def make_rumor_agent(config: RunnableConfig):
         model_name=model_name,
         subagent_enabled=web_search_enabled,
     )
-    tools = base_tools + ([rumor_check_tool] if classifier_enabled else [])
+    tools = _select_main_agent_tools(
+        base_tools,
+        classifier_enabled=classifier_enabled,
+    )
 
     return create_agent(
         model=create_chat_model(name=model_name, thinking_enabled=True),

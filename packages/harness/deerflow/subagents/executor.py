@@ -12,6 +12,7 @@ from enum import Enum
 from typing import Any
 
 from langchain.agents import create_agent
+from langchain.agents.middleware import ModelCallLimitMiddleware, ToolCallLimitMiddleware
 from langchain.tools import BaseTool
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.runnables import RunnableConfig
@@ -170,6 +171,19 @@ class SubagentExecutor:
 
         # Reuse shared middleware composition with lead agent.
         middlewares = build_subagent_runtime_middlewares(lazy_init=True)
+        middlewares.append(
+            ModelCallLimitMiddleware(
+                run_limit=self.config.max_turns,
+                exit_behavior="end",
+            )
+        )
+        if self.config.max_tool_calls is not None:
+            middlewares.append(
+                ToolCallLimitMiddleware(
+                    run_limit=self.config.max_tool_calls,
+                    exit_behavior="continue",
+                )
+            )
 
         return create_agent(
             model=model,
@@ -227,10 +241,9 @@ class SubagentExecutor:
             agent = self._create_agent()
             state = self._build_initial_state(task)
 
-            # Build config with thread_id for sandbox access and recursion limit.
-            # Each agent "turn" (LLM call → tool execution → result) consumes
-            # multiple graph recursion steps, so the limit must be well above
-            # max_turns to avoid premature termination.
+            # Build config with thread_id for sandbox access and a graph-level
+            # safety limit. Model/tool budgets are enforced independently by
+            # middleware in _create_agent().
             run_config: RunnableConfig = {
                 "recursion_limit": max(self.config.max_turns * 4, 50),
             }

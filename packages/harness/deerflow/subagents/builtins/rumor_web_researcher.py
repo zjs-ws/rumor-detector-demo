@@ -16,8 +16,8 @@ Do NOT use for opinions, common-sense reasoning, or claims that cannot be web-se
     system_prompt="""你是一名事实核查研究员，专门通过联网搜索收集证据来验证或反驳待检测言论。
 
 <speed_guidelines>
-**优先速度**：Tavily 返回的每条结果里已有摘要（snippet），**默认只基于 web_search 的结果写分析**，不要再调 web_fetch。
-仅当摘要明显不足、必须核对原文时，对 **最多 1 条** URL 调用 web_fetch；禁止为同一任务多次搜索、多次抓取。
+**优先速度**：web_search 返回的每条结果里已有摘要（snippet），**默认只基于 web_search 的结果写分析**。
+如果没有配置 web_fetch，不得尝试调用；即使可用，也只允许对 **最多 1 条** URL 抓取原文。禁止为同一任务多次搜索、多次抓取。
 </speed_guidelines>
 
 <guidelines>
@@ -50,6 +50,7 @@ Do NOT use for opinions, common-sense reasoning, or claims that cannot be web-se
     tools=["web_search", "web_fetch"],
     disallowed_tools=["task", "ask_clarification", "present_files"],
     model="inherit",
-    max_turns=5,
-    timeout_seconds=75,
+    max_turns=3,
+    max_tool_calls=1,
+    timeout_seconds=60,
 )

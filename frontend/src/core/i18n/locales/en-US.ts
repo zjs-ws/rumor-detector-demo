@@ -53,7 +53,7 @@ export const enUS: Translations = {
   welcome: {
     greeting: "Welcome back!",
     description:
-      "Welcome to RumorBuster. Paste a news report, forwarded message, chat excerpt, or specific claim.\nWe will identify suspicious wording, missing evidence, and potential misinformation risks.\nThe current version focuses on text analysis and should be used as a fact-checking aid.",
+      "Welcome to RumorBuster. Paste a news report, forwarded message, chat excerpt, or specific claim.\nWe will analyze suspicious details and search public sources when the search service is available.\nSearch results may be incomplete, so use the conclusion as a fact-checking aid.",
 
     createYourOwnSkill: "Create a Verification Skill",
     createYourOwnSkillDescription:

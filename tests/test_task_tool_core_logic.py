@@ -39,6 +39,18 @@ def _make_runtime() -> SimpleNamespace:
     )
 
 
+def _make_runtime_without_context(*, configurable=None, metadata=None) -> SimpleNamespace:
+    """Build the runtime shape used by LangGraph Server tool executions."""
+    return SimpleNamespace(
+        state={"sandbox": None, "thread_data": None},
+        context=None,
+        config={
+            "configurable": configurable or {},
+            "metadata": metadata or {},
+        },
+    )
+
+
 def _make_subagent_config() -> SubagentConfig:
     return SubagentConfig(
         name="general-purpose",
@@ -151,6 +163,92 @@ def test_task_tool_emits_running_and_completed_events(monkeypatch):
     event_types = [e["type"] for e in events]
     assert event_types == ["task_started", "task_running", "task_running", "task_completed"]
     assert events[-1]["result"] == "all done"
+
+
+@pytest.mark.parametrize(
+    ("runtime", "expected_thread_id"),
+    [
+        (
+            _make_runtime_without_context(configurable={"thread_id": "thread-configurable"}),
+            "thread-configurable",
+        ),
+        (
+            _make_runtime_without_context(metadata={"thread_id": "thread-metadata"}),
+            "thread-metadata",
+        ),
+    ],
+)
+def test_task_tool_recovers_thread_id_from_server_runtime(monkeypatch, runtime, expected_thread_id):
+    """Server runs may omit runtime.context but still expose the thread ID in config."""
+    config = _make_subagent_config()
+    captured = {}
+
+    class DummyExecutor:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+        def execute_async(self, prompt, task_id=None):
+            return task_id
+
+    monkeypatch.setattr(task_tool_module, "SubagentStatus", FakeSubagentStatus)
+    monkeypatch.setattr(task_tool_module, "SubagentExecutor", DummyExecutor)
+    monkeypatch.setattr(task_tool_module, "get_subagent_config", lambda _: config)
+    monkeypatch.setattr(task_tool_module, "get_skills_prompt_section", lambda: "")
+    monkeypatch.setattr(
+        task_tool_module,
+        "get_background_task_result",
+        lambda _: _make_result(FakeSubagentStatus.COMPLETED, result="done"),
+    )
+    monkeypatch.setattr(task_tool_module, "get_stream_writer", lambda: lambda _: None)
+    monkeypatch.setattr("deerflow.tools.get_available_tools", lambda **kwargs: [])
+
+    output = _run_task_tool(
+        runtime=runtime,
+        description="核验来源",
+        prompt="search once",
+        subagent_type="web-researcher",
+        tool_call_id="tc-server-runtime",
+    )
+
+    assert output == "Task Succeeded. Result: done"
+    assert captured["thread_id"] == expected_thread_id
+
+
+def test_task_tool_caps_requested_turns_at_subagent_limit(monkeypatch):
+    """A model-provided max_turns value must not increase the configured budget."""
+    config = _make_subagent_config()
+    config.max_turns = 3
+    captured = {}
+
+    class DummyExecutor:
+        def __init__(self, **kwargs):
+            captured.update(kwargs)
+
+        def execute_async(self, prompt, task_id=None):
+            return task_id
+
+    monkeypatch.setattr(task_tool_module, "SubagentStatus", FakeSubagentStatus)
+    monkeypatch.setattr(task_tool_module, "SubagentExecutor", DummyExecutor)
+    monkeypatch.setattr(task_tool_module, "get_subagent_config", lambda _: config)
+    monkeypatch.setattr(task_tool_module, "get_skills_prompt_section", lambda: "")
+    monkeypatch.setattr(
+        task_tool_module,
+        "get_background_task_result",
+        lambda _: _make_result(FakeSubagentStatus.COMPLETED, result="done"),
+    )
+    monkeypatch.setattr(task_tool_module, "get_stream_writer", lambda: lambda _: None)
+    monkeypatch.setattr("deerflow.tools.get_available_tools", lambda **kwargs: [])
+
+    _run_task_tool(
+        runtime=_make_runtime(),
+        description="核验来源",
+        prompt="search once",
+        subagent_type="web-researcher",
+        tool_call_id="tc-turn-cap",
+        max_turns=10,
+    )
+
+    assert captured["config"].max_turns == 3
 
 
 def test_task_tool_returns_failed_message(monkeypatch):

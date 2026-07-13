@@ -21,6 +21,20 @@ models:
         thinking:
           type: enabled
 
+# 无需额外 API Key 的网页搜索。主智能体不会直接调用该工具，
+# 只会委托受调用次数限制的 web-researcher 收集公开来源。
+tools:
+  - name: web_search
+    group: web
+    use: deerflow.community.ddg_search.tools:web_search_tool
+    max_results: 5
+
+# 限制联网核验子智能体的最长运行时间，避免网络异常导致长时间等待。
+subagents:
+  agents:
+    web-researcher:
+      timeout_seconds: 60
+
 # “Local”指相对于应用进程本地运行。
 # 由于整个应用在 Docker 容器中，因此不会使用 Mac 本机的 Python 环境。
 sandbox:

@@ -18,6 +18,26 @@ from deerflow.subagents.executor import SubagentStatus, cleanup_background_task,
 logger = logging.getLogger(__name__)
 
 
+def _get_runtime_thread_id(runtime: ToolRuntime | None) -> str | None:
+    """Resolve a thread ID across local and LangGraph Server runtime shapes."""
+    if runtime is None:
+        return None
+
+    context = runtime.context or {}
+    thread_id = context.get("thread_id")
+    if thread_id:
+        return thread_id
+
+    config = runtime.config or {}
+    configurable = config.get("configurable") or {}
+    thread_id = configurable.get("thread_id")
+    if thread_id:
+        return thread_id
+
+    metadata = config.get("metadata") or {}
+    return metadata.get("thread_id")
+
+
 @tool("task", parse_docstring=True)
 async def task_tool(
     runtime: ToolRuntime[ContextT, ThreadState],
@@ -78,7 +98,9 @@ async def task_tool(
         overrides["system_prompt"] = config.system_prompt + "\n\n" + skills_section
 
     if max_turns is not None:
-        overrides["max_turns"] = max_turns
+        # The caller may request a smaller budget, but it must never enlarge
+        # the subagent's configured safety limit.
+        overrides["max_turns"] = max(1, min(max_turns, config.max_turns))
 
     if overrides:
         config = replace(config, **overrides)
@@ -93,7 +115,7 @@ async def task_tool(
     if runtime is not None:
         sandbox_state = runtime.state.get("sandbox")
         thread_data = runtime.state.get("thread_data")
-        thread_id = runtime.context.get("thread_id") if runtime.context else None
+        thread_id = _get_runtime_thread_id(runtime)
 
         # Try to get parent model from configurable
         metadata = runtime.config.get("metadata", {})

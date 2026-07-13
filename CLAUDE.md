@@ -21,6 +21,15 @@ is configured, and only exposes the fine-tuned classifier when
 disabled capabilities. Model and tool call limit middleware are required to
 prevent repeated agent/tool loops.
 
+`config.example.yaml` enables the keyless DuckDuckGo `web_search` provider.
+The parent rumor agent must not receive `web_search` or `web_fetch` directly;
+only its single-call `web-researcher` delegation may use retrieval tools.
+LangGraph Server may provide the active thread ID through runtime context,
+`config.configurable`, or `config.metadata`; task delegation must preserve all
+three fallbacks. A model may reduce a subagent's `max_turns`, but must never
+increase the configured limit. The default web researcher budget is 3 turns
+and 60 seconds, with a code-enforced single tool call per run.
+
 DeerFlow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
 
 **Architecture**:
