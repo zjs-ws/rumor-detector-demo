@@ -29,6 +29,14 @@ tools:
     use: deerflow.community.ddg_search.tools:web_search_tool
     max_results: 5
 
+  # 读取用户直接提供的公开网页 URL。默认使用受限本地抓取；配置
+  # JINA_API_KEY 后优先使用 Jina Reader 处理复杂网页。
+  - name: web_fetch
+    group: web
+    use: deerflow.community.jina_ai.tools:web_fetch_tool
+    timeout: 12
+    max_chars: 12000
+
 # 限制联网核验子智能体的最长运行时间，避免网络异常导致长时间等待。
 subagents:
   agents:

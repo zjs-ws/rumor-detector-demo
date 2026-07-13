@@ -22,8 +22,9 @@ disabled capabilities. Model and tool call limit middleware are required to
 prevent repeated agent/tool loops.
 
 `config.example.yaml` enables the keyless DuckDuckGo `web_search` provider.
-The parent rumor agent must not receive `web_search` or `web_fetch` directly;
-only its single-call `web-researcher` delegation may use retrieval tools.
+The parent rumor agent must not receive `web_search` directly; only its
+single-call `web-researcher` delegation may use search. The parent may receive
+`web_fetch` directly for one user-supplied source URL per run.
 LangGraph Server may provide the active thread ID through runtime context,
 `config.configurable`, or `config.metadata`; task delegation must preserve all
 three fallbacks. A model may reduce a subagent's `max_turns`, but must never
@@ -40,6 +41,21 @@ query. The frontend must prefill this content without auto-submitting it and
 must immediately clear the fragment with `history.replaceState` after reading
 it. Keep this privacy and explicit-confirmation contract when changing either
 side of the integration.
+
+`config.example.yaml` also enables the `web_fetch` provider for user-supplied
+public HTTP(S) URLs. Without `JINA_API_KEY` it uses a bounded local
+HTTP/readability fallback; with a key it prefers Jina Reader. The main rumor agent may call `web_fetch`
+directly at most once per run, before delegating its separate one-call search.
+The fetch tool must reject localhost/private/non-web targets and must return
+structured JSON containing `source_url`, `title`, bounded `content`, character
+counts, and truncation state. Reports must cite only URLs actually returned by
+the current fetch/search calls, using standard clickable Markdown links, and
+must include a deduplicated Sources section. A successful page read is not
+independent confirmation of that page's claims. `RumorEvidencePolicyMiddleware`
+enforces this after the final model call: it removes clickable URLs absent from
+the current run's tool messages, restores a missing original-page source entry,
+and downgrades the verdict to evidence-insufficient/low whenever the final
+report cites no independently searched source.
 
 DeerFlow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
 

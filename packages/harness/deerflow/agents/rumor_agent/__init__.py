@@ -13,6 +13,9 @@ from langchain_core.runnables import RunnableConfig
 
 from deerflow.agents.middlewares.loop_detection_middleware import LoopDetectionMiddleware
 from deerflow.agents.middlewares.memory_middleware import MemoryMiddleware
+from deerflow.agents.middlewares.rumor_evidence_policy_middleware import (
+    RumorEvidencePolicyMiddleware,
+)
 from deerflow.agents.middlewares.subagent_limit_middleware import SubagentLimitMiddleware
 from deerflow.agents.middlewares.title_middleware import TitleMiddleware
 from deerflow.agents.middlewares.tool_error_handling_middleware import build_lead_runtime_middlewares
@@ -62,22 +65,36 @@ def _build_middlewares():
         )
     )
     middlewares.append(
+        ToolCallLimitMiddleware(
+            tool_name="web_fetch",
+            run_limit=1,
+            exit_behavior="continue",
+        )
+    )
+    middlewares.append(
         ModelCallLimitMiddleware(
             run_limit=6,
             exit_behavior="end",
         )
     )
     middlewares.append(LoopDetectionMiddleware(warn_threshold=2, hard_limit=3))
+    middlewares.append(RumorEvidencePolicyMiddleware())
 
     return middlewares
 
 
-def _select_main_agent_tools(base_tools, *, classifier_enabled: bool):
-    """Keep evidence retrieval behind the bounded web-researcher delegation."""
+def _select_main_agent_tools(
+    base_tools,
+    *,
+    classifier_enabled: bool,
+    web_fetch_enabled: bool,
+):
+    """Keep search delegated while allowing one configured source-page fetch."""
     tools = [
         tool
         for tool in base_tools
-        if tool.name not in {"web_search", "web_fetch"}
+        if tool.name != "web_search"
+        and (web_fetch_enabled or tool.name != "web_fetch")
     ]
     if classifier_enabled and all(tool.name != "rumor_check" for tool in tools):
         tools.append(rumor_check_tool)
@@ -92,12 +109,14 @@ def make_rumor_agent(config: RunnableConfig):
     model_name = _resolve_model_name()
     configured_tool_names = {tool.name for tool in app_config.tools}
     web_search_enabled = "web_search" in configured_tool_names
+    web_fetch_enabled = "web_fetch" in configured_tool_names
     classifier_enabled = bool(os.getenv("RUMOR_MODEL_BASE_URL", "").strip())
 
     logger.info(
-        "Creating rumor_agent (model=%s, web_search=%s, classifier=%s)",
+        "Creating rumor_agent (model=%s, web_search=%s, web_fetch=%s, classifier=%s)",
         model_name,
         web_search_enabled,
+        web_fetch_enabled,
         classifier_enabled,
     )
 
@@ -117,6 +136,7 @@ def make_rumor_agent(config: RunnableConfig):
     tools = _select_main_agent_tools(
         base_tools,
         classifier_enabled=classifier_enabled,
+        web_fetch_enabled=web_fetch_enabled,
     )
 
     return create_agent(
@@ -125,6 +145,7 @@ def make_rumor_agent(config: RunnableConfig):
         middleware=_build_middlewares(),
         system_prompt=build_rumor_system_prompt(
             web_search_enabled=web_search_enabled,
+            web_fetch_enabled=web_fetch_enabled,
             classifier_enabled=classifier_enabled,
         ),
         state_schema=ThreadState,
