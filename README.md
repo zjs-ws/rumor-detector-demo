@@ -31,7 +31,7 @@
 
 1. 克隆并进入项目：
 
-   `git clone -b enhanced_one https://github.com/C-0x200-Y/rumor-detector-demo.git`
+   `git clone -b enhanced_one https://github.com/zjs-ws/rumor-detector-demo.git`
 
    `cd rumor-detector-demo`
 
