@@ -26,3 +26,11 @@ config.yaml
 
 # Claude Code settings
 .claude/settings.local.json
+
+# Local secrets
+.env
+.env.local
+.env.*.local
+runtime/
+local-backups/
+.DS_Store

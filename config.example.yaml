@@ -1,0 +1,32 @@
+config_version: 1
+log_level: info
+
+models:
+  - name: deepseek-v4-flash
+    display_name: DeepSeek V4 Flash
+    description: 谣言检测智能体主模型
+
+    use: langchain_openai:ChatOpenAI
+    model: deepseek-v4-flash
+
+    api_key: $DEEPSEEK_API_KEY
+    base_url: https://api.deepseek.com
+
+    supports_thinking: true
+    supports_reasoning_effort: false
+    supports_vision: false
+
+    when_thinking_enabled:
+      extra_body:
+        thinking:
+          type: enabled
+
+# “Local”指相对于应用进程本地运行。
+# 由于整个应用在 Docker 容器中，因此不会使用 Mac 本机的 Python 环境。
+sandbox:
+  use: deerflow.sandbox.local:LocalSandboxProvider
+
+# 将 LangGraph 会话状态保存到挂载的数据目录。
+checkpointer:
+  type: sqlite
+  connection_string: /data/checkpoints/store.db

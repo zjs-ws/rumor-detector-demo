@@ -1,0 +1,107 @@
+services:
+  langgraph:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+
+    image: rumor-detector-demo:enhanced-one
+    container_name: rumor-langgraph
+    init: true
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      PYTHONPATH: /app
+      DEER_FLOW_CONFIG_PATH: /app/config.yaml
+      DEER_FLOW_HOME: /data
+      LANGSMITH_TRACING: "false"
+      LANGCHAIN_TRACING_V2: "false"
+
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./.env:/app/.env:ro
+      - ./runtime:/data
+
+    ports:
+      - "2024:2024"
+
+    command:
+      - uv
+      - run
+      - langgraph
+      - dev
+      - --host
+      - 0.0.0.0
+      - --port
+      - "2024"
+      - --no-browser
+      - --allow-blocking
+      - --no-reload
+
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://localhost:2024/docs
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+
+    image: rumor-detector-demo:enhanced-one
+    container_name: rumor-gateway
+    init: true
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      PYTHONPATH: /app
+      DEER_FLOW_CONFIG_PATH: /app/config.yaml
+      DEER_FLOW_HOME: /data
+      GATEWAY_HOST: 0.0.0.0
+      GATEWAY_PORT: "8001"
+      LANGSMITH_TRACING: "false"
+      LANGCHAIN_TRACING_V2: "false"
+
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+      - ./.env:/app/.env:ro
+      - ./runtime:/data
+
+    ports:
+      - "8001:8001"
+
+    command:
+      - uv
+      - run
+      - uvicorn
+      - app.gateway.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8001"
+
+    depends_on:
+      langgraph:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://localhost:8001/health
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
