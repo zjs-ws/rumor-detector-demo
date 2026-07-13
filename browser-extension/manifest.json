@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "RumorBuster 划词核验",
+  "version": "0.1.0",
+  "description": "选中网页文字，通过本地 RumorBuster 发起事实核验。",
+  "permissions": ["contextMenus"],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  }
+}

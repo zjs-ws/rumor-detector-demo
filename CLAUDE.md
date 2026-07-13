@@ -33,6 +33,14 @@ The web researcher uses `direct_tool="web_search"` so raw structured search
 results reach the parent agent without an intermediate LLM rewriting URLs or
 source summaries.
 
+The unpacked Chrome Manifest V3 extension lives in `browser-extension/`. Its
+selection context-menu action opens `/workspace/chats/new` and passes the
+selected claim and HTTP(S) source URL in the URL fragment, never the request
+query. The frontend must prefill this content without auto-submitting it and
+must immediately clear the fragment with `history.replaceState` after reading
+it. Keep this privacy and explicit-confirmation contract when changing either
+side of the integration.
+
 DeerFlow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
 
 **Architecture**:
