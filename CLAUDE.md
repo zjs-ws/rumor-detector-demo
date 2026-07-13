@@ -27,8 +27,11 @@ only its single-call `web-researcher` delegation may use retrieval tools.
 LangGraph Server may provide the active thread ID through runtime context,
 `config.configurable`, or `config.metadata`; task delegation must preserve all
 three fallbacks. A model may reduce a subagent's `max_turns`, but must never
-increase the configured limit. The default web researcher budget is 3 turns
-and 60 seconds, with a code-enforced single tool call per run.
+increase the configured limit. The web researcher has a 60-second timeout and
+a code-enforced single tool call per run.
+The web researcher uses `direct_tool="web_search"` so raw structured search
+results reach the parent agent without an intermediate LLM rewriting URLs or
+source summaries.
 
 DeerFlow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
 

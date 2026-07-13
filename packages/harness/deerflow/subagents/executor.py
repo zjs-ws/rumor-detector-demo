@@ -238,6 +238,40 @@ class SubagentExecutor:
             )
 
         try:
+            if self.config.direct_tool is not None:
+                direct_tool = next(
+                    (
+                        tool
+                        for tool in self.tools
+                        if tool.name == self.config.direct_tool
+                    ),
+                    None,
+                )
+                if direct_tool is None:
+                    raise ValueError(
+                        f"Direct tool '{self.config.direct_tool}' is not available "
+                        f"to subagent '{self.config.name}'"
+                    )
+
+                tool_input = (
+                    self.config.direct_tool_input_builder(task)
+                    if self.config.direct_tool_input_builder is not None
+                    else task
+                )
+                raw_result = await direct_tool.ainvoke(tool_input)
+                result.result = (
+                    raw_result if isinstance(raw_result, str) else str(raw_result)
+                )
+                result.status = SubagentStatus.COMPLETED
+                result.completed_at = datetime.now()
+                logger.info(
+                    "[trace=%s] Subagent %s completed direct tool %s",
+                    self.trace_id,
+                    self.config.name,
+                    self.config.direct_tool,
+                )
+                return result
+
             agent = self._create_agent()
             state = self._build_initial_state(task)
 

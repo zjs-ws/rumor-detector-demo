@@ -1,6 +1,31 @@
 """Web researcher subagent for rumor fact-checking."""
 
+import re
+
 from deerflow.subagents.config import SubagentConfig
+
+_CLAIM_PATTERN = re.compile(
+    r"(?:主张|待检测言论|待核验原文)\s*[:：]\s*([^\n]+)",
+    re.IGNORECASE,
+)
+
+
+def build_web_search_input(task: str) -> dict[str, object]:
+    """Extract the factual claim from a delegated research instruction."""
+    match = _CLAIM_PATTERN.search(task)
+    if match is not None:
+        query = match.group(1).strip()
+    else:
+        query = next(
+            (line.strip() for line in task.splitlines() if line.strip()),
+            task.strip(),
+        )
+
+    return {
+        "query": query[:500],
+        "max_results": 5,
+    }
+
 
 RUMOR_WEB_RESEARCHER_CONFIG = SubagentConfig(
     name="web-researcher",
@@ -52,5 +77,7 @@ Do NOT use for opinions, common-sense reasoning, or claims that cannot be web-se
     model="inherit",
     max_turns=3,
     max_tool_calls=1,
+    direct_tool="web_search",
+    direct_tool_input_builder=build_web_search_input,
     timeout_seconds=60,
 )

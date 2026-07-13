@@ -15,7 +15,8 @@ the real implementation in isolation.
 import asyncio
 import sys
 from datetime import datetime
-from unittest.mock import MagicMock, patch
+from types import SimpleNamespace
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -211,6 +212,41 @@ class TestAsyncExecutionPath:
         assert result.error is None
         assert result.started_at is not None
         assert result.completed_at is not None
+
+    @pytest.mark.anyio
+    async def test_aexecute_direct_tool_returns_raw_result_without_model(self, classes):
+        """Deterministic evidence collectors must not rewrite tool output with an LLM."""
+        SubagentConfig = classes["SubagentConfig"]
+        SubagentExecutor = classes["SubagentExecutor"]
+        SubagentStatus = classes["SubagentStatus"]
+        direct_tool = SimpleNamespace(
+            name="web_search",
+            ainvoke=AsyncMock(return_value='{"results":[{"url":"https://example.com"}]}'),
+        )
+        config = SubagentConfig(
+            name="web-researcher",
+            description="Search once",
+            system_prompt="unused",
+            tools=["web_search"],
+            direct_tool="web_search",
+            direct_tool_input_builder=lambda task: {"query": task},
+        )
+        executor = SubagentExecutor(
+            config=config,
+            tools=[direct_tool],
+            thread_id="test-thread",
+        )
+
+        with patch.object(
+            executor,
+            "_create_agent",
+            side_effect=AssertionError("direct collection must bypass the model"),
+        ):
+            result = await executor._aexecute("claim text")
+
+        assert result.status == SubagentStatus.COMPLETED
+        assert result.result == '{"results":[{"url":"https://example.com"}]}'
+        direct_tool.ainvoke.assert_awaited_once_with({"query": "claim text"})
 
     @pytest.mark.anyio
     async def test_aexecute_collects_ai_messages(self, classes, base_config, mock_agent, msg):

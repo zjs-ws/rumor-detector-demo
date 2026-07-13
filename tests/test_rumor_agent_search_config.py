@@ -47,3 +47,14 @@ def test_classifier_is_only_added_when_explicitly_enabled():
 def test_web_researcher_has_a_single_tool_call_budget():
     assert RUMOR_WEB_RESEARCHER_CONFIG.max_tool_calls == 1
     assert RUMOR_WEB_RESEARCHER_CONFIG.max_turns == 3
+    assert RUMOR_WEB_RESEARCHER_CONFIG.direct_tool == "web_search"
+
+    tool_input = RUMOR_WEB_RESEARCHER_CONFIG.direct_tool_input_builder(
+        "请核验以下主张：OpenAI 的官方 GitHub 组织地址是 https://github.com/openai/。\n"
+        "请列出来源。"
+    )
+
+    assert tool_input == {
+        "query": "OpenAI 的官方 GitHub 组织地址是 https://github.com/openai/。",
+        "max_results": 5,
+    }
