@@ -10,7 +10,7 @@ pass() { echo "✅ $1"; }
 warn() { echo "⚠️ $1"; }
 fail() { echo "❌ $1"; failed=1; }
 
-echo "== Rumor Detector Doctor =="
+echo "== RumorBuster Doctor =="
 
 command -v docker >/dev/null 2>&1 && pass "Docker 已安装" || fail "Docker 未安装"
 docker info >/dev/null 2>&1 && pass "Docker 正在运行" || fail "Docker 未运行"
@@ -20,6 +20,8 @@ docker compose version >/dev/null 2>&1 && pass "Docker Compose 可用" || fail "
 [[ -f config.yaml ]] && pass "config.yaml 存在" || warn "config.yaml 不存在"
 [[ -f compose.yaml ]] && pass "compose.yaml 存在" || fail "compose.yaml 不存在"
 [[ -f Dockerfile.local ]] && pass "Dockerfile.local 存在" || fail "Dockerfile.local 不存在"
+[[ -f frontend/Dockerfile ]] && pass "前端 Dockerfile 存在" || fail "前端 Dockerfile 不存在"
+[[ -f frontend/package.json ]] && pass "前端项目存在" || fail "前端项目不存在"
 [[ -f .env.example ]] && pass ".env.example 存在" || fail ".env.example 不存在"
 [[ -f config.example.yaml ]] && pass "config.example.yaml 存在" || fail "config.example.yaml 不存在"
 
@@ -67,6 +69,10 @@ curl -fsS http://localhost:8001/health >/dev/null 2>&1 &&
 curl -fsS http://localhost:2024/docs >/dev/null 2>&1 &&
   pass "智能体服务正常" ||
   warn "智能体服务当前未运行"
+
+curl -fsS http://localhost:3000/workspace/chats/new >/dev/null 2>&1 &&
+  pass "RumorBuster 网页端正常" ||
+  warn "RumorBuster 网页端当前未运行"
 
 echo
 if [[ "$failed" -eq 0 ]]; then

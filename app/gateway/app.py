@@ -78,11 +78,11 @@ def create_app() -> FastAPI:
     """
 
     app = FastAPI(
-        title="DeerFlow API Gateway",
+        title="RumorBuster API Gateway",
         description="""
-## DeerFlow API Gateway
+## RumorBuster API Gateway
 
-API Gateway for DeerFlow - A LangGraph-based AI agent backend with sandbox execution capabilities.
+Development API Gateway for the RumorBuster fact-checking application.
 
 ### Features
 
@@ -130,7 +130,7 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
             },
             {
                 "name": "threads",
-                "description": "Manage DeerFlow thread-local filesystem data",
+                "description": "Manage RumorBuster thread-local filesystem data",
             },
             {
                 "name": "agents",
@@ -191,7 +191,7 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
         Returns:
             Service health status information.
         """
-        return {"status": "healthy", "service": "deer-flow-gateway"}
+        return {"status": "healthy", "service": "rumor-buster-gateway"}
 
     return app
 

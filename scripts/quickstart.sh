@@ -48,9 +48,11 @@ docker compose up -d --build
 echo "等待服务启动……"
 for _ in $(seq 1 60); do
   if curl -fsS http://localhost:8001/health >/dev/null 2>&1 &&
-     curl -fsS http://localhost:2024/docs >/dev/null 2>&1; then
+     curl -fsS http://localhost:2024/docs >/dev/null 2>&1 &&
+     curl -fsS http://localhost:3000/workspace/chats/new >/dev/null 2>&1; then
     echo "✅ 启动成功"
     docker compose ps
+    echo "RumorBuster: http://localhost:3000"
     echo "Gateway: http://localhost:8001/health"
     echo "API Docs: http://localhost:8001/docs"
     exit 0
@@ -59,5 +61,5 @@ for _ in $(seq 1 60); do
 done
 
 echo "❌ 服务未在规定时间内通过健康检查"
-docker compose logs --tail=120 langgraph gateway
+docker compose logs --tail=120 langgraph gateway frontend
 exit 1

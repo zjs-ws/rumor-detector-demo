@@ -4,6 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
+### RumorBuster branch note
+
+This repository branch is productized as **RumorBuster**. Its current on-disk
+layout is flat (`app/`, `packages/`, and `frontend/` live at the repository
+root), even though some upstream sections below still describe the historical
+`backend/` layout. `compose.yaml` starts the Next.js frontend on port 3000,
+LangGraph on 2024, and the Gateway on 8001.
+
+The frontend Dockerfile copies dependency manifests before application source,
+so ordinary UI edits reuse the cached dependency-install layer.
+
+The `rumor_agent` only exposes web-research delegation when a `web_search` tool
+is configured, and only exposes the fine-tuned classifier when
+`RUMOR_MODEL_BASE_URL` is explicitly set. Its prompt must never advertise
+disabled capabilities. Model and tool call limit middleware are required to
+prevent repeated agent/tool loops.
+
 DeerFlow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
 
 **Architecture**:

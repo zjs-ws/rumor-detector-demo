@@ -1,13 +1,14 @@
-"""Rumor Detection agent — DeerFlow-style orchestrating agent.
+"""RumorBuster fact-checking agent registered in ``langgraph.json``.
 
-Registered as a LangGraph graph in ``langgraph.json``, on par with ``lead_agent``.
-Uses ``create_agent`` with a full middleware chain, sub-agent delegation via
-``task`` tool, and a fine-tuned classifier exposed as ``rumor_check`` tool.
+Optional search and classifier tools are exposed only when their corresponding
+services are explicitly configured.
 """
 
 import logging
+import os
 
 from langchain.agents import create_agent
+from langchain.agents.middleware import ModelCallLimitMiddleware, ToolCallLimitMiddleware
 from langchain_core.runnables import RunnableConfig
 
 from deerflow.agents.middlewares.loop_detection_middleware import LoopDetectionMiddleware
@@ -45,8 +46,28 @@ def _build_middlewares():
 
     middlewares.append(TitleMiddleware())
     middlewares.append(MemoryMiddleware(agent_name="rumor"))
-    middlewares.append(SubagentLimitMiddleware(max_concurrent=3))
-    middlewares.append(LoopDetectionMiddleware())
+    middlewares.append(SubagentLimitMiddleware(max_concurrent=1))
+    middlewares.append(
+        ToolCallLimitMiddleware(
+            tool_name="task",
+            run_limit=1,
+            exit_behavior="continue",
+        )
+    )
+    middlewares.append(
+        ToolCallLimitMiddleware(
+            tool_name="rumor_check",
+            run_limit=1,
+            exit_behavior="continue",
+        )
+    )
+    middlewares.append(
+        ModelCallLimitMiddleware(
+            run_limit=6,
+            exit_behavior="end",
+        )
+    )
+    middlewares.append(LoopDetectionMiddleware(warn_threshold=2, hard_limit=3))
 
     return middlewares
 
@@ -55,11 +76,17 @@ def make_rumor_agent(config: RunnableConfig):
     """Factory function referenced by ``langgraph.json``."""
     from deerflow.tools import get_available_tools
 
+    app_config = get_app_config()
     model_name = _resolve_model_name()
+    configured_tool_names = {tool.name for tool in app_config.tools}
+    web_search_enabled = "web_search" in configured_tool_names
+    classifier_enabled = bool(os.getenv("RUMOR_MODEL_BASE_URL", "").strip())
 
     logger.info(
-        "Creating rumor_agent (model=%s)",
+        "Creating rumor_agent (model=%s, web_search=%s, classifier=%s)",
         model_name,
+        web_search_enabled,
+        classifier_enabled,
     )
 
     if "metadata" not in config:
@@ -73,14 +100,17 @@ def make_rumor_agent(config: RunnableConfig):
 
     base_tools = get_available_tools(
         model_name=model_name,
-        subagent_enabled=True,
+        subagent_enabled=web_search_enabled,
     )
-    tools = base_tools + [rumor_check_tool]
+    tools = base_tools + ([rumor_check_tool] if classifier_enabled else [])
 
     return create_agent(
         model=create_chat_model(name=model_name, thinking_enabled=True),
         tools=tools,
         middleware=_build_middlewares(),
-        system_prompt=build_rumor_system_prompt(),
+        system_prompt=build_rumor_system_prompt(
+            web_search_enabled=web_search_enabled,
+            classifier_enabled=classifier_enabled,
+        ),
         state_schema=ThreadState,
     )

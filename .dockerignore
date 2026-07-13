@@ -16,3 +16,11 @@ runtime
 *.db
 *.sqlite
 *.sqlite3
+
+# Frontend local dependencies and build output
+frontend/node_modules
+frontend/.next
+frontend/.turbo
+frontend/.pnpm-store
+frontend/out
+frontend/public/demo
