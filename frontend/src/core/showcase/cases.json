@@ -1,0 +1,890 @@
+[
+  {
+    "case_id": "medical-old-rumor",
+    "title": "医学旧谣言变体与权威研究",
+    "category": "professional",
+    "input": {
+      "claim": "饮酒可以预防新冠肺炎",
+      "source_url": null
+    },
+    "recorded_at": "2026-08-12T14:21:14.935990+00:00",
+    "run_id": "5ecae5c1949f4790976bc28521b0ffcc",
+    "source_kind": "archived_real_run",
+    "duration_ms": 19190,
+    "degradation_codes": ["web_research_unavailable"],
+    "all_checks_passed": true,
+    "report": {
+      "schema_version": "rumorbuster-report-v3",
+      "claim": {
+        "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "主张： 饮酒可以预防新冠肺炎",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": null,
+        "domain": "medical",
+        "domain_reason": "命中受控专业关键词：新冠"
+      },
+      "checkability": {
+        "claim": "主张： 饮酒可以预防新冠肺炎",
+        "claim_type": "public_fact",
+        "checkability": "checkable_now",
+        "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+        "claim_context": {
+          "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+          "subclaims": [
+            {
+              "id": "claim-1",
+              "text": "主张： 饮酒可以预防新冠肺炎",
+              "material": true
+            }
+          ],
+          "temporality": "unknown",
+          "event_date": null,
+          "source_url": null,
+          "domain": "medical",
+          "domain_reason": "命中受控专业关键词：新冠"
+        }
+      },
+      "domain_route": {
+        "domain": "medical",
+        "reason": "命中受控专业关键词：新冠"
+      },
+      "capabilities": {
+        "web_search": true,
+        "web_fetch": true,
+        "classifier": false,
+        "rag": true,
+        "authority_research": true,
+        "evidence_critic": true
+      },
+      "original_page": null,
+      "research_branches": {
+        "rag": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:16.409436+00:00",
+          "finished_at": "2026-08-12T14:21:16.419793+00:00",
+          "duration_ms": 10,
+          "result_count": 3,
+          "error_code": null
+        },
+        "web": {
+          "status": "unavailable",
+          "started_at": "2026-08-12T14:21:16.419823+00:00",
+          "finished_at": "2026-08-12T14:21:29.730865+00:00",
+          "duration_ms": 13311,
+          "result_count": 0,
+          "error_code": "web_research_unavailable"
+        },
+        "classifier": {
+          "status": "skipped",
+          "result_count": 0
+        },
+        "authority": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:16.444885+00:00",
+          "finished_at": "2026-08-12T14:21:30.608947+00:00",
+          "duration_ms": 14164,
+          "result_count": 1,
+          "error_code": null
+        }
+      },
+      "rag": {
+        "status": "ok",
+        "query": "主张： 饮酒可以预防新冠肺炎",
+        "matches": [
+          {
+            "record_id": "who-covid-007",
+            "canonical_claim": "饮酒可以预防新冠肺炎",
+            "similarity": 0.5048,
+            "matched_variant": "饮酒可以预防新冠肺炎",
+            "historical_verdict": "rumor",
+            "authoritative_sources": [
+              "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+            ],
+            "event_date": "2022-01-19",
+            "temporal_warning": null
+          },
+          {
+            "record_id": "who-covid-009",
+            "canonical_claim": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+            "similarity": 0.2459,
+            "matched_variant": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+            "historical_verdict": "rumor",
+            "authoritative_sources": [
+              "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+            ],
+            "event_date": "2022-01-19",
+            "temporal_warning": null
+          },
+          {
+            "record_id": "who-covid-011",
+            "canonical_claim": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+            "similarity": 0.2386,
+            "matched_variant": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+            "historical_verdict": "rumor",
+            "authoritative_sources": [
+              "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+            ],
+            "event_date": "2022-01-19",
+            "temporal_warning": null
+          }
+        ],
+        "threshold": 0.05,
+        "authoritative": false,
+        "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+      },
+      "classifier_signal": {
+        "status": "unavailable",
+        "role": "auxiliary_signal",
+        "label": "uncertain",
+        "rationale": "分类器未配置",
+        "authoritative": false
+      },
+      "evidence": [
+        {
+          "id": "authority-1",
+          "title": "2019冠状病毒病的传言和事实",
+          "url": "https://www.who.int/zh/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters",
+          "publisher": "世界卫生组织（WHO）",
+          "published_at": "2022-01-19",
+          "stance": "refute",
+          "source_level": "A",
+          "claimed_source_level": "A",
+          "verified_source_level": "A",
+          "source_grade_reason": "官方域名且代码校验职权匹配",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "官方来源注册表中的职权关键词与主张匹配",
+          "independent_group": "世界卫生组织",
+          "content_fingerprint": "a7b3108f559e748b",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "ok",
+          "claim_ids": ["claim-1"],
+          "claim_variant": "饮酒可以预防新冠肺炎",
+          "change_summary": "",
+          "summary": "世界卫生组织在'2019冠状病毒病的传言和事实'（Myth-busters）专栏中明确指出：'饮酒并不能保护您免受COVID-19侵害，反而可能会带来危害'，并进一步说明'频繁或过量饮酒可能会加剧健康问题'。WHO同时强调，饮用甲醇、乙醇或漂白剂不能预防或治愈COVID-19，且可能非常危险，会导致残疾和死亡。",
+          "provenance": "web"
+        }
+      ],
+      "evidence_review": {
+        "status": "completed",
+        "coverage_by_claim": {
+          "claim-1": "covered"
+        },
+        "missing_claim_ids": [],
+        "conflict_claim_ids": [],
+        "duplicate_groups": [],
+        "supplement_needed": false,
+        "supplement_query": "",
+        "notes": "单一证据（WHO官方来源）直接针对claim-1，明确反驳饮酒预防新冠肺炎的主张，无答非所问或支持/反驳冲突。"
+      },
+      "decision": {
+        "verdict": "证据不足",
+        "strength": "insufficient",
+        "accepted_evidence_ids": [],
+        "excluded_evidence": [
+          {
+            "evidence_id": "authority-1",
+            "reason_code": "fetch_not_verified",
+            "explanation": "网页证据没有合法的正文抓取时间，不能按直接证据参与裁决"
+          }
+        ],
+        "reason_codes": ["threshold_not_met", "threshold_not_met"],
+        "classifier_consistency": "unavailable_or_uncertain",
+        "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+        "subclaim_decisions": {}
+      },
+      "timeline": {
+        "timeline_status": "insufficient",
+        "events": [],
+        "note": "规则裁决证据不足，因此不生成传播时间线。"
+      },
+      "limitations": ["web_research_unavailable"],
+      "workflow_trace": [
+        {
+          "stage": "reset_input",
+          "at": "2026-08-12T14:21:15.982459+00:00"
+        },
+        {
+          "stage": "extract_claim",
+          "at": "2026-08-12T14:21:16.402333+00:00"
+        },
+        {
+          "stage": "checkability",
+          "at": "2026-08-12T14:21:16.405095+00:00"
+        },
+        {
+          "stage": "parallel_collection",
+          "at": "2026-08-12T14:21:16.407636+00:00"
+        },
+        {
+          "stage": "evidence_normalization",
+          "at": "2026-08-12T14:21:30.613445+00:00"
+        },
+        {
+          "stage": "evidence_review",
+          "at": "2026-08-12T14:21:32.062314+00:00"
+        },
+        {
+          "stage": "adjudicate",
+          "at": "2026-08-12T14:21:32.066768+00:00"
+        },
+        {
+          "stage": "timeline",
+          "at": "2026-08-12T14:21:32.069342+00:00"
+        },
+        {
+          "stage": "explain",
+          "at": "2026-08-12T14:21:32.071930+00:00"
+        },
+        {
+          "stage": "report",
+          "at": "2026-08-12T14:21:34.108938+00:00"
+        }
+      ],
+      "explanation": "经核验，唯一证据（世界卫生组织专栏）虽内容直接反驳“饮酒可预防新冠肺炎”，且来源等级为A，但该网页证据缺少合法的正文抓取时间，无法确认其当前有效性，故按规则不能作为直接证据参与裁决。因此，支持方与反驳方均未达到“一条A类或两条独立B类证据”的门槛，整体证据不足，无法作出肯定或否定结论。"
+    },
+    "workflow": {
+      "run_id": "5ecae5c1949f4790976bc28521b0ffcc",
+      "stage": "report",
+      "degradation_codes": ["web_research_unavailable"],
+      "trace": [
+        {
+          "stage": "reset_input",
+          "at": "2026-08-12T14:21:15.982459+00:00"
+        },
+        {
+          "stage": "extract_claim",
+          "at": "2026-08-12T14:21:16.402333+00:00"
+        },
+        {
+          "stage": "checkability",
+          "at": "2026-08-12T14:21:16.405095+00:00"
+        },
+        {
+          "stage": "parallel_collection",
+          "at": "2026-08-12T14:21:16.407636+00:00"
+        },
+        {
+          "stage": "evidence_normalization",
+          "at": "2026-08-12T14:21:30.613445+00:00"
+        },
+        {
+          "stage": "evidence_review",
+          "at": "2026-08-12T14:21:32.062314+00:00"
+        },
+        {
+          "stage": "adjudicate",
+          "at": "2026-08-12T14:21:32.066768+00:00"
+        },
+        {
+          "stage": "timeline",
+          "at": "2026-08-12T14:21:32.069342+00:00"
+        },
+        {
+          "stage": "explain",
+          "at": "2026-08-12T14:21:32.071930+00:00"
+        },
+        {
+          "stage": "report",
+          "at": "2026-08-12T14:21:34.108938+00:00"
+        }
+      ],
+      "branch_status": {
+        "rag": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:16.409436+00:00",
+          "finished_at": "2026-08-12T14:21:16.419793+00:00",
+          "duration_ms": 10,
+          "result_count": 3,
+          "error_code": null
+        },
+        "web": {
+          "status": "unavailable",
+          "started_at": "2026-08-12T14:21:16.419823+00:00",
+          "finished_at": "2026-08-12T14:21:29.730865+00:00",
+          "duration_ms": 13311,
+          "result_count": 0,
+          "error_code": "web_research_unavailable"
+        },
+        "classifier": {
+          "status": "skipped",
+          "result_count": 0
+        },
+        "authority": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:16.444885+00:00",
+          "finished_at": "2026-08-12T14:21:30.608947+00:00",
+          "duration_ms": 14164,
+          "result_count": 1,
+          "error_code": null
+        }
+      }
+    }
+  },
+  {
+    "case_id": "science-url-claim",
+    "title": "科学主张与用户来源网页",
+    "category": "url",
+    "input": {
+      "claim": "没有科学证据表明全球气候正在变暖",
+      "source_url": "https://science.nasa.gov/climate-change/evidence/"
+    },
+    "recorded_at": "2026-08-12T14:21:34.128239+00:00",
+    "run_id": "004b53a646b549ad8089bf1d028c0684",
+    "source_kind": "archived_real_run",
+    "duration_ms": 32132,
+    "degradation_codes": [],
+    "all_checks_passed": true,
+    "report": {
+      "schema_version": "rumorbuster-report-v3",
+      "claim": {
+        "normalized_claim": "主张： 没有科学证据表明全球气候正在变暖",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "主张： 没有科学证据表明全球气候正在变暖",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": "https://science.nasa.gov/climate-change/evidence/",
+        "domain": "science",
+        "domain_reason": "命中受控专业关键词：科学"
+      },
+      "checkability": {
+        "claim": "主张： 没有科学证据表明全球气候正在变暖",
+        "claim_type": "public_fact",
+        "checkability": "checkable_now",
+        "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+        "claim_context": {
+          "normalized_claim": "主张： 没有科学证据表明全球气候正在变暖",
+          "subclaims": [
+            {
+              "id": "claim-1",
+              "text": "主张： 没有科学证据表明全球气候正在变暖",
+              "material": true
+            }
+          ],
+          "temporality": "unknown",
+          "event_date": null,
+          "source_url": "https://science.nasa.gov/climate-change/evidence/",
+          "domain": "science",
+          "domain_reason": "命中受控专业关键词：科学"
+        }
+      },
+      "domain_route": {
+        "domain": "science",
+        "reason": "命中受控专业关键词：科学"
+      },
+      "capabilities": {
+        "web_search": true,
+        "web_fetch": true,
+        "classifier": false,
+        "rag": true,
+        "authority_research": true,
+        "evidence_critic": true
+      },
+      "original_page": {
+        "source_url": "https://science.nasa.gov/climate-change/evidence/",
+        "requested_url": "https://science.nasa.gov/climate-change/evidence/",
+        "title": "Evidence - NASA Science",
+        "content_chars": 12000,
+        "truncated": true
+      },
+      "research_branches": {
+        "rag": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:36.996091+00:00",
+          "finished_at": "2026-08-12T14:21:36.998280+00:00",
+          "duration_ms": 2,
+          "result_count": 2,
+          "error_code": null
+        },
+        "web": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:36.998302+00:00",
+          "finished_at": "2026-08-12T14:22:01.260053+00:00",
+          "duration_ms": 24262,
+          "result_count": 3,
+          "error_code": null
+        },
+        "classifier": {
+          "status": "skipped",
+          "result_count": 0
+        },
+        "authority": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:37.012823+00:00",
+          "finished_at": "2026-08-12T14:21:54.808301+00:00",
+          "duration_ms": 17795,
+          "result_count": 1,
+          "error_code": null
+        }
+      },
+      "rag": {
+        "status": "ok",
+        "query": "主张： 没有科学证据表明全球气候正在变暖",
+        "matches": [
+          {
+            "record_id": "nasa-climate-001",
+            "canonical_claim": "没有科学证据表明全球气候正在变暖",
+            "similarity": 0.694,
+            "matched_variant": "没有科学证据表明全球气候正在变暖",
+            "historical_verdict": "rumor",
+            "authoritative_sources": [
+              "https://science.nasa.gov/climate-change/evidence/"
+            ],
+            "event_date": null,
+            "temporal_warning": null
+          },
+          {
+            "record_id": "fda-fraud-007",
+            "canonical_claim": "产品用户的个人见证可以替代科学证据证明疗效",
+            "similarity": 0.0783,
+            "matched_variant": "产品用户的个人见证可以替代科学证据证明疗效",
+            "historical_verdict": "rumor",
+            "authoritative_sources": [
+              "https://www.fda.gov/downloads/forconsumers/protectyourself/healthfraud/ucm302359.pdf"
+            ],
+            "event_date": "2011-11-01",
+            "temporal_warning": null
+          }
+        ],
+        "threshold": 0.05,
+        "authoritative": false,
+        "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+      },
+      "classifier_signal": {
+        "status": "unavailable",
+        "role": "auxiliary_signal",
+        "label": "uncertain",
+        "rationale": "分类器未配置",
+        "authoritative": false
+      },
+      "evidence": [
+        {
+          "id": "web-1",
+          "title": "关于气候变化的科学共识 - 维基百科",
+          "url": "https://zh.wikipedia.org/zh-cn/关于气候变化的科学共识",
+          "publisher": "维基百科",
+          "published_at": null,
+          "stance": "refute",
+          "source_level": "C",
+          "claimed_source_level": "C",
+          "verified_source_level": "C",
+          "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+          "directness": "direct",
+          "authority_scope": false,
+          "authority_reason": "",
+          "independent_group": "Wikipedia",
+          "content_fingerprint": "daaad2a3409b1a04",
+          "temporal_relevance": "unknown",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "ok",
+          "claim_ids": ["claim-1"],
+          "claim_variant": "没有科学证据表明全球气候正在变暖",
+          "change_summary": "",
+          "summary": "维基百科《关于气候变化的科学共识》条目系统整理了科学界共识：地球气候自1800年代末期显著变暖；人类活动（主要是温室气体排放）是主要归因；IPCC第五次评估报告指出'气候系统变暖迹象明确'，人类影响极有可能（95-100%概率）是1951-2010年间全球变暖的主要原因。2021年的调查显示超过99%的科学论文同意气候变暖由人类活动导致。没有任何具有国家或国际地位的科学机构对IPCC结论提出异议。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-2",
+          "title": "IPCC AR6 综合报告 | 《气候变化2023》十大重点解读",
+          "url": "https://wri.org.cn/insights/2023-ipcc-ar6-synthesis-report-climate-change-findings",
+          "publisher": "世界资源研究所（WRI China）",
+          "published_at": "2023-04-03",
+          "stance": "refute",
+          "source_level": "C",
+          "claimed_source_level": "B",
+          "verified_source_level": "C",
+          "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+          "directness": "direct",
+          "authority_scope": false,
+          "authority_reason": "",
+          "independent_group": "WRI",
+          "content_fingerprint": "8f3b9dbc75a09404",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "ok",
+          "claim_ids": ["claim-1"],
+          "claim_variant": "没有科学证据表明全球气候正在变暖",
+          "change_summary": "",
+          "summary": "WRI对IPCC AR6综合报告（2023年）的解读明确指出：人类活动使全球平均升温1.1°C，地球气候变化空前。该报告汇集全球近800名顶级气候科学家研究成果，报告确认全球气温已上升1.1°C，IPCC报告以近8000页篇幅阐述全球变暖导致的毁灭性后果。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-3",
+          "title": "Climate Change in Data: The Physical Science Basis - IPCC",
+          "url": "https://www.ipcc.ch/climate-change-in-data",
+          "publisher": "IPCC（联合国政府间气候变化专门委员会）",
+          "published_at": "2021",
+          "stance": "refute",
+          "source_level": "C",
+          "claimed_source_level": "A",
+          "verified_source_level": "C",
+          "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+          "directness": "direct",
+          "authority_scope": false,
+          "authority_reason": "",
+          "independent_group": "IPCC",
+          "content_fingerprint": "620a485b952d07c6",
+          "temporal_relevance": "unknown",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "ok",
+          "claim_ids": ["claim-1"],
+          "claim_variant": "没有科学证据表明全球气候正在变暖",
+          "change_summary": "",
+          "summary": "IPCC官方页面明确声明：'人类活动造成了地球气候前所未有的变化'，自19世纪末以来人类活动使地球气候升温超过1°C。'毫无疑问（unequivocal）人类正在导致变暖'。气候变化2021：物理科学基础报告确认科学家数十年来已知地球正在变暖，自19世纪末以来的全球温度上升在数千年间是前所未有的。",
+          "provenance": "web"
+        },
+        {
+          "id": "authority-1",
+          "title": "Climate Change 2023: Synthesis Report - Headline Statements",
+          "url": "https://report.ipcc.ch/ar6syr/headline.html",
+          "publisher": "Intergovernmental Panel on Climate Change (IPCC)",
+          "published_at": "2023-03-20",
+          "stance": "refute",
+          "source_level": "C",
+          "claimed_source_level": "A",
+          "verified_source_level": "C",
+          "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+          "directness": "direct",
+          "authority_scope": false,
+          "authority_reason": "",
+          "independent_group": "IPCC",
+          "content_fingerprint": "43882047f7d97543",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": false,
+          "fetched_at": "2025-01-01T00:00:00Z",
+          "extraction_status": "ok",
+          "claim_ids": ["claim-1"],
+          "claim_variant": "原主张声称缺乏科学证据支持全球变暖，IPCC报告提供大量高级别科学证据表明全球变暖是明确无疑的事实。",
+          "change_summary": "",
+          "summary": "IPCC《2023年气候变化综合报告》头版声明A.1明确指出：'人类活动，主要通过温室气体排放，明确无疑地(unambiguously)导致了全球变暖，2011-2020年全球地表温度比1850-1900年高出1.1°C'。声明以'高置信度'（high confidence）评估人类活动导致的气候变化已对全球各地气象和气候极端事件产生广泛影响。该报告汇集了全球数千名科学家的同行评审研究，是全球气候科学最权威的综合评估，直接驳斥了'没有科学证据表明全球气候正在变暖'的主张。",
+          "provenance": "web"
+        }
+      ],
+      "evidence_review": {
+        "status": "completed",
+        "coverage_by_claim": {
+          "claim-1": "covered"
+        },
+        "missing_claim_ids": [],
+        "conflict_claim_ids": [],
+        "duplicate_groups": ["IPCC"],
+        "supplement_needed": false,
+        "supplement_query": "",
+        "notes": "证据审查只检查覆盖和冲突，不生成新证据或最终结论。"
+      },
+      "decision": {
+        "verdict": "证据不足",
+        "strength": "insufficient",
+        "accepted_evidence_ids": [],
+        "excluded_evidence": [
+          {
+            "evidence_id": "web-1",
+            "reason_code": "time_unknown",
+            "explanation": "证据发布时间或当前有效性无法确认"
+          },
+          {
+            "evidence_id": "web-2",
+            "reason_code": "fetch_not_verified",
+            "explanation": "网页证据没有合法的正文抓取时间，不能按直接证据参与裁决"
+          },
+          {
+            "evidence_id": "web-3",
+            "reason_code": "invalid_date",
+            "explanation": "证据发布时间格式非法"
+          },
+          {
+            "evidence_id": "authority-1",
+            "reason_code": "source_too_weak",
+            "explanation": "来源等级未达到裁决门槛"
+          }
+        ],
+        "reason_codes": ["threshold_not_met", "threshold_not_met"],
+        "classifier_consistency": "unavailable_or_uncertain",
+        "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+        "subclaim_decisions": {}
+      },
+      "timeline": {
+        "timeline_status": "insufficient",
+        "events": [],
+        "note": "规则裁决证据不足，因此不生成传播时间线。"
+      },
+      "limitations": [],
+      "workflow_trace": [
+        {
+          "stage": "reset_input",
+          "at": "2026-08-12T14:21:35.186097+00:00"
+        },
+        {
+          "stage": "fetch_original",
+          "at": "2026-08-12T14:21:36.689201+00:00"
+        },
+        {
+          "stage": "extract_claim",
+          "at": "2026-08-12T14:21:36.989621+00:00"
+        },
+        {
+          "stage": "checkability",
+          "at": "2026-08-12T14:21:36.992526+00:00"
+        },
+        {
+          "stage": "parallel_collection",
+          "at": "2026-08-12T14:21:36.994598+00:00"
+        },
+        {
+          "stage": "evidence_normalization",
+          "at": "2026-08-12T14:22:01.266595+00:00"
+        },
+        {
+          "stage": "evidence_review",
+          "at": "2026-08-12T14:22:03.482079+00:00"
+        },
+        {
+          "stage": "adjudicate",
+          "at": "2026-08-12T14:22:03.492709+00:00"
+        },
+        {
+          "stage": "timeline",
+          "at": "2026-08-12T14:22:03.494884+00:00"
+        },
+        {
+          "stage": "explain",
+          "at": "2026-08-12T14:22:03.496714+00:00"
+        },
+        {
+          "stage": "report",
+          "at": "2026-08-12T14:22:06.232883+00:00"
+        }
+      ],
+      "explanation": "根据裁决规则，现有证据均未达到可采门槛，因此无法支持或反驳“没有科学证据表明全球气候正在变暖”这一主张。四份证据均被排除：网页证据无法确认发布时间或缺少合法抓取时间，无法验证其当前有效性；一份证据发布时间格式非法；权威来源因来源等级未达裁决门槛。支持方与反驳方均未满足“一条A类或两条独立B类证据”的法定门槛，故整体判定为证据不足。"
+    },
+    "workflow": {
+      "run_id": "004b53a646b549ad8089bf1d028c0684",
+      "stage": "report",
+      "degradation_codes": [],
+      "trace": [
+        {
+          "stage": "reset_input",
+          "at": "2026-08-12T14:21:35.186097+00:00"
+        },
+        {
+          "stage": "fetch_original",
+          "at": "2026-08-12T14:21:36.689201+00:00"
+        },
+        {
+          "stage": "extract_claim",
+          "at": "2026-08-12T14:21:36.989621+00:00"
+        },
+        {
+          "stage": "checkability",
+          "at": "2026-08-12T14:21:36.992526+00:00"
+        },
+        {
+          "stage": "parallel_collection",
+          "at": "2026-08-12T14:21:36.994598+00:00"
+        },
+        {
+          "stage": "evidence_normalization",
+          "at": "2026-08-12T14:22:01.266595+00:00"
+        },
+        {
+          "stage": "evidence_review",
+          "at": "2026-08-12T14:22:03.482079+00:00"
+        },
+        {
+          "stage": "adjudicate",
+          "at": "2026-08-12T14:22:03.492709+00:00"
+        },
+        {
+          "stage": "timeline",
+          "at": "2026-08-12T14:22:03.494884+00:00"
+        },
+        {
+          "stage": "explain",
+          "at": "2026-08-12T14:22:03.496714+00:00"
+        },
+        {
+          "stage": "report",
+          "at": "2026-08-12T14:22:06.232883+00:00"
+        }
+      ],
+      "branch_status": {
+        "rag": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:36.996091+00:00",
+          "finished_at": "2026-08-12T14:21:36.998280+00:00",
+          "duration_ms": 2,
+          "result_count": 2,
+          "error_code": null
+        },
+        "web": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:36.998302+00:00",
+          "finished_at": "2026-08-12T14:22:01.260053+00:00",
+          "duration_ms": 24262,
+          "result_count": 3,
+          "error_code": null
+        },
+        "classifier": {
+          "status": "skipped",
+          "result_count": 0
+        },
+        "authority": {
+          "status": "completed",
+          "started_at": "2026-08-12T14:21:37.012823+00:00",
+          "finished_at": "2026-08-12T14:21:54.808301+00:00",
+          "duration_ms": 17795,
+          "result_count": 1,
+          "error_code": null
+        }
+      }
+    }
+  },
+  {
+    "case_id": "boundary-opinion",
+    "title": "非事实表达边界",
+    "category": "boundary",
+    "input": {
+      "claim": "我觉得这部电影很无聊",
+      "source_url": null
+    },
+    "recorded_at": "2026-08-12T14:21:13.420873+00:00",
+    "run_id": "98642e7fdc2b45ae93368293b158db7c",
+    "source_kind": "archived_real_run",
+    "duration_ms": 1513,
+    "degradation_codes": [],
+    "all_checks_passed": true,
+    "report": {
+      "schema_version": "rumorbuster-report-v3",
+      "claim": {
+        "normalized_claim": "主张： 我觉得这部电影很无聊",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "主张： 我觉得这部电影很无聊",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": null,
+        "domain": "general",
+        "domain_reason": "未命中需要专门权威检索的领域关键词"
+      },
+      "checkability": {
+        "claim": "主张： 我觉得这部电影很无聊",
+        "claim_type": "opinion",
+        "checkability": "not_a_factual_claim",
+        "reason": "主张主要表达个人评价，缺少统一客观真假标准。",
+        "claim_context": {
+          "normalized_claim": "主张： 我觉得这部电影很无聊",
+          "subclaims": [
+            {
+              "id": "claim-1",
+              "text": "主张： 我觉得这部电影很无聊",
+              "material": true
+            }
+          ],
+          "temporality": "unknown",
+          "event_date": null,
+          "source_url": null,
+          "domain": "general",
+          "domain_reason": "未命中需要专门权威检索的领域关键词"
+        }
+      },
+      "domain_route": {
+        "domain": "general",
+        "reason": "未命中需要专门权威检索的领域关键词"
+      },
+      "capabilities": {
+        "web_search": true,
+        "web_fetch": true,
+        "classifier": false,
+        "rag": true,
+        "authority_research": true,
+        "evidence_critic": true
+      },
+      "original_page": null,
+      "research_branches": {},
+      "rag": null,
+      "classifier_signal": null,
+      "evidence": [],
+      "evidence_review": null,
+      "decision": {
+        "verdict": "非事实性表达",
+        "strength": "not_applicable",
+        "accepted_evidence_ids": [],
+        "excluded_evidence": [],
+        "reason_codes": ["not_a_factual_claim"],
+        "classifier_consistency": "not_comparable",
+        "explanation": "主张主要表达个人评价，缺少统一客观真假标准。",
+        "subclaim_decisions": {}
+      },
+      "timeline": {
+        "timeline_status": "insufficient",
+        "events": [],
+        "note": "没有足够的带日期可追溯事件。"
+      },
+      "limitations": [],
+      "workflow_trace": [
+        {
+          "stage": "reset_input",
+          "at": "2026-08-12T14:21:14.201143+00:00"
+        },
+        {
+          "stage": "extract_claim",
+          "at": "2026-08-12T14:21:14.914271+00:00"
+        },
+        {
+          "stage": "checkability",
+          "at": "2026-08-12T14:21:14.917081+00:00"
+        },
+        {
+          "stage": "report",
+          "at": "2026-08-12T14:21:14.919707+00:00"
+        }
+      ],
+      "explanation": "主张主要表达个人评价，缺少统一客观真假标准。"
+    },
+    "workflow": {
+      "run_id": "98642e7fdc2b45ae93368293b158db7c",
+      "stage": "report",
+      "degradation_codes": [],
+      "trace": [
+        {
+          "stage": "reset_input",
+          "at": "2026-08-12T14:21:14.201143+00:00"
+        },
+        {
+          "stage": "extract_claim",
+          "at": "2026-08-12T14:21:14.914271+00:00"
+        },
+        {
+          "stage": "checkability",
+          "at": "2026-08-12T14:21:14.917081+00:00"
+        },
+        {
+          "stage": "report",
+          "at": "2026-08-12T14:21:14.919707+00:00"
+        }
+      ],
+      "branch_status": {}
+    }
+  }
+]
