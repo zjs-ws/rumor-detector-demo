@@ -1,5 +1,24 @@
-export const RUMORBUSTER_BASE_URL = "http://localhost:3000";
+export const DEFAULT_RUMOR_BUSTER_BASE_URL = "http://localhost:8080";
+export const RUMORBUSTER_BASE_URL = DEFAULT_RUMOR_BUSTER_BASE_URL;
 export const MAX_SELECTION_LENGTH = 2000;
+
+export function normalizeRumorBusterBaseUrl(value) {
+  if (!value) {
+    return null;
+  }
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return null;
+    }
+    url.hash = "";
+    url.search = "";
+    url.pathname = "/";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return null;
+  }
+}
 
 function normalizeSourceUrl(sourceUrl) {
   if (!sourceUrl) {
@@ -27,7 +46,12 @@ export function buildRumorBusterUrl(
     return null;
   }
 
-  const target = new URL("/workspace/chats/new", baseUrl);
+  const normalizedBaseUrl = normalizeRumorBusterBaseUrl(baseUrl);
+  if (!normalizedBaseUrl) {
+    return null;
+  }
+
+  const target = new URL("/workspace/chats/new", normalizedBaseUrl);
   const params = new URLSearchParams();
   const truncated = claim.length > MAX_SELECTION_LENGTH;
 

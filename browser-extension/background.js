@@ -1,4 +1,5 @@
 import { buildRumorBusterUrl } from "./link.js";
+import { RUMORBUSTER_BASE_URL } from "./link.js";
 
 const MENU_ID = "rumorbuster-verify-selection";
 
@@ -20,8 +21,17 @@ chrome.contextMenus.onClicked.addListener((info) => {
     return;
   }
 
-  const targetUrl = buildRumorBusterUrl(info.selectionText, info.pageUrl);
-  if (targetUrl) {
-    void chrome.tabs.create({ url: targetUrl });
-  }
+  chrome.storage.sync.get(
+    { rumorbusterBaseUrl: RUMORBUSTER_BASE_URL },
+    ({ rumorbusterBaseUrl }) => {
+      const targetUrl = buildRumorBusterUrl(
+        info.selectionText,
+        info.pageUrl,
+        rumorbusterBaseUrl,
+      );
+      if (targetUrl) {
+        void chrome.tabs.create({ url: targetUrl });
+      }
+    },
+  );
 });

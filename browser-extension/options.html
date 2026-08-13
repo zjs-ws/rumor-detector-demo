@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RumorBuster 扩展设置</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">RUMORBUSTER EXTENSION</p>
+      <h1>划词核验设置</h1>
+      <p class="description">
+        配置 RumorBuster
+        网页入口。扩展只负责传递选中文字和来源页面，不会直接调用模型或核验 API。
+      </p>
+      <form id="settings-form">
+        <label for="base-url">RumorBuster 地址</label>
+        <input
+          id="base-url"
+          name="base-url"
+          type="url"
+          required
+          placeholder="http://localhost:8080"
+          spellcheck="false"
+        />
+        <p class="hint">只接受 HTTP 或 HTTPS 地址，不要填写 API Key。</p>
+        <div class="actions">
+          <button type="submit">保存设置</button>
+          <button id="reset-button" type="button" class="secondary">
+            恢复本地默认值
+          </button>
+        </div>
+        <p id="status" role="status" aria-live="polite"></p>
+      </form>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>
