@@ -2,12 +2,23 @@
 
 面向网页端与浏览器划词插件的谣言检测智能体。
 
-课程版本的完整开发、评测、材料与提交安排见
-[课程项目完善与提交计划](docs/COURSE_PROJECT_PLAN.md)。
+当前协作版本位于 `feature/import-mcp-frontend`，交接基线提交为
+`96a875c`。课程开发、评测和答辩安排见
+[课程项目计划](docs/COURSE_PROJECT_PLAN.md)，代码归属和接手顺序见
+[工程交接文档](docs/CLAUDE_HANDOFF.md)。
 
 用户可以在网页端粘贴新闻、社交媒体消息或其他文本进行核验，也可以通过浏览器扩展选中文字并直接进入核验工作区。当前分支已提供 RumorBuster 网页端、浏览器划词入口、智能体后端、API Gateway、模型调用与本地持久化能力。
 
 ## 当前状态
+
+截至 2026-08-13：
+
+- RumorBuster 定向回归测试共 113 项通过；
+- Ruff、ESLint、TypeScript 和 Next.js 生产构建通过；
+- `compose.prod.yaml` 配置校验通过；
+- 训练集和原测试集保持冻结，部署前后的 SHA-256 一致；
+- 本地假 HTTP 服务已验证 V3 确实调用 ModelScope `/v1/chat`，且分类标签不能覆盖规则结论；
+- ModelScope 真实权重的 GPU 推理、200 条模型评测和三案例双跑尚未执行，不能把本地适配测试表述为真实模型指标。
 
 已验证：
 
@@ -43,11 +54,11 @@
 
 继续开发中：
 
-- 注册与登录系统
-- 更稳定的可选搜索提供商与网页原文抓取
-- 微调谣言分类模型的 GPU 服务真机部署与远程验收（适配代码已完成）
-- 更大规模知识库、真实网页端到端评测与结果归档
-- 生产环境鉴权
+- P0：短租 GPU，完成微调模型真机部署、9 条双跑冒烟和冻结评测集；
+- P0：三个真实网页案例各运行两次并保存脱敏报告；
+- P1：更稳定的可选搜索提供商和网页正文抓取；
+- P1：完善报告、PPT、视频和答辩材料；
+- P2：注册登录、生产鉴权、MCP 和更大规模知识库。
 
 > 当前版本为开发预览版，不建议直接暴露到公网。
 
@@ -55,9 +66,25 @@
 
 1. 克隆并进入项目：
 
-   `git clone -b enhanced_one https://github.com/zjs-ws/rumor-detector-demo.git`
+   ```bash
+   git clone \
+     --branch feature/import-mcp-frontend \
+     --recurse-submodules \
+     https://github.com/zjs-ws/rumor-detector-demo.git
 
-   `cd rumor-detector-demo`
+   cd rumor-detector-demo
+   ```
+
+   已经克隆过仓库的队友执行：
+
+   ```bash
+   git fetch origin
+   git switch feature/import-mcp-frontend
+   git pull --ff-only
+   git submodule update --init --recursive
+   ```
+
+   `模型微调/数据集` 是冻结的独立数据仓库，以 Git 子模块方式引用。不要在主项目中重新生成、移动或提交该数据集。
 
 2. 创建本地配置：
 
@@ -75,6 +102,36 @@
 4. 一键启动：
 
    `./scripts/quickstart.sh`
+
+5. 确认服务和定向测试：
+
+   ```bash
+   docker compose ps
+   docker compose -f compose.prod.yaml config -q
+
+   docker compose -f compose.prod.yaml run --rm -T \
+     -v "$PWD/packages:/app/packages:ro" \
+     -v "$PWD/tests:/app/tests:ro" \
+     -v "$PWD/scripts:/app/scripts:ro" \
+     -v "$PWD/evaluation:/app/evaluation:ro" \
+     langgraph uv run pytest \
+       tests/test_rumor_*.py \
+       tests/test_finetuned_classifier_evaluation.py \
+       tests/test_checks_api.py \
+       tests/test_demo_runner.py \
+       tests/test_jina_web_fetch.py \
+       tests/test_subagent_executor.py -q
+   ```
+
+## 队友接手顺序
+
+1. 先阅读 [V3 工作流说明](docs/WORKFLOW_V3_IMPLEMENTATION.md)和[三层架构归属](docs/ARCHITECTURE_OWNERSHIP.md)。
+2. 运行上面的 113 项定向回归，确认环境没有破坏当前基线。
+3. 不修改训练集、原测试集和既有 Benchmark，不重新训练模型。
+4. 有 GPU 资源后，按[微调模型部署手册](docs/MODELSCOPE_CLASSIFIER_DEPLOYMENT.md)建立 SSH 隧道并运行真实验收。
+5. 只把阻断测试、真机结果和脱敏演示产物提交到当前协作分支；不要提交密钥、运行数据库或模型权重。
+
+本仓库没有分发三篇本地 Word 论文原文，它们已被 `模型微调/*.docx` 规则忽略。仓库只保留不含论文全文的[论文经验落地矩阵](docs/PAPER_TO_IMPLEMENTATION.md)。
 
 ## 使用 DeepSeek 驱动 Claude Code
 
@@ -153,6 +210,9 @@ python3 scripts/check_production_ready.py
 - DeepSeek 模式启动 Claude Code：`./scripts/claude-deepseek.sh`
 - URL 核验端到端冒烟测试：`docker compose run --rm -T -v "$PWD/scripts:/app/scripts:ro" -e LANGGRAPH_BASE_URL=http://langgraph:2024 langgraph uv run python scripts/smoke_url_factcheck.py`
 - 固定三案例 V2/V3 留痕：`docker compose -f compose.prod.yaml run --rm -T -v "$PWD/evaluation:/app/evaluation" langgraph uv run python scripts/run_demo_cases.py --base-url http://langgraph:2024`
+- 真实模型 9 条双跑冒烟：`python3 scripts/run_classifier_smoke.py --base-url http://127.0.0.1:18000 --repeats 2`
+- 冻结早期预警集评测：`python3 scripts/evaluate_finetuned_classifier.py --base-url http://127.0.0.1:18000 --dataset early`
+- 冻结对抗集评测：`python3 scripts/evaluate_finetuned_classifier.py --base-url http://127.0.0.1:18000 --dataset adversarial`
 
 ## 配置安全
 
@@ -166,9 +226,13 @@ python3 scripts/check_production_ready.py
 禁止提交：
 
 - `.env`
+- `.env.production`
 - `config.yaml`
+- `.claude/deepseek.env`
 - `runtime/`
 - `local-backups/`
+- `模型微调/*.docx`
+- 模型权重
 
 每位开发者使用自己的 API Key。真实密钥只保存在本地 `.env` 中。
 
@@ -178,6 +242,8 @@ python3 scripts/check_production_ready.py
 - `packages/harness/`：智能体运行核心
 - `packages/harness/deerflow/agents/rumor_agent/`：谣言检测智能体
 - `evaluation/`：可核验性、RAG、证据规则，以及按 V3 计划固定组成的 40 条综合离线评测清单
+- `模型微调/数据集/`：冻结训练集和原测试集子模块；首次克隆必须使用 `--recurse-submodules`
+- `模型微调/bench mark/`：既有课程 Benchmark，当前仅运行、不重新生成
 - `frontend/`：RumorBuster Next.js 网页端
 - `browser-extension/`：Chrome Manifest V3 划词核验扩展
 - `compose.yaml`：本地 Docker 编排
@@ -197,6 +263,7 @@ python3 scripts/check_production_ready.py
 - `docs/PRODUCTION_DEPLOYMENT.md`：云主机部署、统一 API、备份恢复与故障处理
 - `docs/MODELSCOPE_CLASSIFIER_DEPLOYMENT.md`：短租 GPU、SSH 隧道、真实模型调用与验收
 - `docs/SOCIAL_CONTEXT_FUTURE.md`：未启用的评论质证扩展边界和 Fixture
+- `docs/PAPER_TO_IMPLEMENTATION.md`：三篇论文思想、已实现内容和未实现边界
 
 ## 已知限制
 
