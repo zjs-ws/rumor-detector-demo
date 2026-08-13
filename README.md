@@ -1,6 +1,6 @@
 # RumorBuster
 
-面向网页端与浏览器划词插件的谣言检测智能体。
+面向网页端与浏览器划词插件的可追溯事实核验工作台。
 
 当前协作版本位于 `feature/import-mcp-frontend`，交接基线提交为
 `96a875c`。课程开发、评测和答辩安排见
@@ -8,6 +8,10 @@
 [工程交接文档](docs/CLAUDE_HANDOFF.md)。
 
 用户可以在网页端粘贴新闻、社交媒体消息或其他文本进行核验，也可以通过浏览器扩展选中文字并直接进入核验工作区。当前分支已提供 RumorBuster 网页端、浏览器划词入口、智能体后端、API Gateway、模型调用与本地持久化能力。
+
+| 证据实验室首页                                                         | 结构化历史实测报告                                                              |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| ![RumorBuster 亮色首页](docs/screenshots/frontend/home-light-1280.png) | ![RumorBuster 暗色结构化报告](docs/screenshots/frontend/showcase-dark-1440.png) |
 
 ## 当前状态
 
@@ -50,6 +54,11 @@
 - 至少三个可追溯事件时生成传播演化时间线，否则明确显示时间线证据不足
 - 结构化证据卡片、排除原因、Markdown/JSON 下载和打印
 - Chrome 浏览器划词核验入口
+- “证据实验室”亮暗双主题界面：首屏突出规则结论、证据强度与可追溯来源，技术审计默认折叠
+- V3 七阶段执行进度和 RAG、普通网页、权威来源、LoRA 四个并行分支状态
+- 三个带真实运行日期的历史实测案例；存档结果与实时核验明确区分并复用同一报告组件
+- 浏览器扩展可在设置页修改 RumorBuster 地址，默认使用生产编排入口 `http://localhost:8080`
+- 正式 Markdown/JSON 导出不包含模型 reasoning、工具参数、系统提示词、密钥或服务地址
 - Apple Silicon Docker 环境
 
 继续开发中：
@@ -168,11 +177,14 @@ nano .claude/deepseek.env
 
 ## 安装浏览器划词扩展
 
-1. 启动 RumorBuster，确认 `http://localhost:3000` 可以访问。
+1. 启动生产编排，确认 `http://localhost:8080` 可以访问。
 2. 在 Chrome 打开 `chrome://extensions`。
 3. 开启“开发者模式”，点击“加载已解压的扩展程序”。
 4. 选择仓库中的 `browser-extension/` 目录。
 5. 在任意网页选中文字，右键选择“用 RumorBuster 核验”。
+
+如果入口不是本机 `8080`，在扩展详情页打开“扩展程序选项”，填写新的
+HTTP(S) 基础地址。地址保存在 `chrome.storage.sync`，更换服务器时无需重新打包。
 
 扩展会打开新对话并预填原文与来源页面，不会自动发送。选中文字通过 URL
 fragment 传递，不会进入本地服务的 HTTP 请求或访问日志；前端读取后会立即
@@ -180,10 +192,14 @@ fragment 传递，不会进入本地服务的 HTTP 请求或访问日志；前�
 
 ## 服务地址
 
-- RumorBuster 网页端：`http://localhost:3000`
-- Gateway 健康检查：`http://localhost:8001/health`
-- Gateway API 文档：`http://localhost:8001/api/docs`
-- 内部智能体开发接口：`http://localhost:2024/docs`
+- 生产统一入口：`http://localhost:8080`
+- 历史实测案例：`http://localhost:8080/workspace/showcase`
+- 聚合健康检查：`http://localhost:8080/healthz`
+- 统一核验 API：`http://localhost:8080/api/v1/checks`
+- LangGraph 流式协议：`http://localhost:8080/api/langgraph/*`
+
+开发编排可按 Compose 配置直接访问前端、Gateway 与 LangGraph 端口；最终用户和
+浏览器扩展应使用 Nginx 的 `8080` 单入口。
 
 `2024` 端口仅用于后端开发调试，不应直接暴露给最终用户。
 
@@ -213,6 +229,9 @@ python3 scripts/check_production_ready.py
 - 真实模型 9 条双跑冒烟：`python3 scripts/run_classifier_smoke.py --base-url http://127.0.0.1:18000 --repeats 2`
 - 冻结早期预警集评测：`python3 scripts/evaluate_finetuned_classifier.py --base-url http://127.0.0.1:18000 --dataset early`
 - 冻结对抗集评测：`python3 scripts/evaluate_finetuned_classifier.py --base-url http://127.0.0.1:18000 --dataset adversarial`
+- 前端纯函数测试：`corepack pnpm --dir frontend test`
+- 浏览器扩展测试：`node --test browser-extension/tests/*.mjs`
+- 前端质量检查：`corepack pnpm --dir frontend format && corepack pnpm --dir frontend lint && corepack pnpm --dir frontend typecheck && corepack pnpm --dir frontend build`
 
 ## 配置安全
 
@@ -272,7 +291,7 @@ python3 scripts/check_production_ready.py
 3. 普通研究员预算为 55 秒、1 次搜索和最多 4 次正文抓取；医学、法律、金融、政策与科学等专业主张额外并行启用权威研究员，预算为 55 秒、1 次搜索和最多 2 次抓取。补检最多一次、35 秒。搜索摘要只作线索，不能凑正式证据门槛。
 4. 智能体已加入模型/工具调用上限，后续仍需补齐真实证据源后的复杂流程测试。
 5. 当前智能体服务使用本地开发模式和无鉴权配置。
-6. 注册登录尚未接入；浏览器扩展当前为本地加载版，默认连接 `http://localhost:3000`。
+6. 注册登录尚未接入；浏览器扩展当前为本地加载版，默认连接 `http://localhost:8080`，可在扩展设置中更换为未来的云端地址。
 7. 每轮最多抓取用户提供的 1 个公开 HTTP(S) URL，正文最多保留 12,000 个字符。登录墙、强动态渲染或阻止爬取的网页可能无法读取；私网、localhost 与非 HTTP(S) 地址会被拒绝。
 8. 本地 RAG 是透明可解释的 TF-IDF 基线，不是语义向量大模型；命中历史记录不会直接决定当前主张。
 9. Sandbox 中间件已装配，但不是事实裁决核心；LocalSandbox 不是容器级安全边界，公网环境应使用更强隔离 Provider。
