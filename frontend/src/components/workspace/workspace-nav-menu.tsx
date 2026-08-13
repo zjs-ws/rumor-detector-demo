@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BlocksIcon,
   BugIcon,
   ChevronsUpDown,
   GlobeIcon,
@@ -9,6 +10,7 @@ import {
   Settings2Icon,
   SettingsIcon,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import {
@@ -96,6 +98,12 @@ export function WorkspaceNavMenu() {
                   >
                     <Settings2Icon />
                     {t.common.settings}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/workspace/agents">
+                      <BlocksIcon />
+                      {t.workspace.frameworkExtensions}
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <a

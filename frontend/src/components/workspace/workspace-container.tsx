@@ -93,7 +93,7 @@ export function WorkspaceHeader({
       <div className="pr-4">
         <Tooltip content={t.workspace.githubTooltip}>
           <a
-            href="https://github.com/bytedance/deer-flow"
+            href="https://github.com/zjs-ws/rumor-detector-demo"
             target="_blank"
             rel="noopener noreferrer"
             className="opacity-75 transition hover:opacity-100"
@@ -131,5 +131,6 @@ function nameOfSegment(
   if (!segment) return t.common.home;
   if (segment === "workspace") return t.breadcrumb.workspace;
   if (segment === "chats") return t.breadcrumb.chats;
+  if (segment === "showcase") return t.sidebar.showcase;
   return segment[0]?.toUpperCase() + segment.slice(1);
 }

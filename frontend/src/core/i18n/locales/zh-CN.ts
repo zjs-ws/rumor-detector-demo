@@ -51,9 +51,11 @@ export const zhCN: Translations = {
 
   // Welcome
   welcome: {
-    greeting: "你好，欢迎回来！",
+    eyebrow: "Evidence-first verification",
+    greeting: "把一条说法，拆成可复核的证据链",
     description:
-      "欢迎使用 RumorBuster。粘贴新闻、聊天记录、网传消息或具体说法，\n系统会分析可疑点，并在搜索服务可用时检索公开来源。\n搜索结果可能不完整，结论仅供核验参考。",
+      "粘贴文字或网页链接。RumorBuster 会并行检索历史记录与公开来源，\n再由确定性规则裁决；模型只负责辅助分析和解释。",
+    capabilities: ["历史谣言 RAG", "普通与权威来源取证", "规则裁决与引用追溯"],
 
     createYourOwnSkill: "创建核验技能",
     createYourOwnSkillDescription:
@@ -104,12 +106,12 @@ export const zhCN: Translations = {
     followupConfirmReplace: "替换并发送",
     suggestions: [
       {
-        suggestion: "新闻核验",
-        prompt: "请核验这条新闻是否可信：[粘贴新闻内容]",
+        suggestion: "健康传言",
+        prompt: "请核验：喝高度白酒可以杀死体内的新冠病毒。",
         icon: PenLineIcon,
       },
       {
-        suggestion: "网传消息",
+        suggestion: "网传说法",
         prompt:
           "请核验这条网传消息，并区分已证实、未证实和存疑部分：[粘贴内容]",
         icon: MicroscopeIcon,
@@ -120,8 +122,8 @@ export const zhCN: Translations = {
         icon: ShapesIcon,
       },
       {
-        suggestion: "截图文字",
-        prompt: "请核验图片或截图中的文字说法：[粘贴文字或上传图片]",
+        suggestion: "网页链接",
+        prompt: "请核验这个网页中的核心说法：[粘贴公开网页 URL]",
         icon: GraduationCapIcon,
       },
     ],
@@ -155,11 +157,12 @@ export const zhCN: Translations = {
 
   // Sidebar
   sidebar: {
-    newChat: "新对话",
-    chats: "对话",
-    recentChats: "最近的对话",
+    newChat: "新建核验",
+    chats: "历史核验",
+    recentChats: "最近核验",
     demoChats: "演示对话",
     agents: "检测助手",
+    showcase: "历史实测案例",
   },
 
   // Agents
@@ -206,6 +209,7 @@ export const zhCN: Translations = {
     reportIssue: "报告问题",
     contactUs: "联系我们",
     about: "关于 RumorBuster",
+    frameworkExtensions: "框架扩展能力",
   },
 
   // Conversation

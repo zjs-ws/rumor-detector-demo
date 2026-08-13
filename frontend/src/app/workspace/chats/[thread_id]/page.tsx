@@ -93,7 +93,12 @@ export default function ChatPage() {
             </div>
           </header>
           <main className="flex min-h-0 max-w-full grow flex-col">
-            <div className="flex size-full justify-center">
+            <div
+              className={cn(
+                "flex size-full justify-center",
+                isNewThread && "rumor-lab-grid",
+              )}
+            >
               <MessageList
                 className={cn("size-full", !isNewThread && "pt-10")}
                 threadId={threadId}
@@ -103,10 +108,10 @@ export default function ChatPage() {
             <div className="absolute right-0 bottom-0 left-0 z-30 flex justify-center px-4">
               <div
                 className={cn(
-                  "relative w-full",
+                  "relative w-full min-w-0",
                   isNewThread && "-translate-y-[calc(50vh-96px)]",
                   isNewThread
-                    ? "max-w-(--container-width-sm)"
+                    ? "max-w-[calc(100vw-2rem)] sm:max-w-(--container-width-sm)"
                     : "max-w-(--container-width-md)",
                 )}
               >
@@ -122,9 +127,13 @@ export default function ChatPage() {
                   </div>
                 </div>
                 <InputBox
-                  className={cn("bg-background/5 w-full -translate-y-4")}
+                  className={cn(
+                    "w-full -translate-y-4",
+                    isNewThread ? "rumor-glass" : "bg-background/90 shadow-lg",
+                  )}
                   isNewThread={isNewThread}
                   threadId={threadId}
+                  showRuntimeControls={false}
                   autoFocus={isNewThread}
                   status={
                     thread.error
@@ -137,7 +146,10 @@ export default function ChatPage() {
                   extraHeader={
                     isNewThread && <Welcome mode={settings.context.mode} />
                   }
-                  disabled={env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true" || isUploading}
+                  disabled={
+                    env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY === "true" ||
+                    isUploading
+                  }
                   onContextChange={(context) => setSettings("context", context)}
                   onSubmit={handleSubmit}
                   onStop={handleStop}

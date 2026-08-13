@@ -40,8 +40,10 @@ export interface Translations {
 
   // Welcome
   welcome: {
+    eyebrow: string;
     greeting: string;
     description: string;
+    capabilities: [string, string, string];
     createYourOwnSkill: string;
     createYourOwnSkillDescription: string;
   };
@@ -109,6 +111,7 @@ export interface Translations {
     chats: string;
     demoChats: string;
     agents: string;
+    showcase: string;
   };
 
   // Agents
@@ -153,6 +156,7 @@ export interface Translations {
     reportIssue: string;
     contactUs: string;
     about: string;
+    frameworkExtensions: string;
   };
 
   // Conversation

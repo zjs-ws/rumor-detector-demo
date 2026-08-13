@@ -51,9 +51,15 @@ export const enUS: Translations = {
 
   // Welcome
   welcome: {
-    greeting: "Welcome back!",
+    eyebrow: "Evidence-first verification",
+    greeting: "Turn a claim into a traceable evidence chain",
     description:
-      "Welcome to RumorBuster. Paste a news report, forwarded message, chat excerpt, or specific claim.\nWe will analyze suspicious details and search public sources when the search service is available.\nSearch results may be incomplete, so use the conclusion as a fact-checking aid.",
+      "Paste text or a public URL. RumorBuster searches historical records and public sources in parallel,\nthen applies deterministic evidence rules. Models only assist with analysis and explanation.",
+    capabilities: [
+      "Verified-rumor RAG",
+      "Web and authority research",
+      "Rule adjudication and citations",
+    ],
 
     createYourOwnSkill: "Create a Verification Skill",
     createYourOwnSkillDescription:
@@ -109,9 +115,9 @@ export const enUS: Translations = {
     followupConfirmReplace: "Replace & send",
     suggestions: [
       {
-        suggestion: "News check",
+        suggestion: "Health claim",
         prompt:
-          "Please assess whether this news report is credible: [paste report]",
+          "Verify this claim: drinking high-proof alcohol can kill the coronavirus inside the body.",
         icon: PenLineIcon,
       },
       {
@@ -127,9 +133,8 @@ export const enUS: Translations = {
         icon: ShapesIcon,
       },
       {
-        suggestion: "Screenshot text",
-        prompt:
-          "Please assess the claim shown in this image or screenshot: [paste text or attach image]",
+        suggestion: "Web URL",
+        prompt: "Verify the central claim on this page: [paste a public URL]",
         icon: GraduationCapIcon,
       },
     ],
@@ -163,11 +168,12 @@ export const enUS: Translations = {
 
   // Sidebar
   sidebar: {
-    newChat: "New chat",
-    chats: "Chats",
-    recentChats: "Recent chats",
+    newChat: "New verification",
+    chats: "Verification history",
+    recentChats: "Recent checks",
     demoChats: "Demo chats",
     agents: "Verification assistants",
+    showcase: "Archived real cases",
   },
 
   // Agents
@@ -219,6 +225,7 @@ export const enUS: Translations = {
     reportIssue: "Report a issue",
     contactUs: "Contact us",
     about: "About RumorBuster",
+    frameworkExtensions: "Framework extensions",
   },
 
   // Conversation
