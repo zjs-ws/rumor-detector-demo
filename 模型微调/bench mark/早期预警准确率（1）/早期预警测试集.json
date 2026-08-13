@@ -1,0 +1,802 @@
+[
+  {
+    "text": "white house is aglow in the colors of the rainbow celebrating the supreme court's same-sex marriage decision.",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "nurses save lives of all different races and colors, but <> thinks we belong in a",
+    "true_label": "unknown"
+  },
+  {
+    "text": "懂得沙士比亞的計程車司機",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "five people killed and two others seriously wounded in school shooting in western canada, pm justin trudeau says",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "man at salad bar has to say every item aloud as he adds it to salad",
+    "true_label": "unknown"
+  },
+  {
+    "text": "first photo from the malaysia airlines crash site in ukraine. via",
+    "true_label": "rumor"
+  },
+  {
+    "text": "solo cups have been red for decades. if starbucks was taking a shot at christmas, solo shot first.",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【全国首个五星级旅游厕所建成 耗资200万】12月5日，全国首个五星级旅游厕所——江苏省盐城大纵湖景区旅游厕所建成。该系列厕所计划共建造四个，每个投资200多万元。厕所分四个功能区：解忧如厕区，公共休闲区，无障碍区，母婴休息区。详见：",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "darren wilson got $500k from abc for interview, plus $500k for donations... he is a killer millionaire, literally",
+    "true_label": "rumor"
+  },
+  {
+    "text": "soldier killed at war memorial identified as cpl. nathan cirillo -",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【见过么？10线合体成功】今天，上海地铁10号线发生故障，两车成功合体，真心恐怖。（拍摄： ）",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【已解救4名被困人员】据 ：目前已调18中队、185名消防员、37辆消防车和搜救犬分队赶赴现场。13时13分，现场报称已解救出4名被困人员（1人轻伤，其他3人无受伤），另外发现还有1名群众被困，正在营救。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【《火星救援》中真实的NASA科技】太空农场、水回收、氧气生成……为了生存，马特达蒙在火星上整出了各种妖蛾子（雾），然而这些黑科技，其实早就不是什么科学幻想了→_→",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "尼玛太帅了！！[鼓掌] 中国女球童低调捡球，轻功震撼全场！！！[震撼] 简直是开挂。。。得此女者得天下，真心碉堡了好么！！[怒吼] 【更多精彩，关注 】",
+    "true_label": "rumor"
+  },
+  {
+    "text": "bbc reports that broadcaster sir terry wogan has died of cancer aged 77",
+    "true_label": "unknown"
+  },
+  {
+    "text": "很少,只是刚在qq群里忽然对这小孩生出恻隐之心...真心希望能帮到他...",
+    "true_label": "rumor"
+  },
+  {
+    "text": "uk mother tareena shakil, who took son to syria, guilty of joining so-called islamic state and encouraging terror",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【清华大学实验室发生爆炸1人死亡】据北京市消防部门，今天上午，清华大学一实验室发生火灾爆炸事故，事故造成一名实验人员死亡，目前火已经被扑灭。爆炸的具体原因还在调查中。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "sydney siege: police enter cafe as hostages flee the scene, gunfire heard, reports of an injured person – live",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "爆料称：小姑娘被开除了，为正义付出代价 。谦谦女是余姚工商银行的员工，当她看到这张支票的时候，十分气愤，吃顿鲍鱼五万多!财政局怎么能这样糟蹋纳税人的钱呢?于是上传了这张支票，现在她已经被银行开除，她的微博也删除了全部内容，真为她担心",
+    "true_label": "rumor"
+  },
+  {
+    "text": "zika virus \"spreading explosively\" around the americas, who director-general says.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "幹這種事，需要一個好環境，需要裸著，需要一前一後… ((是在幹什麼事呢[群体围观] [得意地笑] 我挑背景挑了好久XDDD",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "最近出现骗子让单独带孩子的家长帮忙照相，当家长拿着相机拍照的时候就会出现眩晕。然后孩子就被抱走了。沈阳出现两起了。请告诉周围妈妈们注意！ 深圳也有妈妈差点上当 到其他群让各位爸爸和妈妈们注意一下，这个得发发 ！ 投稿",
+    "true_label": "rumor"
+  },
+  {
+    "text": "meria: signs is using chemical weapons.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "the government's spare room subsidy or has been declared discriminatory by court of appeal judges following two legal challenges",
+    "true_label": "unknown"
+  },
+  {
+    "text": "【除了知识 我还要教会他们坚强[good]】广西贺州教师覃雪梅，因患重度癫痫，她无法正常行走和写板书。确诊十年来，她坚持上课、改作业、经常去学生家家访。因病加重，她曾在课堂晕倒，学校考虑为她调岗她却婉言拒绝。她说梦想就是把孩子们带出山外，用知识改变命运。为她点赞！(央视记者廖汨)",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "上天涯果然被毁三观了。。。波士顿马拉松爆炸案的“新闻”演员又被认出来了，更有众多疑点分析。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "end of the line for land rover defender as emission rules kill off iconic 4x4",
+    "true_label": "unknown"
+  },
+  {
+    "text": "【最新:李天一案女主角撤销控诉】认证博友 ：\"著名编辑透露，李天一案女主角撤销控诉，已达和解意向。因未满18岁，且当时已醉酒，即便诉讼被重判的可能性极低，李天一及其他4名嫌疑人家长的奔走，最终联系上女孩父母进行长谈，受害人终得到极大物质补偿，包括落实北京户口，工作及一套房产。\"",
+    "true_label": "rumor"
+  },
+  {
+    "text": "r.i.p paul walker he died doing what he loved",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "us trying to locate americans missing in baghdad after al-arabiya reports they may have been kidnapped by militias",
+    "true_label": "unknown"
+  },
+  {
+    "text": "5楼: 请帮忙,披露中国的贪官: 今天又两个中江县红十字会的人来我们这里购买了1万多元的救灾药品，但要求我们开5万多元的发票。我们（成都制药一厂）没有答应，结果由隔壁通化一家药厂经营部开给他们了。 强烈谴责中国红十字会，并要中国红十字会对所有捐款去向做出...",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【监控曝光！，共用饮用水互相吸口罩[吃惊]】据ABC新闻报道，当地时间5月11日，美国加州洛杉矶卡斯泰克县监狱公布两则视频，视频显示一些服刑人员正在试图通过饮水、嗅口罩的方式故意感染新冠病毒并企图借此离开监狱。据报道，目前已有30名囚犯确诊新冠肺炎。<'时差视频'>>网页链接",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "icymi: a dog accidentally stumbled into the middle of a local half marathon ... and earned 7th place.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "听说今天晚上一群小鲜肉要掀翻舞台，忽然想起来几年前同样站在聚光灯下的自己。少年们今天晚上尽情燃烧，享受全世界粉丝的呐喊吧。今晚十点浙江卫视，燃烧吧少年！",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "看國外新聞說：演員尼古拉斯凱奇（Nicolas Cage），滑雪身亡，1964-2013，年仅49岁。[吃惊][抓狂][思考]真的假的？！[泪][蜡烛]",
+    "true_label": "rumor"
+  },
+  {
+    "text": "a russian officer \"pushed that button deliberately\" & shot down ukrainian gov. says:",
+    "true_label": "rumor"
+  },
+  {
+    "text": "[色][色]明天的早餐就他了！操作简单，里面的酱和肉可以按喜好做成不同口味，爱芝士的你要不要试试？",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【80岁老兵：我亲眼目睹了黄继光堵枪眼】面对否定“黄继光堵枪眼”的网络谣言，高青县志愿军老战士李继德说：“我们的人上去一拨牺牲一拨”“我看见黄继光向首长请战‘我去!'”“我看见已经爬到地堡下的黄继光,猛地弓着腰起了一下子,堵上了枪眼子。”说到这里，老人用痛苦的表情连说了七八个“哎呀”。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "一分钟酸奶蛋糕，简单易学，吃货快get起来~",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "'great pacific garbage patch' researchers return with data",
+    "true_label": "rumor"
+  },
+  {
+    "text": "有谁知道这是真的吗？？我们这些被困湖北的外地人到底什么时候才能回家啊！（市政府会议精神，3月16日居民出行正常化，17日公交正常化，18日逐步企业生产和市场经营正常化，22日重点场所正常化，25日机场、高速、动车、国道正常化。）",
+    "true_label": "rumor"
+  },
+  {
+    "text": "no, has not been arrested",
+    "true_label": "rumor"
+  },
+  {
+    "text": ".joins for rally in davenport, iowa. watch live:",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "故事应该是这样的：投毒嫌疑人林森浩的本意并不是毒杀黄洋，而是同舍的另一人姜成，他曾于2012年在百度注册名为“诛姜成”，并提了很多关于有毒化合物的问题，他的本意应该也并非直接投毒致命，而是小剂量缓慢的让他中毒，最终致死，却不曾想放错了剂量，并误杀黄洋，最终造成惨剧。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "😷大家谨慎使用酒精消毒！“😱广东惠州麦地金都花园一家人用酒精全屋消毒后开空调，引起爆炸，引以为戒”深圳深圳金先生的微博视频",
+    "true_label": "rumor"
+  },
+  {
+    "text": ".<> will reportedly pose nude for sports illustrated",
+    "true_label": "unknown"
+  },
+  {
+    "text": "深圳笋岗封了！大家要注意戴好口罩！保护好自己！广州",
+    "true_label": "rumor"
+  },
+  {
+    "text": "香川真司个人集锦 德甲控球大师掌控冠军中场",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "caitlyn jenner mourns the loss of bruce: \"maybe he didn't deserve to be gone.\"",
+    "true_label": "unknown"
+  },
+  {
+    "text": "1991, book written saying trump says \"laziness is a trait in all blacks\"",
+    "true_label": "unknown"
+  },
+  {
+    "text": "up to 34 million green cards and work permits...",
+    "true_label": "rumor"
+  },
+  {
+    "text": "给每一个烦恼一段期限，在有限的时间内尽力解决，剩下的时间，请还给快乐的自己。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "黑暗料理界又一新作，“奶酪煎肠饺”。做法简单：饺子皮上放半张奶酪片，撒匀胡椒，再放上一根香肠，包好封一端口，放在油锅中滚着煎熟，金黄色出盘……号称新型增肥利器，不胖不要钱[doge]",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "“这位兄台，不是同一部剧的就不要来问我了，我很忙的好吗…”「via 慢绣雷墩」",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "香港方面称，充气大黄鸭在港不幸爆掉，乃大陆沈阳某旅行团的胡某扔烟头所致。此旅行团13日晚搭乘豪华客轮「莫利亚第」号经过大黄鸭旁，胡某向其投掷了30个点燃的烟头并向周围游客表示“不信弄不死你”，昨晚大黄鸭倒下后经导游指认港警已将其收监",
+    "true_label": "rumor"
+  },
+  {
+    "text": "'hoods off': anonymous announces operation to name kkk members",
+    "true_label": "rumor"
+  },
+  {
+    "text": "russian olympic officials concerned after learning team’s clean urine reservoir almost empty",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【钱江夜话】湖州一养殖场被检出H7N9病毒，7000只鸭子全灭。从养殖场到餐桌，家禽产业有长长的产业链，关系到无数人的生计。养殖户们眼中含泪、心头滴血，将家禽一一掩埋。谁都知道，只要一加热，病毒就活不了，可城里的餐馆，连卤蛋都取消了。理性应对、科学防疫，别让农户伤上加伤，躺着也中枪。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "stop believing what you see on facebook. rt <>: so ebola was found in hair extensions? all my bitches wear weave 😳",
+    "true_label": "rumor"
+  },
+  {
+    "text": "that powerful letter from lego to parents from the 1970s? it's real",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "ohio police officer served sandwich containing shards of glass – officer has been hospitalized -",
+    "true_label": "unknown"
+  },
+  {
+    "text": "今天台湾地震把厦门一高层震歪了！台湾震中的楼没歪，厦门的楼被震歪了，这叫啥事，且看政府和专家又有何雷人解释？[抓狂][抓狂] -天佑",
+    "true_label": "rumor"
+  },
+  {
+    "text": "家乐福发生突发事件：营业时间所有出入口用铁门封闭，原因是一名女士在结账时跟在身边的孩子突然失踪，幸亏及时报警，家乐福立刻封闭所有出入口寻找孩子，后来孩子在二楼卫生间找到，头发被剃光，衣服已经被换掉，人口贩子不知去向，团伙作案手法迅速，年关将至，请大家出入公共场合务必带好孩子。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "马伊利真无辜，可怜，文章连道歉都是抄袭的，看我微博，有图有真相",
+    "true_label": "rumor"
+  },
+  {
+    "text": "watchdog says iran has taken all steps to start implementing nuclear deal, paving way for lifting of sanctions",
+    "true_label": "unknown"
+  },
+  {
+    "text": "sister <> <> at the bash",
+    "true_label": "unknown"
+  },
+  {
+    "text": "\"we have now cut off every single path that iran could have used to build a bomb.\" — <>",
+    "true_label": "unknown"
+  },
+  {
+    "text": "five people killed and two others seriously wounded in school shooting in western canada, pm justin trudeau says",
+    "true_label": "unknown"
+  },
+  {
+    "text": "hp confirmed that it's splitting into two companies. and cutting 5,000 jobs. $hp",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【提醒！涂完花露水切勿接触明火！】夏天来临，蚊子出没。花露水必不可少！不过，花露水属易燃品，一般花露水里面的乙醇浓度在70%—75%，最低也会达到30%以上；且燃点仅为24℃。所以，涂完花露水后如遇明火...将会发生闪燃现象！所以：涂完花露水后，请远离火源！否则......",
+    "true_label": "rumor"
+  },
+  {
+    "text": "你说要懂我 那么你来仔细看看 把我揉碎了看 骨头是贪婪 毛孔是笨拙 血液是卑微 肉身是盲目 还有五脏六腑的不甘心和占有欲 每一寸每一分 都是不好的 但你把它们合起来 合成一个我 你再看 是爱你的",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "有没有帮刘翔说话的啊？来解释一下这张照片啊！",
+    "true_label": "rumor"
+  },
+  {
+    "text": "ukraine officials say malaysia plane was shot down by a buk missile system",
+    "true_label": "rumor"
+  },
+  {
+    "text": "oh look the muslim shooter was also a democrat!",
+    "true_label": "unknown"
+  },
+  {
+    "text": "到底谁跟凯凯王约会？已派出大内密探调查那个女人的身份！",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【：本以为早就感染了[费解]】巴西总统博索纳罗7日表示，自己已感染新冠病毒，发烧到38°C，目前正在服用羟氯喹。巴西总统办公室回应称，博索纳罗现在在家办公，健康状况良好。博索纳罗在公众场合很少戴口罩，经常上街与人群互动。他表示，“我以为早就感染了，因为我和民众一直积极互动。”博索纳罗非常崇拜特朗普，在很多事上都非常欣赏特朗普的做法，包括使用抗疟疾药羟氯喹，以及对待疫情的态度。今年3月上旬，博索纳罗率巴西政府代表团访问美国并会晤美国总统特朗普，超过20名代表团成员回国后确诊感染新冠病毒。新冠肺炎刚刚传入巴西时，博索纳罗宣称，新冠病毒只是媒体制造的谣言。当巴西出现第一个死亡病例时，则称新冠病毒是“小流感”。巴西松弛的防疫措施也让其疫情越发严峻。目前，巴西新冠肺炎累计确诊病例数和累计死亡病例数均位列全球第二，仅次于美国。当地时间7月5日，巴西卫生部官网发布最新疫情数据显示，该国新冠病毒感染者人数超过160万人，累计死亡病例近6.5万。网页链接凤凰网视频的微博视频",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "report: toronto, seattle, quebec city to join vegas in 2017 nhl expansion:",
+    "true_label": "rumor"
+  },
+  {
+    "text": "感情这种东西勉强不来，多情总是会被无情伤。不同的是，有的人选择拿别的人错误惩罚自己，而有的人则吃一堑长一智。所谓成长所谓成熟无非就是经历痛苦的一个过程。不要纠缠，不要贪恋，更没有必要妄自菲薄！其实，每个人，总有段时间痛不欲生，没有更好的选择，只好勇敢面对。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【新闻联播：火车盒饭只要5元！ 你吃过吗？】《新闻联播》cctv记者亲身登上火车，报道火车上的东西一点都不贵！网友：\"央视记者是怎么买到火车票的？\"、\"能不能别逗了？5元太能扯了！最便宜的矿泉水都要五块以上，还能买盒饭？ [弱]【央屎】",
+    "true_label": "rumor"
+  },
+  {
+    "text": "college graduate first person in family to waste $160,000",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【早啊！新闻来了〔2015.12.11〕】①屠呦呦领取“2015年诺贝尔生理学或医学奖” ②2016年部分节假日安排昨发布 ③驾考改革意见稿公布：可自学直考 ④北京积分落户征求意见稿：需北京居住证、不满45岁、在京连续缴纳社保7年以上、符合计生政策、无犯罪记录。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【喝易拉罐一定要吸管】一妇女喝了罐饮料，被送进医院，离开了世界。验尸死于於细螺旋体病，追踪她喝的饮料，是直接用罐对嘴饮用。实验证明罐头受到鼠尿感染细螺旋体病毒。鼠尿含有毒性和致命物质。因罐头运输过程没有清洗的。研究显示罐上面的毒菌很多，请转给你关心的朋友。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "dearborn michigan, this morning. pro isis rally. spread the word, the fit is about to hit the shan here in the us.",
+    "true_label": "rumor"
+  },
+  {
+    "text": "will ny ag investigate clinton campaign credit card fraud re elderly donors?",
+    "true_label": "unknown"
+  },
+  {
+    "text": "不要被料理看似普通的名字所迷惑！未满18岁的未成年人请把家长赶走后再观看链接内具体教程[doge]",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "olympics: us women win 6th straight 4x400m-relay gold, giving allyson felix 6 career golds.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "gop candidates, lawmakers return donations made by leader of racist group cited in dylann roof's manifesto:",
+    "true_label": "rumor"
+  },
+  {
+    "text": "facebook spies on you for the government:",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【广东教师发布有损党和国家形象文章被撤职】广东省纪委通报，广东湛江市岭南师范学院基础教育学院英语系副主任梁新生2012年至2014年间，在网上发表多篇言论过激的博文，有损党和国家形象，造成不良社会影响。2015年7月，因违反政治纪律和政治规矩，梁新生被撤职。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "造孽啊。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "whole foods tests the limits of yuppie diet fads with new $6 asparagus water -",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "breakfast all around.",
+    "true_label": "rumor"
+  },
+  {
+    "text": "There is nothing you can not achieve！为人类的潜能赞叹[威武]！",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【专家警告或传染全境】鉴于目前在巴西里约热内卢州尼泰罗伊市的排水系统中检测出大量新冠肺炎病毒，巴西水质专家15日警告说，如果这种现象继续蔓延，里约州乃至巴西全境的排水系统可能会成为新冠肺炎病毒传播的又一重要载体。目前里约州供水和排水公司与联邦卫生部、里约联邦大学以及克鲁兹基金会合作，由卫生和环境工程人员对里约市内的排水系统中的水质进行新冠肺炎病毒检测。检测报告将作为制定下一步防疫方针的参考文件提供给巴西卫生部。里约州供水与排水公司承担着为里约州提供92%的排水服务，而该公司此前发现有400多名工人，出现新冠肺炎症状，他们中多数就职于负责污水排放的分公司。就巴西全境而言，目前全国污水收集，在排放入河道前只有46%的体量经过加氯的无害化处理。这就更加剧了人们对排水系统成为新冠肺炎重要传播渠道的担心。（央视新闻）",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "paula deen: \"forget the food network. i've already been offered a cooking show on the new fox news food channel.\"",
+    "true_label": "rumor"
+  },
+  {
+    "text": "obama declares stay-at-home moms aren't worth a hill of beans; says it's a choice 'we don't want americans to...",
+    "true_label": "rumor"
+  },
+  {
+    "text": "北京海淀区新冠疫情封闭小区如下：二街坊小区（海淀区 永定路57号院）、罗庄北里锦秋家园 、太平路甲50号院1-3号楼及平房、复兴路甲36号院百朗园、香山南路8号院、黄土坡8号院、董四墓甲1号院、大有庄蜈蚣街20号院、道公府路1号院、颐和园路35号院、国际关系学院、小营西路30号院、北清路26号院、二街坊小区（海淀区 永定路57号院）、罗庄北里锦秋家园 。大家不要去上述这些小区，一旦进入，则手机健康码则由绿码变为黄码，将寸步难行。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "pray for parents and school leadership to have wisdom to refuse these after school satan clubs!",
+    "true_label": "unknown"
+  },
+  {
+    "text": "new analysis from <> : sanders won the latino vote in nevada.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "el chapo puts $100 million bounty on donald trump...dead or alive!",
+    "true_label": "rumor"
+  },
+  {
+    "text": "今天又两个中江县红十字会的人来我们这里购买了1万多元的救灾药品，但要求我们开5万多元的发票。我们（成都制药一厂）没有答应，结果由隔壁通化一家药厂经营部开给他们了。我的真实身份:吴斌，1973年10月12日出生，家住什邡市方亭镇中心大街西段67号。跪请多，消灭贪官，为民除害！否则天理难容！",
+    "true_label": "rumor"
+  },
+  {
+    "text": "2013，我们如智者，面对生活乐观积极，我们似行者，追求梦想永不停歇，我们做勇者，面对挫折越挫越勇，我们为德者，化解仇恨以德报怨，这一年我们收获了很多，愿2014可以更加美好幸福。 专业提供网上订花、鲜花速递，市区最快三小时内送达！",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【银行公布的硬币回收价格，快翻翻你的抽屉吧】1960年 1分80元；1965 1分350元；1966 1分180元；1967 1分350元；1969 1分150元；1977 1分320元；1988 1分300元；1989 1分150元；1990 1分 180元；1968 2分 300元；1970 2分 180元；1971 2分 300元；1972 2分 260元。查查看你有哪个呢？",
+    "true_label": "rumor"
+  },
+  {
+    "text": "大西洋海神海蛞蝓（学名：Glaucus atlanticus），也叫“蓝龙”或“蓑海牛”，是一种蓝色、小型的远洋翼蓑海蛞蝓。简直！超！好！看！啊！",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【关于劳动合同，你不得不知的8件事】求职找工作，拿到合同就万事大吉？连细节都没看清就挥着笔杆子“签签签”？别急！合同里有哪些陷阱你清楚吗？劳动合同要包含哪些内容？试用期不是“白用期”，法律上有哪些规定？…戳图↓↓关于劳动合同，你必须知道这8件事。事关权利，转起学习！(人民日报)",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【治愈都市病，这个城市最有发言权】你是否厌倦了钢筋混凝土的写字楼，得了各种“都市病”，失眠、焦虑、暴躁……周刊君推荐你来北临长江、南近太湖的治愈小城张家港。在这里褪去喧嚣，休憩身心，你会体味到生活应有的质感[微风]",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "中国云南双柏县鄂家镇彝族传统文化的庆典节日，时间为每年阴历的7月14、15、16三天，“摸奶节”期间男人以摸到奶为吉祥，女子们以被摸奶为吉利。节日起源于隋朝年间。在“摸奶节”的三天以内，只要是参加节日的人都可以摸！",
+    "true_label": "rumor"
+  },
+  {
+    "text": "employees at a chick-fil-a said to be banned from using slang such as \"bae\", \"bruh\", \"ratchet\"",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【手绘日历！带你预览未来七天大事】[噢耶]猛戳下图↓[]",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": ":【广东佛山一在建16层楼盘发生坍塌，太恐怖了】广东佛山，已经建到16层了，一起是八栋。哥在另一个楼顶，眼睁睁的看着整栋楼倒下去，吓死哥了啊！太可怕，现在现场已经封锁，公安，防暴的来了十几车",
+    "true_label": "rumor"
+  },
+  {
+    "text": "international criminal george soros & his boi <> are sooo busted <>",
+    "true_label": "unknown"
+  },
+  {
+    "text": "donald trump goes to louisiana flooding site, spends a minute handing out play-doh, leaves",
+    "true_label": "unknown"
+  },
+  {
+    "text": "black men have legitimate reason to run from police – supreme court",
+    "true_label": "unknown"
+  },
+  {
+    "text": "一只骆驼辛辛苦苦穿过了沙漠，一只苍蝇趴在骆驼背上，一点力气也不花，也过来了。苍蝇讥笑说：“骆驼，谢谢你辛苦把我驼过来。”骆驼看了一眼苍蝇说：“你在我身上的时候我根本就不知道，你走了也没必要跟我打招呼，你本就没有什么重量，别把自己看太重。”很多的时候，我们就是那只苍蝇",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "this was team usa's largest margin of victory in a gold-medal game since the dream team beat croatia by 32 in 1992.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "up to 100 masked men, dressed in black, involved in \"migrant attack\" in stockholm",
+    "true_label": "unknown"
+  },
+  {
+    "text": "we should pick a company a month. 1.1 million families join afa’s target boycott, stock takes $2.5 billion hit -",
+    "true_label": "unknown"
+  },
+  {
+    "text": "why the year's most anticipated pop lp, rihanna's 'anti,' is an inward-searching curveball",
+    "true_label": "unknown"
+  },
+  {
+    "text": "a tiny alpine town in northern italy just welcomed its first baby in 28 years 🍼👶",
+    "true_label": "unknown"
+  },
+  {
+    "text": "\"let's not make the next two weeks about a 'black qb.' let's just talk about the greatness of this guy.\" -c. barkley",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "saudi cleric proclaims snowman-building 'anti-islamic' (photos, video)",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "新华社报道：2013年3月5日：曾为雷锋拍摄200多张照片的沈阳军区原工程兵政治部宣传助理员张峻，3月5日下午在沈阳军区学雷锋座谈会上发言将结束时说：我向毛主席保证，今天讲的一切都是真实的。要有半句假话，立刻就死。结果结果结果！张峻当场心脏病发，经抢救无效，不幸去世。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "7 years ago today, <> was sworn into office. here's a look at how far we've come since.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "well, this is a new one: chelsea clinton implies that marijuana can kill you. 2016, y’all.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "【朱自清诞辰117周年】他曾任清华大学中国文学系主任；他的作品《匆匆》《春》《背影》陪伴一代代学子成长。在他淡淡的笔墨中，流露着深情，没有半点矫饰，却蕴藏着动人心弦的力量。如今，朱自清去世已66周年，而他笔下那位在南京浦口火车站捧着橘子的父亲，却久久留在人们的脑海里……",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【奥巴马看后一言不发】不要小看国家级贫困县，刘书记的豪华办公室，比奥黑的强一百倍吧？？？？谁再说中国不如美国我跟他急。。。。注意，正中间那个威风凛凛的是刘书记。(图片来自网络)",
+    "true_label": "rumor"
+  },
+  {
+    "text": "俄罗斯巡逻员都这么剽悍",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【连小s都关注的微博，你值得关注】聪明女人记住： 和别人交往，你要知道，你只是他的一个选择而非唯一，你也只能把他当成你的一个选择而非生命中的某个优先。不要轻易去依赖一个人，当分别来临，你失去的不是某个人，而是你精神的支柱。【一个让女人受益终生的微博，怎么能少了你！】",
+    "true_label": "rumor"
+  },
+  {
+    "text": "white house lit in rainbow colors after high court's gay marriage ruling (with photo)",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "先看视频，大家自己评判吧↓↓↓",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【小哥频道】赵本山涉黑，再次被抓，证据确凿。子虚大师卧底赵家堂口，冒生命危险，拍到黑帮内部拜大哥仪式。党朝生产的艺术家都是什么破玩意？·····[衰]",
+    "true_label": "rumor"
+  },
+  {
+    "text": ".played around with and the outcome is absolutely beautiful.",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "from to protests adopt \"hands up, don't shoot\"",
+    "true_label": "unknown"
+  },
+  {
+    "text": "十万火急-----谁的群多？请帮忙转一下：一个重庆打工者，22岁，叫骆婕，不知道在什么地方，请他速回重庆万州，直接到三峡中心医院。家中失火，父母双亡，弟弟伤势很严重，想见她最后一面。舅舅：18716501803——爱心接力。这个不转对不起自己的良心 （重庆市万州区柱山镇党委罗于平托 谢谢",
+    "true_label": "rumor"
+  },
+  {
+    "text": "摸奶无罪:请尽情摸MM的\"奶\"吧！！！[花心] [花心] 史上最牛的节日摸奶节。[来] 在彩云之南的楚雄，至今还盛行“摸奶节”，[来] 每年阴历七月十四到十六，摸奶节狂欢场面解密》》",
+    "true_label": "rumor"
+  },
+  {
+    "text": "今天在震区，1只小熊猫紧紧抱住警察叔叔的腿。。。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "结局太温馨，爸爸的心都萌化（sui）了[笑cry][笑cry][笑cry]",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "lego letter from the 1970s still offers a powerful message to parents 40 years later",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "report: amazon plans to open its first physical store, in new york",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【因思念走失女儿 七旬老人捡垃圾成瘾[伤心]】成都一出租房里堆满了垃圾，78岁的颜大娘住在10平米的小屋内。“这行为已持续了七八年”。大娘曾五度搬家，每住一处都要被垃圾填满。老人说：“我就寻思着捡点垃圾，不然老是琢磨那丢失的女儿…”（成都商报）实际上，老人家的女儿10多年前就走失了。[泪]",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "good news!: target stock plummets",
+    "true_label": "unknown"
+  },
+  {
+    "text": "tupac was hiding for 18 years flushed_face",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【俄媒：失联客机在美国印度洋基地迭戈卡西亚岛！[吃惊]】俄罗斯媒体称，俄军方不愿意透露姓名的人仕说，据他们掌握的信息，失联客机在美国印度洋基地迭戈卡西亚岛，客机藏在机库里，这个新机库是两年前建的，能停B52等大型机体。美国这样做无非就是勒索中国不要倒向俄罗",
+    "true_label": "rumor"
+  },
+  {
+    "text": "今天下午六点开始，高清探头全部启动，副驾驶室不系安全带相同处罚，开车时打电话罚款50元，闯黄闪罚200，越线停车罚100，今天起晚六点半至深夜二点，为期60天，全国交警集中查处酒驾，一经查获，一律拘役六个月，五年内不得考证。专拍是否有带安全带！（实施区域包含但不限于泉州via ）。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【北京气象局:冷空气已到内蒙古 雾霾今夜将散去】当前北京正遭遇今年以来最严重的污染过程。据北京市气象局官方微博通报，今天下午北京雾霾持续，冷空气已到内蒙中部，今夜北风渐起，北京雾霾将逐渐散去。明后两天(2—3日)，将会刮起5、6级偏北风，天气转晴，北京将再现蓝天。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "“after school satan clubs”?",
+    "true_label": "unknown"
+  },
+  {
+    "text": "一句道歉的话，可能平息一场战争。一句刻薄的话，可能令人把心伤透。一句劝慰的话，可能治愈别人的伤口。一句公道的话，可能让人感激你一生。一句谎言,可能让你失掉人心。一句直白的话，可能使紧张的气氛升级。一句赞美的话，可能化解一场危机。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "my heart goes out to loved ones and fans of paul walker, who died in a car wreck saturday. word is he was a really good dude.",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【我是歌手】今晚有三首歌是张杰以前唱过的，不同的声音，不同的感悟。回味一下杰哥的版本吧。《往事随风》 MP3版 视频 《夜夜夜夜》 《不让我的眼泪陪我过夜》",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "kenny is considered the first tiger with down syndrome. at the age of nine, kenny died in 2008 of cancer.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "international criminal george soros & his boi <> are sooo busted <>",
+    "true_label": "unknown"
+  },
+  {
+    "text": "【《二叔》成黑马 年末获重奖】年终岁尾，大剧混战，山东卫视同海宁北辰影视公司联合打造的订制剧《二叔》杀出重围，收视率一路攀升，全国网和46测量仪城市冲进省级卫视第二，收视成长高达110%！观众反应热烈，几乎零差评。鉴于该剧优良的社会效果和优异的收视表现，山东卫视决定对该剧给予百万巨奖。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "昨晚起六点半至深夜二点，为期60天，全国交警集中查处酒驾，一经查获，一律拘役六个月，五年内不得考证。每月10、20、30日由省厅带队检查，每月3、7、13、17、23日和每周五、六由市局组织检查，时间为中午12点至下午2点，晚上7点至9点，从今天起陆续启用高清摄像，专拍前排驾乘人员安全带是否系扣。转",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【热播剧中选出撩妹届四大高手，亲自上阵教你脱单妙招！】有没有亲跟小编一样最近是按这个路线来追剧的：《无理的前进》→《朝5晚9》→《泰版一吻定情》→《她很漂亮》。在11.11这敏感日子， 为你们总结了“脱单”计划！赶紧边看边学起来→ 关注[剧能说]一起聊~",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "pray for parents and school leadership to have wisdom to refuse these after school satan clubs!",
+    "true_label": "unknown"
+  },
+  {
+    "text": "一种最新骗术 请大家一定要看看，并引起警惕： 一.近日，社会上出现了一种最新骗术，骗子具体操作的程序是：自称快递公司人员先给诸位打电话(随机)，告诉你有快递物品，但由于天气潮湿看不清你具体地址、姓名，只知道电话，请你提供地址、姓名，然后真有快递公...",
+    "true_label": "rumor"
+  },
+  {
+    "text": "research on which matters more: \"leadership qualities\" or competence",
+    "true_label": "unknown"
+  },
+  {
+    "text": "云南一只母猪生下8个小孩=震撼全世界！[抓狂] 详情请点地址》",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【15岁学生写作业至凌晨猝死课堂 父亲发文追思[伤心]】10日上午，河南某中学9年级学生宣云博在早读课上突然昏迷，抢救无效死亡。而孩子头天晚上写作业到12点多，早上6点20起床。其父写到：愿天下父母别再给孩子加压了！娃啊！每天睡那么少，爸爸知道你累了，从此再也没有压力了…[悲伤]（大河报）",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【对比】1996年在澳大利亚悉尼，一只野狗在水库大便，结果当地水务局鉴定水质污染，悉尼水业在电视台和报社打广告，告诉大家自来水被污染；2013年在中国上海，几千头死猪出现在黄浦江，结果当地水务局宣布水质没有问题..",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【坑爹交通新规】1.闯黄灯、闯红灯，6分，100元；2.酒驾，12分，5年内不得再考驾照；3.不系安全带，3分，100元；4.副驾不系安全带，1分，50元；5.行驶中拨打手机，3分，100元；6.行驶中抽烟，1分，100元；7.有意遮挡号牌，12分，顶额处罚；8.超速驾驶，6分；9.副驾驶有不满14周岁乘坐的，6分，300元。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "CCTV今天播出交通新规： 1闯红灯记6分罚100元。2 酒驾记12分5年内不得再考取驾照。3 不系安全带记3分罚100元。4 副驾不系安全带记1分罚50元。5 行驶中拨打手机记3分罚100元。6 行驶中抽烟记1分罚100元。7 有意遮挡号牌记12分，顶额处罚。8 超速驾驶记6分。9 副驾驶有不满14周岁乘坐的记6分罚300元。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "印度一妇女一次性产下一支足球队，创世界记录！",
+    "true_label": "rumor"
+  },
+  {
+    "text": "\"the dave i know is polite, modest, and content. jumbotron dave is crass and loud.\"",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【23年前杀人放火疑案 23年后开庭再审】1992年，海南海口发生一起杀人焚尸案。29岁的陈满被锁定为凶手，获判死缓，随后陈满坚称蒙冤上诉。今年初，最高检复查认为\"事实不清，证据不足\"提出抗诉。本月底这起案件将开庭再审。时隔23年，案件为何要重审？陈满在审讯中又经历了什么？",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "islamic state video purports to show beheading of british hostage david haines; officials can't confirm- <>",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【女生可以放心旅行的10个国家 】这些国的警察闲得可以做伴游了，出国旅行，既要玩得任性，也要游得安心！ 今天推荐的这些国家不但治安良好，经济发达，它们的景色也是相当的怡人。如果你想独自旅行，尽可放心的去吧！建议收藏！(๑´ڡ`๑)",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "柬埔寨首相也感染上了，汗…这世界怎么了",
+    "true_label": "rumor"
+  },
+  {
+    "text": "fbi assisting in the case of the ottawa shooting, sources have confirmed to ctv news",
+    "true_label": "unknown"
+  },
+  {
+    "text": "指认真假新罗女神，赢iphone6S！5位女神同时出现，究竟哪一位才是真身？发动你的火眼金睛找到真正的Angelababy，参与就有机会获得iphone6S。此博文就有机会获得话费哦！1000个名额，赶紧转起来吧~",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【[话筒]救救10个月的小叶满[泪]】张叶满，刚刚来到这个世界才10个月，14日妈妈为她洗澡时，她从床上翻落，掉进开水盆，全身多处Ⅱ级烫伤，脱水休克。小叶满的爸妈是90后，无固定工作，未入新农合，无法承受30万治疗费…帮帮孩子！联系人：彝良阳光志愿者协会副会长吴学敏15096575162。（央视）",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "5月12日不要去电影院 请大家一定别进影院，大家一起为《贞子》票房为零，做努力！ 中国人拍的《金陵十三钗》在日本小鬼子票房为零。小日本拍的《贞子》3D将于5月12日在中国大陆上映。而5月12日既是南京大屠杀纪念日，又是国难日。勿忘国耻！作为中国人，敢不敢让贞子3D 5月12日票房为零。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "CNN飞机✈️被马军方击落！北京时间3月13日10时48分向全球抢先发布独家最新消息：由美国CIA参与此次调查的调查结果显示，已失联五天之久由吉隆坡飞往北京的马来西亚航空公司MH370航班（机型：“波音777”）系于2014年3月8日凌晨2...(全文见图，分享自 iPhone客户端)",
+    "true_label": "rumor"
+  },
+  {
+    "text": "逻辑严密，措辞严谨，鄙视嘴炮，抽打用iphone4骗粉的奸商，用正能量安抚同学们被骗受伤的心灵。假如本届伦敦奥运会结束时，只要中国代表队还能在金牌榜上排前二，参与本微博并关注 的亲们，每一人都将被送一条独立袋装正品CBA运动型内裤，原价48元。",
+    "true_label": "rumor"
+  },
+  {
+    "text": "许久不联系的人，不用再联系。各自辛苦，各自生活，也再无交集，该停留在过去的，就让它停留在过去。如果有缘，会再见。若无缘，不如不见。就是这样。",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "us imposes sanctions on iranian companies and individuals over missile programme, after lifting of nuclear sanctions",
+    "true_label": "unknown"
+  },
+  {
+    "text": "周杰伦福州演唱会，给自己整了个隔离舱，这是cos天龙人吗这是要，挺惜命的整挺好，就是不知歌迷有啥装备。这是今天机场的周杰伦，有钱真好，可以全方位三百六十度无死角预防冠状病毒，此时我正在发愁年后的口罩什么时候寄到[感冒][感冒][摊手][摊手]网页链接",
+    "true_label": "rumor"
+  },
+  {
+    "text": "no baes allowed: a chick-fil-a manager bans 22 hip words",
+    "true_label": "rumor"
+  },
+  {
+    "text": "刘翔的7步上篮法是针对起跑点到第一个高栏的距离13.72米，然而狗屎一样的英国人把第一个高栏改到了13.85米的距离所以刘翔第一脚就踩栏了，这也是导致最后小组有4个人踩栏摔倒，然而那个英国猪练的就是13.85米所以他没摔栏 英国人这么干就是为了自己国家的人拿金牌 CNM的英国猪！",
+    "true_label": "rumor"
+  },
+  {
+    "text": "高手在民间！666666[doge]",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "【市长呼吁民众每天默哀1分钟】3月30日，西班牙马德里大区举行默哀仪式以悼念所有新冠肺炎逝者，各地降半旗并默哀一分钟。作为西班牙疫情最严重大区，马德里确诊超2.4万例，死亡人数超过3300人，占全国死亡病例46%。政府改造两座临时殡仪馆，用于停放逝者遗体。<'新京报我们视频'>>世面的秒拍视频",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "忍者QS：江苏省东海县女镇党委书记徐艳，因不愿陪县委书记关永健上床，竟然被警察毒打致子宫破裂。徐艳一怒揭开6亿贪污大案---东海县石梁河水库水淹地补偿款案，县委书记关永健一个人竟贪污6亿多元。关永健每年搞全县科级干部大调整，仅此每年受贿2000万以上。--转自人网",
+    "true_label": "rumor"
+  },
+  {
+    "text": "周孝正V】主权在民，才有人权：98年，有三名福建工人在以色列被炸死！以政府找到中国使馆商议赔偿及处理后事，中使馆以三名工人是偷渡客为由不予理睬！以政府对此硬是一查到底，后来不远万里来到福建，把受害者骨灰交到家属手中、向三名受害者各赔了70万美元。这钱后来还被我们政府收了每人18万的税！",
+    "true_label": "rumor"
+  },
+  {
+    "text": "people blame the massacre in orlando on the nra. newsflash: the orlando shooter wasn't a nra member... but he was a registered democrat.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "听说《越南套餐流量用完上网不收费》，易友们表示不服.....",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "do these look like the faces of a homeless couple caught living in a walmart attic for over 2 years?",
+    "true_label": "rumor"
+  },
+  {
+    "text": "the globalisation of civil disobedience: protesters use the \"hands up, don't shoot\" gesture.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "breaking: malaysia airlines passenger 'shot down' near russian border in ukraine",
+    "true_label": "rumor"
+  },
+  {
+    "text": "【美媒评052D型驱逐舰：已经与伯克级接近】美国战略之页网站报道，中国最新下水的052D型驱逐舰，排水量约7000吨，采用美式垂直导弹发射系统可兼容多种导弹，以及新的相控阵雷达。不过美国人对052D的评价却很耐人寻味，\"中国海军用十年时间，造出了和已服役20余年的伯克级战斗力相似的舰艇。\"(高凯)",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "TVXQ France 暂时只救回了图,18号场的红海.擦!这位子拍出来的视频肯定嗲啊┭┮﹏┭┮",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "an unexpected bond has developed between damaged parrots and traumatized veterans",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "最新消息，汕头潮南区陈店镇部队救援物资到了，方便面一包50块，矿泉水一瓶15块，快艇接送一人15块，不给钱不救，心痛啊，求扩散，转吧，让习总书记评评理…",
+    "true_label": "rumor"
+  },
+  {
+    "text": "云南一只母猪生下8个小孩=震撼全世界！更多奇猪异事请点击",
+    "true_label": "rumor"
+  },
+  {
+    "text": "bernie sanders and donald trump continue to hold wide leads in new hampshire primary races, cnn/wmur poll finds.",
+    "true_label": "unknown"
+  },
+  {
+    "text": "elvis presley was born on this day in 1935",
+    "true_label": "unknown"
+  },
+  {
+    "text": "【北京新机场拆迁记：村民抢盖房，政府怎么办？】两年前，北京新机场建设风声就已传遍，选址处村民们纷纷抢盖房，以期多获赔偿。然而北京市大兴区政府部门拿出的拆迁政策却叫“政府不多花，百姓不少得”。这如同天方夜谭的政策如何实施？一起来看看： 王鲁彬）",
+    "true_label": "non_rumor"
+  },
+  {
+    "text": "the government's spare room subsidy or has been declared discriminatory by court of appeal judges following two legal challenges",
+    "true_label": "unknown"
+  },
+  {
+    "text": "[可怜] 感动又被萌翻，地震发生时，一只害怕的熊猫死死地抱住警察叔叔的腿。[泪][泪]",
+    "true_label": "rumor"
+  },
+  {
+    "text": "open letter to trump voters from his top strategist-turned-defector - amazing first person account via <>",
+    "true_label": "unknown"
+  }
+]

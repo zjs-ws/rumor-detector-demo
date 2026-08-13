@@ -1,0 +1,917 @@
+[
+  {
+    "text": "5 people confirmed dead after building collapse in mumbai. rescue operations ongoing. pm modi expresses condolences.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "英文灾难",
+    "index": 0
+  },
+  {
+    "text": "【读者调查：你的生活作息规律吗？】小李26岁，刚考上苏州某高校博士生就住进了ICU。考博期间，他常熬夜，不吃早餐，午饭和晚饭都靠叫外卖，晚上喝咖啡提神；结果被确诊为结核性脑膜炎。医生说作息不规律、长期透支身体是重要诱因。你的生活作息规律吗？",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 1
+  },
+  {
+    "text": "【重要知识学起来[话筒]你真的明白什么是新冠病毒了吗？】空气中一般不会有新冠病毒，主要是近距离呼吸道飞沫传播！浙团：听好了！一张刘上士的微博视频",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 2
+  },
+  {
+    "text": "【陕西山阳县一公立幼儿园:非公务员子女不得报名】近日网曝一帖子:9月1日在山阳县幼儿园,好多人为了给孩子报上名,半夜起来的也有,可是等到早上,学校大门却始终大门紧闭。为了维持现场秩序,校方连贴二张紧急通知,而通知中竟然称父母双方都必须在县直机关单位上班者才符合报名条件。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 3
+  },
+  {
+    "text": "【小伙狂喝可乐致肝肾衰竭死亡】一20岁年轻男子一天喝掉十多瓶可乐，因呕吐送到医院时，血糖值已爆表，抢救无效离世。同时，小伙子还有查出肝脏衰竭、乳酸中毒等。他患的是糖尿病酮酸中毒，糖尿病最危险的并发症之一。医生说，他可能早就有糖尿病，最近又大量喝可乐，引发了悲剧。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 4
+  },
+  {
+    "text": "【谷雨养生小运动[推荐]】①冷水搓鼻翼 ：谷雨前后飞絮较多，早晚用冷水洗鼻和揉搓鼻翼，有助缓解过敏；②按揉祛湿穴：谷雨时节湿度大，按揉位于小腿内侧、膝下胫骨内侧凹陷中的阴陵泉穴能健脾祛湿；③茶水洗脸：用喝剩下的茶叶水洗脸，能舒缓皮肤，还能让脸部皮肤光泽滑润。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 5
+  },
+  {
+    "text": "uk mother tareena shakil, who took son to syria, guilty of joining so-called islamic state and encouraging terror",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 6
+  },
+  {
+    "text": "【早啊！新闻来了〔2015.11.22〕】①北方多地降雪，京津晋冀多条高速公路封闭②北京警方全面提升社会面防控等级，做好反恐处突准备 ③第52届金马奖：冯小刚、林嘉欣分获影帝影后④再登亚洲之巅！广州恒大获亚冠冠军⑤今日23时25分，迎小雪节气。更多↓↓↓",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 7
+  },
+  {
+    "text": "【[推荐]扩散！警方教你如何快速去除快递单上的隐私！】收到快递，快递单是不是随手就扔？这样可不行！[NO]上面可有你的隐私信息，万一被有心之人拿去……快戳图↓↓， 介绍如何处理快递单上的隐私信息，get√新技能学起来！转！",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 8
+  },
+  {
+    "text": "breaking: magnitude 6.1 earthquake strikes off the coast of japan. tsunami warning issued for coastal areas. no casualties reported yet.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "英文突发",
+    "index": 9
+  },
+  {
+    "text": "我无法理解一些女人在夜店整晚被N个搂抱亲吻还觉得特光荣，一有局就各种求偶遇。看到开跑车的人和稍微有点人样恨不得马上扒光自己。姑娘，这不叫交际花，这叫交妓花，叫不知耻！没局的时候就在家扯着胸罩露大半边乳房出来发微薄喊寂寞。这不叫性感，这叫阴部瘙痒！女人，最忌讳的就是把自己做烂！",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 10
+  },
+  {
+    "text": "jeb bush: \"donald, you're not going to be able to insult your way to the presidency.\" cheer from the audience",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 11
+  },
+  {
+    "text": "paul walker dies, millions cried. millions died of human hunger, no one simply gives a fk.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 12
+  },
+  {
+    "text": "【一读就错的姓，你读对了吗？】中国文字博大精深，一些常用字作为姓氏时，读法又大不同：①朴，读piáo，不读pǔ。②仇，读qiú，不读chóu。③单，读shàn，不读dān。④解，读xiè，不读jiě。⑤任，读rén，不读rèn。⑥尉迟，读yù chí，不读wèi chí …戳图自测，你哪几个读错了？",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 13
+  },
+  {
+    "text": "media account posts picture claiming to be michael zehaf-bibeau, dead suspect.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 14
+  },
+  {
+    "text": "this is the soldier who died today at the war memorial. his name is cpl. nathan cirillo.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 15
+  },
+  {
+    "text": "at least 11 dead in shooting at hq of in (police source)",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 16
+  },
+  {
+    "text": "大家来猜猜这都是哪儿？[doge]",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 17
+  },
+  {
+    "text": "除了法国恐怖袭击伤亡数百+，还有浙江丽水泥石流、东海地震7.0级、黎巴嫩恐怖自杀式袭击伤亡30+、巴格达同样也有自杀式恐怖袭击……希望今天的天灾人祸早点过去……GBU",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 18
+  },
+  {
+    "text": "【持外国护照间谍在吉林被抓 正刺探解放军兵力】吉林村民在劳作时发现陌生男子拿望远镜四处观望，形迹可疑，急忙给驻地边防连打电话通报。连队对其盘查发现，其随身携带1本外国护照、1部已拍摄军事设施的相机，内衣口袋还有手绘我军边境兵力分布图。经核实，此人是1名间谍。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 19
+  },
+  {
+    "text": "corporations have sold or spun off $1.6 trillion worth of subsidiaries & biz lines this year.",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 20
+  },
+  {
+    "text": "the white house is lit up rainbow.",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 21
+  },
+  {
+    "text": "they left syria in 2013 for a camp in jordan and arrived in detroit last week. their story",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 22
+  },
+  {
+    "text": "【10张图看清你和妈妈的关系】你与妈妈的关系其实可以用10张图来概括，看完之后决定对妈妈好一点，再好一点，更好一点[可怜]！",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 23
+  },
+  {
+    "text": "urgent: severe thunderstorm warning for the greater london area. residents advised to stay indoors. public transport may be affected.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "英文预警",
+    "index": 24
+  },
+  {
+    "text": "【截至7时最新消息汇总:3名中国公民遇难】马里酒店劫持事件中有3名中国公民遇难，另有4名中国公民与1名法籍华人获救；劫持事件已宣告结束，已造成至少22人死亡，劫持者手中已没有任何人质；两名劫持者被击毙；基地组织下属团体宣称对袭击事件负责。最新消息：",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 25
+  },
+  {
+    "text": "ap video: police say speed was a factor in an l.a. crash that killed 2, including \"fast & furious\" actor paul walker:",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 26
+  },
+  {
+    "text": "suicide bomber who killed at least 50 in turkey was aged 12-14, state-run news agency quotes president as saying.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 27
+  },
+  {
+    "text": "【鲜血染红病房墙面[感冒]】据外媒报道，近日，美国一名护士在社交媒体分享了儿子确诊新冠去世的一组照片，整个病房的墙壁、地板沾满鲜血。据报道，佩顿年仅13岁，于10月25日确诊为新冠肺炎，送医后，血氧水平居然低到了44%，而正常人的血氧水平应该是95%-100%之间。6天后，医生插管抢救时，孩子胸腔里淤积的鲜血一下子喷洒在了病房的墙上，最终不幸去世。沸点国际的微博视频",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 28
+  },
+  {
+    "text": "《冰川时代》最新番外短片 还是那只倒霉的小松鼠，这次的脑洞更是突破天际",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 29
+  },
+  {
+    "text": "8款超快手凉菜，美味又开胃~[花心]",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 30
+  },
+  {
+    "text": "“你拥有青春的时候，就要感受它。不要虚掷你的黄金时代，不要去倾听枯燥乏味的东西，不要设法挽留无望的失败，不要把你的生命献给无知、平庸和低俗。这些都是我们时代病态的目标，虚假的理想。活着！把你宝贵的内在生命活出来。什么都别错过。”（by王尔德）早安，各位。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 31
+  },
+  {
+    "text": "幸福就是重复。每天跟自己喜欢的人一起，通电话，旅行，重复一个承诺和梦想，听他第二十八次提起童年往事，每年的同一天和他庆祝生日，每年的情人节、圣诞节、除夕，也和他共度。甚至连吵架也是重复的，为了一些琐事吵架，然后冷战，疯狂思念对方，最后和好。（转）",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 32
+  },
+  {
+    "text": "remembering the talented singer aaliyah on what would have been her 37th birthday:",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 33
+  },
+  {
+    "text": "an 11-month old baby is among the hostages at the kosher supermarket in paris. unbearably sad.",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 34
+  },
+  {
+    "text": "my heart goes out to loved ones and fans of paul walker, who died in a car wreck saturday. word is he was a really good dude.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 35
+  },
+  {
+    "text": "【南京一小区称有中东男子潜入，他想干嘛？】近日，南京唱经楼小区物业发警示，18日晚，一中东男子和女华人进入该小区29楼并拆除防盗门，准备进水箱房和电梯机房，被发现并斥责后匆忙离去。经监控录像分析，二人有严重破坏或投毒嫌疑。警方已介入，两名嫌疑人尚在抓捕中。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 36
+  },
+  {
+    "text": "developing story: shots fired on parliament hill, soldier shot at war memorial",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 37
+  },
+  {
+    "text": "siege over at burkina faso hotel taken by suspected islamist gunmen, but reports say nearby hotel attacked",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 38
+  },
+  {
+    "text": "18岁美国男生高山翻唱《我的歌声里》男生版，不一样的味道，一样的好听！！！ [赞]",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 39
+  },
+  {
+    "text": "【 该人员未曾与普京接触】据CNN报道，当地时间27日，俄总统新闻秘书佩斯科夫证实，克里姆林宫的一名工作人员感染了新冠病毒。佩斯科夫表示：“在政府内部确实有新冠病毒的病例，我知道一个病例，我可以确认，我不知道还有第二个病例······目前正在采取一切必要的流行病学措施，以防止病毒进一步传播。”佩斯科夫补充称，俄罗斯总统普京并未与检测呈阳性的病患有过接触。“总统还在工作，他不能就这样停下来，”佩斯科夫说，“这再次证明，邀请所有参加总统参与的活动的人接受新冠检测的预防措施是合理的。”",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 40
+  },
+  {
+    "text": "有人说，旋转木马是世界上最残忍的游戏，彼此追逐，却怀着永恒的距离。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 41
+  },
+  {
+    "text": "【除了知识 我还要教会他们坚强[good]】广西贺州教师覃雪梅，因患重度癫痫，她无法正常行走和写板书。确诊十年来，她坚持上课、改作业、经常去学生家家访。因病加重，她曾在课堂晕倒，学校考虑为她调岗她却婉言拒绝。她说梦想就是把孩子们带出山外，用知识改变命运。为她点赞！(央视记者廖汨)",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 42
+  },
+  {
+    "text": "央视曝光：某品牌儿童玩具重金属超标，涉及产品已被市场监管部门责令下架召回。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "曝光报道",
+    "index": 43
+  },
+  {
+    "text": "新冠收割机已经变异加强了传播性，这对于整个世界都不是好消息，人类会更长时期要与新冠共存，这已经是大概率事件。对于中国来说，最大的风险还是输入，需要编织一个更加严密、科学、高效的输入病例的防控网络。中国已经经历了武汉埋伏战，绥芬河阵地战，北京病毒反恐战，除了武汉埋伏战带来了更大挑战之外，绥芬河和北京都能在最短时间解决战斗，显示出中国在病毒防控方面高超的战略战术。我相信，新冠再怎么变异，能防控住的还是中国，新冠的特点就是传播速度，而中国的信息化建设越来越高效，只有社会基础设施、社会治理更加信息化，智慧化，智能化，只有信息化的速度才能真正遏制新冠的传播速度。人类社会与新冠的战争，就是一场关于速度的比拼。而真正已经建设完成了信息化的，全世界可能也就只有中国，而且更为关键的是中国治理水平与民众素质还可以弥补信息化不足的地方。除中国之外的国家，美国，巴西，印度，乃至俄罗斯，欧洲诸国，可能还要在新冠蹂躏下挣扎很久。我觉得中国现在需要关起门来搞建设，事实上，全球经济已经陷入停顿，不必追求全球化，可以按照病毒感染情况进行优先经贸合作，不必无差别对别人开放。除了新冠之外，中国最大的风险就是以防有人军事冒险，中国已经成为全世界最安全的地方，很多人心里肯定见不得我们好的，要加强武装建设，把我们武装到牙齿，保卫祖国安宁，有能力歼灭任何来犯之敌。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 44
+  },
+  {
+    "text": "college graduate first person in family to waste $160,000",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 45
+  },
+  {
+    "text": "一只骆驼辛辛苦苦穿过了沙漠，一只苍蝇趴在骆驼背上，一点力气也不花，也过来了。苍蝇讥笑说：“骆驼，谢谢你辛苦把我驼过来。”骆驼看了一眼苍蝇说：“你在我身上的时候我根本就不知道，你走了也没必要跟我打招呼，你本就没有什么重量，别把自己看太重。”很多的时候，我们就是那只苍蝇",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 46
+  },
+  {
+    "text": "喜欢就在一起吧 别辜负了相遇",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 47
+  },
+  {
+    "text": "【北京气象局:冷空气已到内蒙古 雾霾今夜将散去】当前北京正遭遇今年以来最严重的污染过程。据北京市气象局官方微博通报，今天下午北京雾霾持续，冷空气已到内蒙中部，今夜北风渐起，北京雾霾将逐渐散去。明后两天(2—3日)，将会刮起5、6级偏北风，天气转晴，北京将再现蓝天。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 48
+  },
+  {
+    "text": "【市长呼吁民众每天默哀1分钟】3月30日，西班牙马德里大区举行默哀仪式以悼念所有新冠肺炎逝者，各地降半旗并默哀一分钟。作为西班牙疫情最严重大区，马德里确诊超2.4万例，死亡人数超过3300人，占全国死亡病例46%。政府改造两座临时殡仪馆，用于停放逝者遗体。<'新京报我们视频'>>世面的秒拍视频",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 49
+  },
+  {
+    "text": "【马云在斯坦福大学的演讲】让你见识见识，什么叫：三流长相，二流英语，一流口才！！很精彩的演讲，时间较长，先马再看！！",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 50
+  },
+  {
+    "text": "太可怕了！今天亲眼看到一辆大货车在高速上侧翻，消防救援人员已经到场，司机已被救出送医。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "亲历事件",
+    "index": 51
+  },
+  {
+    "text": "【深圳一处工业园区被曝遭山体滑坡掩埋】据网友曝料，深圳光明新区红坳村柳溪工业园发生山体滑坡，将工业园整个吞掉了，大概10多万平米，现在还在清点人数，不确定有无人员伤亡。现在所有车辆禁止进入滑坡区域。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 52
+  },
+  {
+    "text": "巴黎遭遇恐怖袭击之后，多伦多、伦敦、都柏林、纽约等多个城市建筑打上法国国旗红蓝白三色。灾难面前不分国籍，Let’s all pray for paris！[蜡烛]（图源自tumblr）",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 53
+  },
+  {
+    "text": "【钱江夜话】湖州一养殖场被检出H7N9病毒，7000只鸭子全灭。从养殖场到餐桌，家禽产业有长长的产业链，关系到无数人的生计。养殖户们眼中含泪、心头滴血，将家禽一一掩埋。谁都知道，只要一加热，病毒就活不了，可城里的餐馆，连卤蛋都取消了。理性应对、科学防疫，别让农户伤上加伤，躺着也中枪。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 54
+  },
+  {
+    "text": "soldier killed at war memorial identified as cpl. nathan cirillo -",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 55
+  },
+  {
+    "text": "惊人发现！中国科学家在月球土壤中首次检测到新矿物'嫦娥石'，这是人类发现的第六种月球新矿物。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "科学发现",
+    "index": 56
+  },
+  {
+    "text": "in the wake of paul walker's tragic death, what's the future of the <> movies?",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 57
+  },
+  {
+    "text": "在这个高贵的国家里，菜贵伤民，菜贱伤农。是因为从农村到城里，一路路过了敌占区吗？",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 58
+  },
+  {
+    "text": "latest update: attacker shot dead in parliament after soldier shot at national war memorial",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 59
+  },
+  {
+    "text": "the sudden & tragic death of reminds us that we shouldn't take even a moment for granted bc it can be over in a blink",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 60
+  },
+  {
+    "text": "(〃▽〃)猫咪第一次见小豚鼠：诶，这是个啥啊......还挺萌的......摸摸头[心]",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 61
+  },
+  {
+    "text": "at least two people are dead in a shooting at a school in northern saskatchewan, canadian government official said",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 62
+  },
+  {
+    "text": "reports of an active gunman at san diego navy medical centre",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 63
+  },
+  {
+    "text": "【国防部回应美军机闯南海：守礁部队对其警告驱离】国防部公布美军机闯南海细节，10日凌晨美军2架B-52轰炸机擅自进入南沙群岛有关岛礁临近空域。中国军队对美军机保持严密监视。守礁部队高度戒备，对美军机予以警告驱离。国防部称，美方所作所为是一种严重的军事挑衅行为。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 64
+  },
+  {
+    "text": "【监控曝光！，共用饮用水互相吸口罩[吃惊]】据ABC新闻报道，当地时间5月11日，美国加州洛杉矶卡斯泰克县监狱公布两则视频，视频显示一些服刑人员正在试图通过饮水、嗅口罩的方式故意感染新冠病毒并企图借此离开监狱。据报道，目前已有30名囚犯确诊新冠肺炎。<'时差视频'>>网页链接",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 65
+  },
+  {
+    "text": "【初冬时节，一起来赏银杏吧[拍照]】银杏叶从树枝上纷纷扬扬飘落下来，如同金灿灿的地毯覆盖了地面…云南腾冲银杏村，每年10月下旬起进入银杏最佳观赏期，被银杏树围绕着的村子，就如童话中金色的城堡，美得令人心醉！点图，找时间，约上小伙伴一起来享受这金色之美吧！（央视记者陈政）",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 66
+  },
+  {
+    "text": "赚钱的生意一般都不会很累，很累人的生意一般都不赚钱！如果你发现自己做生意特别累，那一定是方向和方法上出了问题！",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 67
+  },
+  {
+    "text": "美 国 老 兵 教你快要失传的溺水自救技巧。非 常有用的救 生技能，还有一定要教会你女朋友跟你妈",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 68
+  },
+  {
+    "text": "主人不给二哈吃鸡肉，急死二哈这个小公主了哈哈哈，字幕好可爱！",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 69
+  },
+  {
+    "text": "【男子做骨折手术 费用清单竟出现子宫切除等4项[吃惊]】日前，黑龙江59岁男子云少君到省医院做骨折手术。令人吃惊的是，医院提供的费用清单中竟有“子宫切除”、“输卵管切除术”等4项女性手术，费用也比此前医生告知的高出一万多。医生重新打印抹去这4项，另有13项费用也莫名消失。你怎么看？[疑问]",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 70
+  },
+  {
+    "text": "一辈子虽然漫长，但过去了也就是弹指一挥。你会不断的遇见一些人，也会不停的和一些人说再见，从陌生到熟悉，从熟悉再回陌生，从臭味相投到分道扬镳，从相见恨晚到不如不见……不是每个人都会是你的伙伴，也不是每个朋友都能肝胆相见，无烦或恼，缘到，报之以大笑，缘散，报之以不厌。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 71
+  },
+  {
+    "text": "【又现英勇“抱火哥” 冒死抱出喷火液化气罐】9日中午，张家口怀来县某店面内液化气罐起火，燃烧的火焰达到近1米高。一名消防战士不顾生命危险，在战友水枪掩护下，果断拎起起火罐冲出室外，最后成功将火扑灭。转发↓↓↓为“抱火哥”点[赞]（央视记者：李文超 介海申）",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 72
+  },
+  {
+    "text": "【央视曝光：投资85亿！贵阳30000套保障房竟闲置！】国家审计署近日公布了一个惊人的数据：贵州贵阳市，3万套保障房竟一直闲置！记者发现，一些小区房子虽已建好，但是水、电等还不能入户。这些保障房项目共涉及投85.43亿元，可因为不完善配套设施，老百姓有房却迟迟住不进...",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 73
+  },
+  {
+    "text": "just in: missing afghan soldiers found trying to enter canada near niagara falls",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 74
+  },
+  {
+    "text": "today marks 71 yrs since the liberation of auschwitz, “city of death”",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 75
+  },
+  {
+    "text": "在铺天盖地的官方消息传播中，很吊诡的一个现实是：到现在为止， ， ， ， ， 都没有发布或转发这条消息，只有 对其家人的合影做了一条转评。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 76
+  },
+  {
+    "text": "- 11 dead including 2 police in paris shooting. photo <>",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 77
+  },
+  {
+    "text": "紧急通知！因暴雨预警，明日全市中小学停课一天，请各位家长做好安排。——市教育局",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "官方通知",
+    "index": 78
+  },
+  {
+    "text": "study: 90% of workplace injuries caused by bare-knuckle boxing",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 79
+  },
+  {
+    "text": "常用中文俚语的英文翻译【更多看图】囧 embarrassed, awkward；大姨妈 aunt flo；宅人 homebody；菜鸟 noob；蹭饭的人 moocher；炒作 publicity stunt；吃老本 rest on one's laurels；吃错药了 get up on the wrong side of bed；扯平 even steven；牛 awesome；电灯泡 third wheel；切！- Whatever!",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 80
+  },
+  {
+    "text": "【[话筒]寻人】据 江苏常州市武进区湖塘镇华家村街都市华联超市门口有一对卖菜煎饼的老两口，每天带着一个六岁的孙女从早上卖饼卖到晚上，很辛苦！老两口于18日晚九点多把孙女弄丢了，他们从出事到现在一直冒雨在找，看着快要“急疯了”，真可怜！[泪]扩散帮寻吧！有线索请联系警方！",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 81
+  },
+  {
+    "text": "jakarta attacks: hashtag shows indonesians are not afraid",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 82
+  },
+  {
+    "text": "【中国拟立法规定：明星代言虚假广告三年禁代言】明星为虚假广告代言，一旦遭行政处罚，未满三年不能做代言，20日，第十二届全国人大常委会第十四次会议继续审议广告法修订草案，拟严格规范广告代言。此外，药品广告内容不得与国务院药品监督管理部门批准的说明书不一致，并应显著标明禁忌和不良反应。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 83
+  },
+  {
+    "text": "刚刚，SpaceX星舰第五次试飞成功！助推器首次实现空中回收，马斯克称这是人类航天的里程碑！",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "科技新闻",
+    "index": 84
+  },
+  {
+    "text": "【如果遇到背着这样包的人，请马上报警！】 如果您发现了背着大背包，背包上面还有散热洞的人员，马上拨打当地110报警电话！这就是发送冒充10086、95588、95533等移动、银行客服短信，让您积分兑奖的设备——伪基站！收到此类短信，千万别打开网址链接！",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 85
+  },
+  {
+    "text": "dog found abandoned at scottish train station with suitcase filled with it's belongings:",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 86
+  },
+  {
+    "text": "近日，全国各地爆发大规模集体吸毒事件，各大城市身陷囹圄，大裤衩被偷，奥特曼降临，广场舞深陷寂静岭，朝阳人民、西城大妈、海淀群众揭竿而起，纷纷举报，要求捉拿毒枭，如有线索，请发送图片证据现场照片在此微博下。小编将随机给部分受难群众发放防毒神器。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 87
+  },
+  {
+    "text": "【拼假攻略已经来了！[奥特曼]】4种拼假攻略可供选择：①清明拼假：4月2日-10日休息，4月5日-8日年假；②五一拼假：4月30日-5月8日休息，5月3日-6日年假；③端午拼假：6月4日-12日休息，6月6日-8日及12日年假；④中秋拼假：9月10日-18日休息，9月12日-14日及18日年假。转！[推荐]",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 88
+  },
+  {
+    "text": "to hold news conference on shootings at 2 pm et, 11 am pt. watch live coverage @",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 89
+  },
+  {
+    "text": "【[话筒]救救10个月的小叶满[泪]】张叶满，刚刚来到这个世界才10个月，14日妈妈为她洗澡时，她从床上翻落，掉进开水盆，全身多处Ⅱ级烫伤，脱水休克。小叶满的爸妈是90后，无固定工作，未入新农合，无法承受30万治疗费…帮帮孩子！联系人：彝良阳光志愿者协会副会长吴学敏15096575162。（央视）",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 90
+  },
+  {
+    "text": ".on declaring a federal emergency in michigan to supplement state and local response efforts.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 91
+  },
+  {
+    "text": "重磅！国务院发布最新政策：2024年起个税起征点调整为6000元。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "政策新闻",
+    "index": 92
+  },
+  {
+    "text": "【速看】暴雨橙色预警！今明两天广东多地将出现大到暴雨，局部特大暴雨，请注意防范。——广东省气象台",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "气象预警",
+    "index": 93
+  },
+  {
+    "text": "【】2020年1月22日郭某某从武汉返回德阳，1月25日，郭某某违反规定，不仅不进行居家隔离，反而聚众打麻将。1月26日，郭某某出现发热、咳嗽等临床症状，1月28日被确诊为新型冠状肺炎患者。1月31日，与郭某某打牌的赖某被确诊为新型冠状肺炎患者，2月2日，与郭某某有过接触的村医朱某某被确诊为新型冠状肺炎患者，随后与郭某某密切接触的120余名村民被强制医学隔离，宏山村、锦屏村被迫实行封闭管理。近日，四川省德阳市旌阳区人民法院<'德阳市旌阳法院'>，判处有期徒刑二年。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 94
+  },
+  {
+    "text": "vaughn foods co-worker who witnessed murder tells murder suspect alton nolen was shouting islamic phrases. fbi investigating",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 95
+  },
+  {
+    "text": "ferguson police chief: officer involved in shooting of michael brown was darren wilson, a 6-year veteran with no disciplinary record",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 96
+  },
+  {
+    "text": "french police: said kouachi and cherif kouachi wanted in paris terror attack:",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 97
+  },
+  {
+    "text": "【什么才是标准巨蟹座】1、没事爱抽风，易伤人，还后悔。2、总纠结，不听劝，死倔。3、大事谨慎，小事糊涂，聪明内敛。4、爱装，装坚强，装深沉，装成熟。5、对爱的人很好，柔情似水。6、喜欢音乐，幻想浪漫，更重现实。7、心太软，志不坚。8、生气后，很恐怖！杀气啊！",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 98
+  },
+  {
+    "text": "breaking: police operation at bataclan concert venue over, two attackers killed: bfm tv",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 99
+  },
+  {
+    "text": "\"people do not smile during a seizure while standing upright and then immediately launch into a coherent sentence.\"",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 100
+  },
+  {
+    "text": "【过去30天 35万中国人赴日赏花】日本樱花开放的3月15日到4月15日之间，赴日旅游的中国人约35万人，比去年翻一番，这些游客在日消费达70亿元人民币。不仅限于春节和赏花季，国人赴日游出现了持续高峰无淡季的全年化趋势。五一小长假，一些人气日本游线路已基本报满。详见：",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 101
+  },
+  {
+    "text": "donna douglas, known for role as elly may clampett on \"the beverly hillbillies,\" dies.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 102
+  },
+  {
+    "text": "震惊！高考状元竟然来自一个贫困县的乡村中学，她的故事令无数人动容。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "煽情标题",
+    "index": 103
+  },
+  {
+    "text": "nigerian islamist group boko haram releases video purporting to show kidnapped chibok schoolgirls",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 104
+  },
+  {
+    "text": "this is the driver that died in the accident with paul walker. don't forget about him just because he's not famous.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 105
+  },
+  {
+    "text": "to end operations next week:",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 106
+  },
+  {
+    "text": "【全国首个五星级旅游厕所建成 耗资200万】12月5日，全国首个五星级旅游厕所——江苏省盐城大纵湖景区旅游厕所建成。该系列厕所计划共建造四个，每个投资200多万元。厕所分四个功能区：解忧如厕区，公共休闲区，无障碍区，母婴休息区。详见：",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 107
+  },
+  {
+    "text": "如果没有信仰，就把旅行当做你的信仰，这一生，都走在朝圣的路上。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 108
+  },
+  {
+    "text": "breaking: a source confirms to cp24 that the deceased soldier in ottawa is cpl. nathan cirillo. cirillo was a member of the hamilton argylls",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 109
+  },
+  {
+    "text": "最新！某市出现1例猴痘确诊病例，患者已隔离治疗，密接人员已全部追踪管控。——市卫健委",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "疫情通报",
+    "index": 110
+  },
+  {
+    "text": "【扩散：极端天气来袭 “航班取消”短信骗局也来了！】骗子短信告知航班取消→乘客联系“400”假客服→骗子索要网银卡号密码→乘客卡上的钱被转移…提醒：航空公司不会直接给旅客发“航班取消”短信。收到此类短信，应联系购票处核实，或直接致电官方客服获取准确航班信息！警惕！",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 111
+  },
+  {
+    "text": "at least 12 dead in the paris shooting. updated story and background info:",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 112
+  },
+  {
+    "text": "there's a rainbow over the white house right now, just the same as when dublin had one the day ireland legalized",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 113
+  },
+  {
+    "text": "德国从进入三月份开始检测狂飙，像柳叶刀主编说的test,test,test。第一周检测11万，第二周16万，第三周40万，今后保证每周50万人次。对比一下，英国上周检测不到5万人次，疫情爆发至今检测了12万人次。所以德国的单日新增确诊人数很好，大量病人还住在ICU，“我们还没有放弃他们”，所以累计死亡数字有滞后性。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 114
+  },
+  {
+    "text": "man who portrayed the marlboro man in the 1970s dies from smoking-related disease",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 115
+  },
+  {
+    "text": "teenage girl 'made up' migrant rape claim that caused uproar in germany",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 116
+  },
+  {
+    "text": "【雪中，他的身影很暖心】近日，一张雪中警察背老人的照片被网友点赞。图中警察是徐州民警高鹏飞，老人是一诈骗案的受害人。日前老人带着工钱回老家，路上却被骗走了钱。高鹏飞通过监控锁定嫌疑人，蹲守8天8夜将其抓获。在领取被骗财物路上，老人扭伤了脚，小高将老人背上警车再送回。为好民警点[赞]！",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 117
+  },
+  {
+    "text": "conservative caucas informed soldier shot at war memorial in ottawa this morning has died. a sad development on a shocking day.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 118
+  },
+  {
+    "text": "apologies if you've already seen a crow riding a bald eagle today. image: phoo chan story:",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 119
+  },
+  {
+    "text": "先看视频，大家自己评判吧↓↓↓",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 120
+  },
+  {
+    "text": "你觉得国外疫情有希望控制住吗？网页链接",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 121
+  },
+  {
+    "text": "没有谁是因为一时冲动而离开你的，那些难过无助又一次次忍耐的眼泪你都看不见。就像堤坝下逐渐因侵蚀而拓宽的裂缝，你看见的，只是它崩溃的那个瞬间。\"请关 注我，这里总有一句是你想说的话“",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 122
+  },
+  {
+    "text": "【土耳其总统再呛声 警告普京“不要玩火”】据英国《BBC》报道，埃尔多安说，他希望透过明日登场的巴黎气候会议上，能与普京“面对面”沟通来解决问题，并警告普京不要玩火。不过俄方强调，在埃尔多安要求见面之前，普京希望土耳其先道歉。（凤凰网）",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 123
+  },
+  {
+    "text": "man’s anxiety not about to let depression muscle in on turf",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 124
+  },
+  {
+    "text": "his movies brought thrills and laughter to millions. can't believe he died in car crash rip paul walker",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 125
+  },
+  {
+    "text": "【先升后跌！沪市成交额爆表破1万亿】周一早盘，沪指高开低走，盘中一度跌逾1%，随后拉升，再度站上4300点，创出七年年新高；午后沪指一度走高涨近2%；随后大盘跳水。截至收盘，沪指报4217.08点，跌1.64%。成交量方面，沪市成交突破万亿元大关，随后数据不再更新。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 126
+  },
+  {
+    "text": "当狐狸也钻钻钻起来，威力完全不下于柴犬钻(ง •̀_•́)ง",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 127
+  },
+  {
+    "text": "最新版郑多燕10分钟甩油操视频版，想瘦你就跳，四周之后你会来感谢我的！先马后看~",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 128
+  },
+  {
+    "text": "【美媒评052D型驱逐舰：已经与伯克级接近】美国战略之页网站报道，中国最新下水的052D型驱逐舰，排水量约7000吨，采用美式垂直导弹发射系统可兼容多种导弹，以及新的相控阵雷达。不过美国人对052D的评价却很耐人寻味，\"中国海军用十年时间，造出了和已服役20余年的伯克级战斗力相似的舰艇。\"(高凯)",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 129
+  },
+  {
+    "text": "is the truth out there? in nod to releases hundreds of declassified docs",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 130
+  },
+  {
+    "text": "好了，对【群体免疫】心心念念的人应该清醒点了：康复者二次感染基本宣告了群体免疫政策的破产。新冠疫情在全球感染了几千万人，在频繁传播中必然累计出传播力更强的变异毒株——这些毒株毒力往往减弱，但更能攻破免疫系统；此时，靠大量人群感染构造的“人肉防火墙”就基本失效了，想要获得应对新毒株的“群体免疫力”，就需要继续大量感染的人口…除非病毒不会出现变异和进化，否则群体免疫必然失败。另外，目前新冠康复者体内的抗体留存也是个众说纷纭的问题；如果在达到群体免疫之前，第一批被感染人群的免疫力已经消失，那人和新冠病毒的搏斗将是一个无限循环。必须说：目前新冠康复者二次感染还是个案，但群体免疫无疑是在放大这种个案的几率，最终会使这种个案变成普遍趋势。还是老老实实搞防控，实施硬隔离吧——别把希望寄托于病毒“按需求”变异上。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 131
+  },
+  {
+    "text": "actor eric lawson who portrayed the marlboro man dies from chronic obstructive pulmonary disease:",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 132
+  },
+  {
+    "text": "【最新消息：我国平均26岁结婚 现在90后已算晚婚！】中国妇联发起的“调查报告”指出，我国平均26岁结婚，90%的女性在30岁前结婚。你被催婚了吗？其实，幸福婚姻并不在何时结婚，调查显示，忠诚、体贴才是幸福的基石，仅剩6周，2015就结束了，新一年，祝大家找到幸福！为爱转发！[心](央视记者谭臻)",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 133
+  },
+  {
+    "text": "minor leaguer hits grand slam, later finds out that he broke his own windshield",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 134
+  },
+  {
+    "text": "【27年后，她找到火海救她的消防员[心]】27年前，上海一民居起火，母亲抱着3个月大女婴被困家中。一消防员冲进火场，抱起女婴往下爬，烧断的电线打来，他触电坠地的瞬间，翻身护住女婴，自己右臂却粉碎骨折…27年后，女孩费尽周折找到了救命恩人陆玉明，亲口对他说了“谢谢”。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 135
+  },
+  {
+    "text": "developing news: soldier shot at war memorial. watch cbc nn for coverage. or follow online:",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 136
+  },
+  {
+    "text": "图解酱香饼做法，自己做卫生又美味，果断收了哈!转",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 137
+  },
+  {
+    "text": "周杰伦在美国街头。。。路人的反应似乎在说，“哎哟，还不错哦！”[笑cry]",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 138
+  },
+  {
+    "text": "paul walker died too fast, i'm furious.. :/",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 139
+  },
+  {
+    "text": "【突发】今晨6时，四川雅安发生4.2级地震，震源深度15公里。据中国地震台网正式测定，暂无人员伤亡报告。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "灾难新闻",
+    "index": 140
+  },
+  {
+    "text": "警方通报：昨日网传的'某小区绑架儿童'一事，经查系家庭纠纷，并非绑架案件。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "警方通报",
+    "index": 141
+  },
+  {
+    "text": "mike pence: \"when donald trump becomes president, we won't be pay ransom to terrorists or terror-sponsoring states.\"",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 142
+  },
+  {
+    "text": "打着真性情的旗号，去做一些不顾别人感受的事，其实只是没教养且情商低。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 143
+  },
+  {
+    "text": "donna douglas, elly may clampett on ‘beverly hillbillies,’ dies at 81",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 144
+  },
+  {
+    "text": "【男生跑步跑“断”腿 6年碳酸饮料喝成“骨脆脆”】湖北高中生小陈体育课跑步时，突然感觉左腿剧痛，栽倒在操场上。经查，小陈意外骨折！原来，小陈6年多以来每天喝两三瓶碳酸饮料，影响钙盐在骨质中沉积。医生介绍，过量饮用碳酸饮料，骨折发生的危险性可增加5倍。转给关心的TA！",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 145
+  },
+  {
+    "text": "不敢相信！一条藏獒的价格竟然降到了几百块，曾经炒到上千万的天价犬如今无人问津。",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "category": "夸张真事",
+    "index": 146
+  },
+  {
+    "text": "photo: dogs of canadian reservist killed at national war memorial wait for him to return home",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 147
+  },
+  {
+    "text": "【Dispatch】[IU最新画报公开“二十三岁的清纯~”]18日时尚杂志 claire 游走在少女和女人之间,时而纯情时而成熟,引发热议.另外IU将于21日-22日在首尔奥林匹克公园奥林匹克Hall举办单独演唱会.",
+    "true_label": "non_rumor",
+    "has_sensitive": true,
+    "index": 148
+  },
+  {
+    "text": "不求，朋友成群，但求知己一人；不求，财富无数，但求够花够用；不求，万人怜惜，但求一人的懂得；不求，房子多大，但求一家温暖；不求，车子豪华，但求一生平安；不求，衣着华丽，但求，穿着合体；不求才高八斗，但求思想丰富；不求地位显赫，但求工作顺心；不求，人生辉煌，但求一生无悔。",
+    "true_label": "non_rumor",
+    "has_sensitive": false,
+    "index": 149
+  }
+]

@@ -1,0 +1,1065 @@
+{
+  "artifact_version": "rumorbuster-demo-capture-v1",
+  "graph_id": "rumor_agent",
+  "case_id": "medical-old-rumor",
+  "case_title": "医学旧谣言变体与权威研究",
+  "category": "professional",
+  "repeat": 1,
+  "input": {
+    "claim": "饮酒可以预防新冠肺炎",
+    "source_url": null
+  },
+  "started_at": "2026-08-12T14:27:52.831762+00:00",
+  "thread_id_redacted": true,
+  "status": "completed",
+  "workflow": {
+    "input_message_id": "b09b90cf-17e0-443d-8464-6130be3cce34",
+    "run_id": "cb2b7a040149472f9e71c41a4e4913fd",
+    "stage": "report",
+    "raw_input": "请核验以下主张：\n饮酒可以预防新冠肺炎",
+    "source_url": null,
+    "initial_claim": "主张： 饮酒可以预防新冠肺炎",
+    "is_verification": true,
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true,
+      "authority_research": true,
+      "evidence_critic": true
+    },
+    "degradation_codes": [],
+    "trace": [
+      {
+        "stage": "reset_input",
+        "at": "2026-08-12T14:27:54.039905+00:00"
+      },
+      {
+        "stage": "extract_claim",
+        "at": "2026-08-12T14:27:55.361256+00:00"
+      },
+      {
+        "stage": "checkability",
+        "at": "2026-08-12T14:27:55.364547+00:00"
+      },
+      {
+        "stage": "parallel_collection",
+        "at": "2026-08-12T14:27:55.366930+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T14:28:16.064861+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T14:28:17.932612+00:00"
+      },
+      {
+        "stage": "adjudicate",
+        "at": "2026-08-12T14:28:17.943487+00:00"
+      },
+      {
+        "stage": "timeline",
+        "at": "2026-08-12T14:28:17.945374+00:00"
+      },
+      {
+        "stage": "explain",
+        "at": "2026-08-12T14:28:17.946958+00:00"
+      },
+      {
+        "stage": "report",
+        "at": "2026-08-12T14:28:24.572226+00:00"
+      }
+    ],
+    "claim_context": {
+      "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "主张： 饮酒可以预防新冠肺炎",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": null,
+      "source_url": null,
+      "domain": "medical",
+      "domain_reason": "命中受控专业关键词：新冠"
+    },
+    "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+    "checkability": {
+      "claim": "主张： 饮酒可以预防新冠肺炎",
+      "claim_type": "public_fact",
+      "checkability": "checkable_now",
+      "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+      "claim_context": {
+        "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "主张： 饮酒可以预防新冠肺炎",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": null,
+        "domain": "medical",
+        "domain_reason": "命中受控专业关键词：新冠"
+      }
+    },
+    "rag_result": {
+      "status": "ok",
+      "query": "主张： 饮酒可以预防新冠肺炎",
+      "matches": [
+        {
+          "record_id": "who-covid-007",
+          "canonical_claim": "饮酒可以预防新冠肺炎",
+          "similarity": 0.5048,
+          "matched_variant": "饮酒可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-009",
+          "canonical_claim": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "similarity": 0.2459,
+          "matched_variant": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-011",
+          "canonical_claim": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "similarity": 0.2386,
+          "matched_variant": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        }
+      ],
+      "threshold": 0.05,
+      "authoritative": false,
+      "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+    },
+    "classifier_signal": {
+      "status": "unavailable",
+      "role": "auxiliary_signal",
+      "label": "uncertain",
+      "rationale": "分类器未配置",
+      "authoritative": false
+    },
+    "evidence": [
+      {
+        "id": "web-1",
+        "title": "世卫组织：喝酒不能防新冠 “宅家”期间须节制",
+        "url": "https://news.un.org/zh/story/2020/04/1055042",
+        "publisher": "联合国新闻",
+        "published_at": "2020-04-15",
+        "stance": "refute",
+        "source_level": "B",
+        "claimed_source_level": "A",
+        "verified_source_level": "B",
+        "source_grade_reason": "官方域名，但代码未确认与本事项职权匹配",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "域名属于官方来源，但主张未命中该机构的受控职权范围",
+        "independent_group": "联合国新闻/世界卫生组织",
+        "content_fingerprint": "74c16861f270c7e5",
+        "temporal_relevance": "historical_match",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:03.923341+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎/喝高度酒能杀死新冠病毒",
+        "change_summary": "",
+        "summary": "联合国新闻引用世界卫生组织声明，明确表示'饮用酒精浓度较高的烈酒能够杀死新冠病毒'的说法并不正确。世卫组织指出饮酒不能预防新冠病毒，任何酒类都会对健康造成风险，且酒精会破坏人体免疫系统，增加健康风险。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-2",
+        "title": "喝酒能预防新冠、杀病毒？官方正式回应来了！",
+        "url": "https://www.sohu.com/a/617754987_121124565",
+        "publisher": "搜狐（来源：新闻坊、上海网络辟谣平台）",
+        "published_at": "2022-12-16",
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "B",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "上海网络辟谣平台",
+        "content_fingerprint": "8541d9d9ea7903c0",
+        "temporal_relevance": "current",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:03.840110+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "适量喝酒预防新冠/喝酒能杀灭新冠病毒",
+        "change_summary": "",
+        "summary": "文章明确指出喝酒不能预防新冠肺炎或杀灭新冠病毒，恰恰相反喝酒会增加感染风险。引用世卫组织2020年7月官方声明：'饮酒不能保护你远离病毒'，'在任何情况下都不应该把含酒精饮品作为预防或治疗冠状病毒病感染的手段'。同时从科学角度解释酒精进入消化系统后难以与呼吸道病毒接触，体内浓度远达不到消毒所需的70%，因此无法杀灭体内病毒。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-3",
+        "title": "喝酒预防新冠 | 百度健康·医学科普",
+        "url": "https://health.baidu.com/m/detail/ar_6066936573507159507",
+        "publisher": "百度健康·医学科普",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "B",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "百度健康医学科普",
+        "content_fingerprint": "8180f5525a8f6d1f",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:05.142639+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "百度健康医学科普明确表示喝酒不能预防新冠病毒感染。从科学角度解释：医用消毒酒精浓度约75%可破坏病毒蛋白质结构，但通过饮酒进入体内的酒精会被消化系统代谢，血液中浓度远低于消毒所需水平，无法灭活病毒；新冠病毒通过呼吸道感染，饮酒无法在呼吸道黏膜形成保护屏障。过量饮酒会损伤免疫系统，反而增加健康风险。引用世卫组织指出饮酒与新冠重症风险上升相关。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-4",
+        "title": "「饮酒」抗新冠？别给想喝两口找借口啦",
+        "url": "https://zhuanlan.zhihu.com/p/151757632",
+        "publisher": "知乎专栏",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "C",
+        "verified_source_level": "C",
+        "source_grade_reason": "搜索摘要最高按C级线索处理",
+        "directness": "snippet_only",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "知乎",
+        "content_fingerprint": "81fa6c894b348a01",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": null,
+        "extraction_status": "snippet_only",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎/喝高度酒杀灭病毒",
+        "change_summary": "",
+        "summary": "搜索摘要显示该文章引用世界卫生组织官方声明：'喝高度酒不仅不能杀灭病毒，还会增加健康风险'，力破喝酒抗新冠的谣言。页面抓取失败（403），仅凭搜索摘要获取信息。",
+        "provenance": "web"
+      },
+      {
+        "id": "authority-1",
+        "title": "Drinking alcohol kills coronavirus? Another one for WHO's myth-busters list",
+        "url": "https://www.scmp.com/news/china/science/article/3110867/drinking-alcohol-kills-coronavirus-another-one-who-myth-busters",
+        "publisher": "South China Morning Post",
+        "published_at": "2020-11-22",
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "C",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "SCMP引用WHO辟谣清单",
+        "content_fingerprint": "48c12c2f8e7fce2f",
+        "temporal_relevance": "event_match",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:06.935856+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "该报道引用世界卫生组织（WHO）在新冠疫情期间发布的'辟谣清单'（myth-busters），明确指出'饮用酒精并不能杀死体内的新冠病毒'（Drinking alcohol doesn't kill the coronavirus inside your body）。WHO官方立场是饮酒不能预防或治疗新冠肺炎，且有害使用酒精会增加感染风险并削弱免疫系统。",
+        "provenance": "web"
+      },
+      {
+        "id": "authority-2",
+        "title": "世界卫生组织 | 世卫组织呼吁各国政府行动起来，预防与酒精相关的死亡和疾病",
+        "url": "https://apps.who.int/mediacentre/news/releases/2014/alcohol-related-deaths-prevention/zh/index.html",
+        "publisher": "世界卫生组织（WHO）",
+        "published_at": "2014-05-12",
+        "stance": "refute",
+        "source_level": "A",
+        "claimed_source_level": "A",
+        "verified_source_level": "A",
+        "source_grade_reason": "官方域名且代码校验职权匹配",
+        "directness": "indirect",
+        "authority_scope": true,
+        "authority_reason": "官方来源注册表中的职权关键词与主张匹配",
+        "independent_group": "世界卫生组织官方文件",
+        "content_fingerprint": "c54162823274e71c",
+        "temporal_relevance": "historical_match",
+        "current_validity_confirmed": false,
+        "fetched_at": null,
+        "extraction_status": "snippet_only",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "WHO官方报告明确指出有害使用酒精会增加人们感染结核病和肺炎等传染病的风险，与'饮酒可以预防新冠肺炎'的主张直接矛盾。此报告发布于2014年，但WHO关于酒精与传染病风险关系的这一立场持续有效。",
+        "provenance": "web"
+      }
+    ],
+    "research_rejected": [
+      {
+        "evidence_id": "web-3",
+        "reason_code": "time_unknown",
+        "explanation": "证据时间字段未通过代码校验"
+      },
+      {
+        "evidence_id": "web-4",
+        "reason_code": "time_unknown",
+        "explanation": "证据时间字段未通过代码校验"
+      }
+    ],
+    "branch_status": {
+      "rag": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:27:55.370830+00:00",
+        "finished_at": "2026-08-12T14:27:55.380479+00:00",
+        "duration_ms": 10,
+        "result_count": 3,
+        "error_code": null
+      },
+      "web": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:27:55.380506+00:00",
+        "finished_at": "2026-08-12T14:28:15.113221+00:00",
+        "duration_ms": 19732,
+        "result_count": 4,
+        "error_code": null
+      },
+      "classifier": {
+        "status": "skipped",
+        "result_count": 0
+      },
+      "authority": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:27:55.789023+00:00",
+        "finished_at": "2026-08-12T14:28:16.055980+00:00",
+        "duration_ms": 20267,
+        "result_count": 2,
+        "error_code": null
+      }
+    },
+    "evidence_review": {
+      "status": "completed",
+      "coverage_by_claim": {
+        "claim-1": "covered"
+      },
+      "missing_claim_ids": [],
+      "conflict_claim_ids": [],
+      "duplicate_groups": [],
+      "supplement_needed": false,
+      "supplement_query": "",
+      "notes": "证据审查只检查覆盖和冲突，不生成新证据或最终结论。"
+    },
+    "decision": {
+      "verdict": "证据不足",
+      "strength": "insufficient",
+      "accepted_evidence_ids": [],
+      "excluded_evidence": [
+        {
+          "evidence_id": "web-2",
+          "reason_code": "source_too_weak",
+          "explanation": "来源等级未达到裁决门槛"
+        },
+        {
+          "evidence_id": "web-3",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "web-4",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "authority-1",
+          "reason_code": "source_too_weak",
+          "explanation": "来源等级未达到裁决门槛"
+        },
+        {
+          "evidence_id": "authority-2",
+          "reason_code": "extraction_failed",
+          "explanation": "证据正文或结构化字段提取失败"
+        }
+      ],
+      "reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "classifier_consistency": "unavailable_or_uncertain",
+      "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+      "subclaim_decisions": {}
+    },
+    "timeline": {
+      "timeline_status": "insufficient",
+      "events": [],
+      "note": "规则裁决证据不足，因此不生成传播时间线。"
+    }
+  },
+  "report": {
+    "schema_version": "rumorbuster-report-v3",
+    "claim": {
+      "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "主张： 饮酒可以预防新冠肺炎",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": null,
+      "source_url": null,
+      "domain": "medical",
+      "domain_reason": "命中受控专业关键词：新冠"
+    },
+    "checkability": {
+      "claim": "主张： 饮酒可以预防新冠肺炎",
+      "claim_type": "public_fact",
+      "checkability": "checkable_now",
+      "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+      "claim_context": {
+        "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "主张： 饮酒可以预防新冠肺炎",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": null,
+        "domain": "medical",
+        "domain_reason": "命中受控专业关键词：新冠"
+      }
+    },
+    "domain_route": {
+      "domain": "medical",
+      "reason": "命中受控专业关键词：新冠"
+    },
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true,
+      "authority_research": true,
+      "evidence_critic": true
+    },
+    "original_page": null,
+    "research_branches": {
+      "rag": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:27:55.370830+00:00",
+        "finished_at": "2026-08-12T14:27:55.380479+00:00",
+        "duration_ms": 10,
+        "result_count": 3,
+        "error_code": null
+      },
+      "web": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:27:55.380506+00:00",
+        "finished_at": "2026-08-12T14:28:15.113221+00:00",
+        "duration_ms": 19732,
+        "result_count": 4,
+        "error_code": null
+      },
+      "classifier": {
+        "status": "skipped",
+        "result_count": 0
+      },
+      "authority": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:27:55.789023+00:00",
+        "finished_at": "2026-08-12T14:28:16.055980+00:00",
+        "duration_ms": 20267,
+        "result_count": 2,
+        "error_code": null
+      }
+    },
+    "rag": {
+      "status": "ok",
+      "query": "主张： 饮酒可以预防新冠肺炎",
+      "matches": [
+        {
+          "record_id": "who-covid-007",
+          "canonical_claim": "饮酒可以预防新冠肺炎",
+          "similarity": 0.5048,
+          "matched_variant": "饮酒可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-009",
+          "canonical_claim": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "similarity": 0.2459,
+          "matched_variant": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-011",
+          "canonical_claim": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "similarity": 0.2386,
+          "matched_variant": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        }
+      ],
+      "threshold": 0.05,
+      "authoritative": false,
+      "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+    },
+    "classifier_signal": {
+      "status": "unavailable",
+      "role": "auxiliary_signal",
+      "label": "uncertain",
+      "rationale": "分类器未配置",
+      "authoritative": false
+    },
+    "evidence": [
+      {
+        "id": "web-1",
+        "title": "世卫组织：喝酒不能防新冠 “宅家”期间须节制",
+        "url": "https://news.un.org/zh/story/2020/04/1055042",
+        "publisher": "联合国新闻",
+        "published_at": "2020-04-15",
+        "stance": "refute",
+        "source_level": "B",
+        "claimed_source_level": "A",
+        "verified_source_level": "B",
+        "source_grade_reason": "官方域名，但代码未确认与本事项职权匹配",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "域名属于官方来源，但主张未命中该机构的受控职权范围",
+        "independent_group": "联合国新闻/世界卫生组织",
+        "content_fingerprint": "74c16861f270c7e5",
+        "temporal_relevance": "historical_match",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:03.923341+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎/喝高度酒能杀死新冠病毒",
+        "change_summary": "",
+        "summary": "联合国新闻引用世界卫生组织声明，明确表示'饮用酒精浓度较高的烈酒能够杀死新冠病毒'的说法并不正确。世卫组织指出饮酒不能预防新冠病毒，任何酒类都会对健康造成风险，且酒精会破坏人体免疫系统，增加健康风险。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-2",
+        "title": "喝酒能预防新冠、杀病毒？官方正式回应来了！",
+        "url": "https://www.sohu.com/a/617754987_121124565",
+        "publisher": "搜狐（来源：新闻坊、上海网络辟谣平台）",
+        "published_at": "2022-12-16",
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "B",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "上海网络辟谣平台",
+        "content_fingerprint": "8541d9d9ea7903c0",
+        "temporal_relevance": "current",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:03.840110+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "适量喝酒预防新冠/喝酒能杀灭新冠病毒",
+        "change_summary": "",
+        "summary": "文章明确指出喝酒不能预防新冠肺炎或杀灭新冠病毒，恰恰相反喝酒会增加感染风险。引用世卫组织2020年7月官方声明：'饮酒不能保护你远离病毒'，'在任何情况下都不应该把含酒精饮品作为预防或治疗冠状病毒病感染的手段'。同时从科学角度解释酒精进入消化系统后难以与呼吸道病毒接触，体内浓度远达不到消毒所需的70%，因此无法杀灭体内病毒。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-3",
+        "title": "喝酒预防新冠 | 百度健康·医学科普",
+        "url": "https://health.baidu.com/m/detail/ar_6066936573507159507",
+        "publisher": "百度健康·医学科普",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "B",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "百度健康医学科普",
+        "content_fingerprint": "8180f5525a8f6d1f",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:05.142639+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "百度健康医学科普明确表示喝酒不能预防新冠病毒感染。从科学角度解释：医用消毒酒精浓度约75%可破坏病毒蛋白质结构，但通过饮酒进入体内的酒精会被消化系统代谢，血液中浓度远低于消毒所需水平，无法灭活病毒；新冠病毒通过呼吸道感染，饮酒无法在呼吸道黏膜形成保护屏障。过量饮酒会损伤免疫系统，反而增加健康风险。引用世卫组织指出饮酒与新冠重症风险上升相关。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-4",
+        "title": "「饮酒」抗新冠？别给想喝两口找借口啦",
+        "url": "https://zhuanlan.zhihu.com/p/151757632",
+        "publisher": "知乎专栏",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "C",
+        "verified_source_level": "C",
+        "source_grade_reason": "搜索摘要最高按C级线索处理",
+        "directness": "snippet_only",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "知乎",
+        "content_fingerprint": "81fa6c894b348a01",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": null,
+        "extraction_status": "snippet_only",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎/喝高度酒杀灭病毒",
+        "change_summary": "",
+        "summary": "搜索摘要显示该文章引用世界卫生组织官方声明：'喝高度酒不仅不能杀灭病毒，还会增加健康风险'，力破喝酒抗新冠的谣言。页面抓取失败（403），仅凭搜索摘要获取信息。",
+        "provenance": "web"
+      },
+      {
+        "id": "authority-1",
+        "title": "Drinking alcohol kills coronavirus? Another one for WHO's myth-busters list",
+        "url": "https://www.scmp.com/news/china/science/article/3110867/drinking-alcohol-kills-coronavirus-another-one-who-myth-busters",
+        "publisher": "South China Morning Post",
+        "published_at": "2020-11-22",
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "C",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "SCMP引用WHO辟谣清单",
+        "content_fingerprint": "48c12c2f8e7fce2f",
+        "temporal_relevance": "event_match",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T14:28:06.935856+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "该报道引用世界卫生组织（WHO）在新冠疫情期间发布的'辟谣清单'（myth-busters），明确指出'饮用酒精并不能杀死体内的新冠病毒'（Drinking alcohol doesn't kill the coronavirus inside your body）。WHO官方立场是饮酒不能预防或治疗新冠肺炎，且有害使用酒精会增加感染风险并削弱免疫系统。",
+        "provenance": "web"
+      },
+      {
+        "id": "authority-2",
+        "title": "世界卫生组织 | 世卫组织呼吁各国政府行动起来，预防与酒精相关的死亡和疾病",
+        "url": "https://apps.who.int/mediacentre/news/releases/2014/alcohol-related-deaths-prevention/zh/index.html",
+        "publisher": "世界卫生组织（WHO）",
+        "published_at": "2014-05-12",
+        "stance": "refute",
+        "source_level": "A",
+        "claimed_source_level": "A",
+        "verified_source_level": "A",
+        "source_grade_reason": "官方域名且代码校验职权匹配",
+        "directness": "indirect",
+        "authority_scope": true,
+        "authority_reason": "官方来源注册表中的职权关键词与主张匹配",
+        "independent_group": "世界卫生组织官方文件",
+        "content_fingerprint": "c54162823274e71c",
+        "temporal_relevance": "historical_match",
+        "current_validity_confirmed": false,
+        "fetched_at": null,
+        "extraction_status": "snippet_only",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "WHO官方报告明确指出有害使用酒精会增加人们感染结核病和肺炎等传染病的风险，与'饮酒可以预防新冠肺炎'的主张直接矛盾。此报告发布于2014年，但WHO关于酒精与传染病风险关系的这一立场持续有效。",
+        "provenance": "web"
+      }
+    ],
+    "evidence_review": {
+      "status": "completed",
+      "coverage_by_claim": {
+        "claim-1": "covered"
+      },
+      "missing_claim_ids": [],
+      "conflict_claim_ids": [],
+      "duplicate_groups": [],
+      "supplement_needed": false,
+      "supplement_query": "",
+      "notes": "证据审查只检查覆盖和冲突，不生成新证据或最终结论。"
+    },
+    "decision": {
+      "verdict": "证据不足",
+      "strength": "insufficient",
+      "accepted_evidence_ids": [],
+      "excluded_evidence": [
+        {
+          "evidence_id": "web-2",
+          "reason_code": "source_too_weak",
+          "explanation": "来源等级未达到裁决门槛"
+        },
+        {
+          "evidence_id": "web-3",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "web-4",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "authority-1",
+          "reason_code": "source_too_weak",
+          "explanation": "来源等级未达到裁决门槛"
+        },
+        {
+          "evidence_id": "authority-2",
+          "reason_code": "extraction_failed",
+          "explanation": "证据正文或结构化字段提取失败"
+        }
+      ],
+      "reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "classifier_consistency": "unavailable_or_uncertain",
+      "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+      "subclaim_decisions": {}
+    },
+    "timeline": {
+      "timeline_status": "insufficient",
+      "events": [],
+      "note": "规则裁决证据不足，因此不生成传播时间线。"
+    },
+    "limitations": [],
+    "workflow_trace": [
+      {
+        "stage": "reset_input",
+        "at": "2026-08-12T14:27:54.039905+00:00"
+      },
+      {
+        "stage": "extract_claim",
+        "at": "2026-08-12T14:27:55.361256+00:00"
+      },
+      {
+        "stage": "checkability",
+        "at": "2026-08-12T14:27:55.364547+00:00"
+      },
+      {
+        "stage": "parallel_collection",
+        "at": "2026-08-12T14:27:55.366930+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T14:28:16.064861+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T14:28:17.932612+00:00"
+      },
+      {
+        "stage": "adjudicate",
+        "at": "2026-08-12T14:28:17.943487+00:00"
+      },
+      {
+        "stage": "timeline",
+        "at": "2026-08-12T14:28:17.945374+00:00"
+      },
+      {
+        "stage": "explain",
+        "at": "2026-08-12T14:28:17.946958+00:00"
+      },
+      {
+        "stage": "report",
+        "at": "2026-08-12T14:28:24.572226+00:00"
+      }
+    ],
+    "explanation": "根据现有证据，无法认定“饮酒可以预防新冠肺炎”这一主张的真伪，因为支持方和反驳方均未达到一条A类或两条独立B类证据的裁决门槛。部分反驳证据因来源等级不足、发布时间或当前有效性无法确认、信息提取失败等原因被排除，故整体证据不足。"
+  },
+  "observed_urls": [
+    "https://apps.who.int/gb/archive/pdf_files/WHA58/A58_18-ch.pdf",
+    "https://apps.who.int/mediacentre/news/releases/2014/alcohol-related-deaths-prevention/zh/index.html",
+    "https://atvnewsonline.com/world/酒类产业强力游说-抗衡who零安全饮酒立场",
+    "https://cdn.who.int/media/docs/default-source/wpro---documents/regional-committee/session-76/wpr-rc76-r4-alcohol_zh.pdf",
+    "https://health.baidu.com/m/detail/ar_6066936573507159507",
+    "https://news.un.org/zh/story/2020/04/1055042",
+    "https://www.scmp.com/news/china/science/article/3110867/drinking-alcohol-kills-coronavirus-another-one-who-myth-busters",
+    "https://www.sohu.com/a/405008798_614733",
+    "https://www.sohu.com/a/617754987_121124565",
+    "https://zhuanlan.zhihu.com/p/151757632"
+  ],
+  "tool_messages": [],
+  "research_payloads": {
+    "web": {
+      "status": "ok",
+      "evidence": [
+        {
+          "id": "web-1",
+          "title": "世卫组织：喝酒不能防新冠 “宅家”期间须节制",
+          "url": "https://news.un.org/zh/story/2020/04/1055042",
+          "publisher": "联合国新闻",
+          "published_at": "2020-04-15",
+          "stance": "refute",
+          "source_level": "A",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "联合国官方新闻平台，转载世界卫生组织关于COVID-19的权威声明和防疫指导意见",
+          "independent_group": "联合国新闻/世界卫生组织",
+          "content_fingerprint": "",
+          "temporal_relevance": "historical_match",
+          "current_validity_confirmed": true,
+          "fetched_at": "2026-08-12T14:28:03.923341+00:00",
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "饮酒可以预防新冠肺炎/喝高度酒能杀死新冠病毒",
+          "change_summary": "",
+          "summary": "联合国新闻引用世界卫生组织声明，明确表示'饮用酒精浓度较高的烈酒能够杀死新冠病毒'的说法并不正确。世卫组织指出饮酒不能预防新冠病毒，任何酒类都会对健康造成风险，且酒精会破坏人体免疫系统，增加健康风险。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-2",
+          "title": "喝酒能预防新冠、杀病毒？官方正式回应来了！",
+          "url": "https://www.sohu.com/a/617754987_121124565",
+          "publisher": "搜狐（来源：新闻坊、上海网络辟谣平台）",
+          "published_at": "2022-12-16",
+          "stance": "refute",
+          "source_level": "B",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "转载上海网络辟谣平台的官方辟谣内容，并引用世界卫生组织2020年7月官方微博声明",
+          "independent_group": "上海网络辟谣平台",
+          "content_fingerprint": "",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": true,
+          "fetched_at": "2026-08-12T14:28:03.840110+00:00",
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "适量喝酒预防新冠/喝酒能杀灭新冠病毒",
+          "change_summary": "",
+          "summary": "文章明确指出喝酒不能预防新冠肺炎或杀灭新冠病毒，恰恰相反喝酒会增加感染风险。引用世卫组织2020年7月官方声明：'饮酒不能保护你远离病毒'，'在任何情况下都不应该把含酒精饮品作为预防或治疗冠状病毒病感染的手段'。同时从科学角度解释酒精进入消化系统后难以与呼吸道病毒接触，体内浓度远达不到消毒所需的70%，因此无法杀灭体内病毒。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-3",
+          "title": "喝酒预防新冠 | 百度健康·医学科普",
+          "url": "https://health.baidu.com/m/detail/ar_6066936573507159507",
+          "publisher": "百度健康·医学科普",
+          "published_at": null,
+          "stance": "refute",
+          "source_level": "B",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "百度健康医学科普内容经专家审阅，提供医学专业知识解释",
+          "independent_group": "百度健康医学科普",
+          "content_fingerprint": "",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": true,
+          "fetched_at": "2026-08-12T14:28:05.142639+00:00",
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "饮酒可以预防新冠肺炎",
+          "change_summary": "",
+          "summary": "百度健康医学科普明确表示喝酒不能预防新冠病毒感染。从科学角度解释：医用消毒酒精浓度约75%可破坏病毒蛋白质结构，但通过饮酒进入体内的酒精会被消化系统代谢，血液中浓度远低于消毒所需水平，无法灭活病毒；新冠病毒通过呼吸道感染，饮酒无法在呼吸道黏膜形成保护屏障。过量饮酒会损伤免疫系统，反而增加健康风险。引用世卫组织指出饮酒与新冠重症风险上升相关。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-4",
+          "title": "「饮酒」抗新冠？别给想喝两口找借口啦",
+          "url": "https://zhuanlan.zhihu.com/p/151757632",
+          "publisher": "知乎专栏",
+          "published_at": null,
+          "stance": "refute",
+          "source_level": "C",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "snippet_only",
+          "authority_scope": false,
+          "authority_reason": "知乎专栏为个人平台，但引用世界卫生组织官方声明作为来源",
+          "independent_group": "知乎",
+          "content_fingerprint": "",
+          "temporal_relevance": "historical_match",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "snippet_only",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "饮酒可以预防新冠肺炎/喝高度酒杀灭病毒",
+          "change_summary": "",
+          "summary": "搜索摘要显示该文章引用世界卫生组织官方声明：'喝高度酒不仅不能杀灭病毒，还会增加健康风险'，力破喝酒抗新冠的谣言。页面抓取失败（403），仅凭搜索摘要获取信息。",
+          "provenance": "web"
+        }
+      ],
+      "notes": "多方权威来源一致反驳'饮酒可以预防新冠肺炎'这一说法。联合国新闻转载世界卫生组织官方声明（2020年4月），明确指出'饮用酒精浓度较高的烈酒能够杀死新冠病毒'的说法并不正确。上海网络辟谣平台（2022年12月）和百度健康医学科普均从科学机制角度解释为何饮酒无法预防或杀灭新冠病毒。知乎文章因403无法抓取，仅作为辅助线索。所有证据一致支持反驳该主张。",
+      "rejected_evidence": [],
+      "observed_urls": [
+        "https://health.baidu.com/m/detail/ar_6066936573507159507",
+        "https://news.un.org/zh/story/2020/04/1055042",
+        "https://www.sohu.com/a/405008798_614733",
+        "https://www.sohu.com/a/617754987_121124565",
+        "https://zhuanlan.zhihu.com/p/151757632"
+      ],
+      "fetched_urls": []
+    },
+    "authority": {
+      "status": "ok",
+      "evidence": [
+        {
+          "id": "authority-1",
+          "title": "Drinking alcohol kills coronavirus? Another one for WHO's myth-busters list",
+          "url": "https://www.scmp.com/news/china/science/article/3110867/drinking-alcohol-kills-coronavirus-another-one-who-myth-busters",
+          "publisher": "South China Morning Post",
+          "published_at": "2020-11-22",
+          "stance": "refute",
+          "source_level": "C",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "该报道直接引述世界卫生组织（WHO）针对新冠疫情期间传播的'饮酒可以杀死体内新冠病毒'不实信息的辟谣清单（myth-busters list），与酒精预防新冠的主张直接相关",
+          "independent_group": "SCMP引用WHO辟谣清单",
+          "content_fingerprint": "",
+          "temporal_relevance": "event_match",
+          "current_validity_confirmed": false,
+          "fetched_at": "2026-08-12T14:28:06.935856+00:00",
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "饮酒可以预防新冠肺炎",
+          "change_summary": "",
+          "summary": "该报道引用世界卫生组织（WHO）在新冠疫情期间发布的'辟谣清单'（myth-busters），明确指出'饮用酒精并不能杀死体内的新冠病毒'（Drinking alcohol doesn't kill the coronavirus inside your body）。WHO官方立场是饮酒不能预防或治疗新冠肺炎，且有害使用酒精会增加感染风险并削弱免疫系统。",
+          "provenance": "web"
+        },
+        {
+          "id": "authority-2",
+          "title": "世界卫生组织 | 世卫组织呼吁各国政府行动起来，预防与酒精相关的死亡和疾病",
+          "url": "https://apps.who.int/mediacentre/news/releases/2014/alcohol-related-deaths-prevention/zh/index.html",
+          "publisher": "世界卫生组织（WHO）",
+          "published_at": "2014-05-12",
+          "stance": "refute",
+          "source_level": "A",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "indirect",
+          "authority_scope": true,
+          "authority_reason": "WHO官方报告指出有害使用酒精使人们更容易感染结核病和肺炎等传染病，从传染病防护角度与'饮酒能预防新冠'的主张相矛盾",
+          "independent_group": "世界卫生组织官方文件",
+          "content_fingerprint": "",
+          "temporal_relevance": "historical_match",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "snippet_only",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "饮酒可以预防新冠肺炎",
+          "change_summary": "",
+          "summary": "WHO官方报告明确指出有害使用酒精会增加人们感染结核病和肺炎等传染病的风险，与'饮酒可以预防新冠肺炎'的主张直接矛盾。此报告发布于2014年，但WHO关于酒精与传染病风险关系的这一立场持续有效。",
+          "provenance": "web"
+        }
+      ],
+      "notes": "WHO官方辟谣清单确认'饮酒不能杀死体内的新冠病毒'。SCMP报道成功抓取正文（direct），但为第三方媒体转载WHO立场，权威性为C级；WHO官网2014年报告明确酒精增加传染病感染风险，但仅获得摘要（snippet_only），未成功抓取正文。两项证据均反驳该主张。临时有效性未确认为current，因为2020年周期的WHO辟谣信息虽与疫情相关，但无法确认当前最新状态下的WHO更新立场。",
+      "rejected_evidence": [],
+      "observed_urls": [
+        "https://apps.who.int/gb/archive/pdf_files/WHA58/A58_18-ch.pdf",
+        "https://apps.who.int/mediacentre/news/releases/2014/alcohol-related-deaths-prevention/zh/index.html",
+        "https://atvnewsonline.com/world/酒类产业强力游说-抗衡who零安全饮酒立场/",
+        "https://cdn.who.int/media/docs/default-source/wpro---documents/regional-committee/session-76/wpr-rc76-r4-alcohol_zh.pdf",
+        "https://www.scmp.com/news/china/science/article/3110867/drinking-alcohol-kills-coronavirus-another-one-who-myth-busters"
+      ],
+      "fetched_urls": [
+        "https://www.scmp.com/news/china/science/article/3110867/drinking-alcohol-kills-coronavirus-another-one-who-myth-busters"
+      ]
+    }
+  },
+  "final_response": "## 谣言检测报告\n\n**待检测言论**：主张： 饮酒可以预防新冠肺炎\n**判定结论**：证据不足\n**证据强度**：insufficient\n\n> **规则约束**：最终结论由确定性证据规则生成，研究子 Agent、分类器和解释模型均不能覆盖。\n\n### 综合分析\n根据现有证据，无法认定“饮酒可以预防新冠肺炎”这一主张的真伪，因为支持方和反驳方均未达到一条A类或两条独立B类证据的裁决门槛。部分反驳证据因来源等级不足、发布时间或当前有效性无法确认、信息提取失败等原因被排除，故整体证据不足。\n\n### 外部证据\n- [世卫组织：喝酒不能防新冠 “宅家”期间须节制](https://news.un.org/zh/story/2020/04/1055042) — B级，未用于裁决：联合国新闻引用世界卫生组织声明，明确表示'饮用酒精浓度较高的烈酒能够杀死新冠病毒'的说法并不正确。世卫组织指出饮酒不能预防新冠病毒，任何酒类都会对健康造成风险，且酒精会破坏人体免疫系统，增加健康风险。\n- [喝酒能预防新冠、杀病毒？官方正式回应来了！](https://www.sohu.com/a/617754987_121124565) — C级，未用于裁决：文章明确指出喝酒不能预防新冠肺炎或杀灭新冠病毒，恰恰相反喝酒会增加感染风险。引用世卫组织2020年7月官方声明：'饮酒不能保护你远离病毒'，'在任何情况下都不应该把含酒精饮品作为预防或治疗冠状病毒病感染的手段'。同时从科学角度解释酒精进入消化系统后难以与呼吸道病毒接触，体内浓度远达不到消毒所需的70%，因此无法杀灭体内病毒。\n- [喝酒预防新冠 | 百度健康·医学科普](https://health.baidu.com/m/detail/ar_6066936573507159507) — C级，未用于裁决：百度健康医学科普明确表示喝酒不能预防新冠病毒感染。从科学角度解释：医用消毒酒精浓度约75%可破坏病毒蛋白质结构，但通过饮酒进入体内的酒精会被消化系统代谢，血液中浓度远低于消毒所需水平，无法灭活病毒；新冠病毒通过呼吸道感染，饮酒无法在呼吸道黏膜形成保护屏障。过量饮酒会损伤免疫系统，反而增加健康风险。引用世卫组织指出饮酒与新冠重症风险上升相关。\n- [「饮酒」抗新冠？别给想喝两口找借口啦](https://zhuanlan.zhihu.com/p/151757632) — C级，未用于裁决：搜索摘要显示该文章引用世界卫生组织官方声明：'喝高度酒不仅不能杀灭病毒，还会增加健康风险'，力破喝酒抗新冠的谣言。页面抓取失败（403），仅凭搜索摘要获取信息。\n- [Drinking alcohol kills coronavirus? Another one for WHO's myth-busters list](https://www.scmp.com/news/china/science/article/3110867/drinking-alcohol-kills-coronavirus-another-one-who-myth-busters) — C级，未用于裁决：该报道引用世界卫生组织（WHO）在新冠疫情期间发布的'辟谣清单'（myth-busters），明确指出'饮用酒精并不能杀死体内的新冠病毒'（Drinking alcohol doesn't kill the coronavirus inside your body）。WHO官方立场是饮酒不能预防或治疗新冠肺炎，且有害使用酒精会增加感染风险并削弱免疫系统。\n- [世界卫生组织 | 世卫组织呼吁各国政府行动起来，预防与酒精相关的死亡和疾病](https://apps.who.int/mediacentre/news/releases/2014/alcohol-related-deaths-prevention/zh/index.html) — A级，未用于裁决：WHO官方报告明确指出有害使用酒精会增加人们感染结核病和肺炎等传染病的风险，与'饮酒可以预防新冠肺炎'的主张直接矛盾。此报告发布于2014年，但WHO关于酒精与传染病风险关系的这一立场持续有效。\n\n### 局限\n- 无额外降级项",
+  "finished_at": "2026-08-12T14:28:24.595779+00:00",
+  "duration_ms": 31764,
+  "checks": {
+    "terminal_stage": true,
+    "report_schema_supported": true,
+    "decision_bound": true,
+    "observed_urls_only": true,
+    "timeline_traceable": true,
+    "expected_domain": true,
+    "expected_authority_branch": true,
+    "expected_rag_record": true
+  },
+  "all_checks_passed": true
+}

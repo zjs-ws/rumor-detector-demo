@@ -26,6 +26,7 @@ import { StreamingIndicator } from "../streaming-indicator";
 import { MarkdownContent } from "./markdown-content";
 import { MessageGroup } from "./message-group";
 import { MessageListItem } from "./message-list-item";
+import { RumorReportCard, RumorWorkflowStatus } from "./rumor-report-card";
 import { MessageListSkeleton } from "./skeleton";
 import { SubtaskCard } from "./subtask-card";
 
@@ -44,6 +45,11 @@ export function MessageList({
   const rehypePlugins = useRehypeSplitWordsIntoSpans(thread.isLoading);
   const updateSubtask = useUpdateSubtask();
   const messages = thread.messages;
+  const finalReportMessageId = thread.values.rumor_report
+    ? [...messages]
+        .reverse()
+        .find((message) => message.type === "ai" && hasContent(message))?.id
+    : undefined;
   if (thread.isThreadLoading && messages.length === 0) {
     return <MessageListSkeleton />;
   }
@@ -55,13 +61,27 @@ export function MessageList({
         {groupMessages(messages, (group) => {
           if (group.type === "human" || group.type === "assistant") {
             return group.messages.map((msg) => {
-              return (
+              const item = (
                 <MessageListItem
                   key={`${group.id}/${msg.id}`}
                   message={msg}
                   isLoading={thread.isLoading}
                 />
               );
+              if (msg.id === finalReportMessageId && !thread.isLoading) {
+                return (
+                  <details
+                    key={`${group.id}/${msg.id}`}
+                    className="rounded-lg border px-4 py-3"
+                  >
+                    <summary className="cursor-pointer text-sm font-medium">
+                      查看大模型解释与 Markdown 报告
+                    </summary>
+                    {item}
+                  </details>
+                );
+              }
+              return item;
             });
           } else if (group.type === "assistant:clarification") {
             const message = group.messages[0];
@@ -198,6 +218,19 @@ export function MessageList({
             />
           );
         })}
+        {thread.values.rumor_report && !thread.isLoading && (
+          <RumorReportCard report={thread.values.rumor_report} />
+        )}
+        {thread.values.rumor_workflow && thread.isLoading && (
+          <RumorWorkflowStatus
+            workflow={{
+              ...thread.values.rumor_workflow,
+              branch_status:
+                thread.values.rumor_branch_status ??
+                thread.values.rumor_workflow.branch_status,
+            }}
+          />
+        )}
         {thread.isLoading && <StreamingIndicator className="my-4" />}
         <div style={{ height: `${paddingBottom}px` }} />
       </ConversationContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, FileJson, FileText } from "lucide-react";
+import { Download, FileJson, FileText, Printer } from "lucide-react";
 import { useCallback } from "react";
 import { toast } from "sonner";
 
@@ -28,9 +28,13 @@ export function ExportTrigger({ threadId }: { threadId: string }) {
   const messages = thread.messages;
 
   const handleExport = useCallback(
-    (format: "markdown" | "json") => {
+    (format: "markdown" | "json" | "print") => {
       if (messages.length === 0) {
         toast.error(t.conversation.noMessages);
+        return;
+      }
+      if (format === "print") {
+        window.print();
         return;
       }
       const agentThread = {
@@ -74,6 +78,10 @@ export function ExportTrigger({ threadId }: { threadId: string }) {
         <DropdownMenuItem onSelect={() => handleExport("json")}>
           <FileJson className="text-muted-foreground" />
           <span>{t.common.exportAsJSON}</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => handleExport("print")}>
+          <Printer className="text-muted-foreground" />
+          <span>打印报告</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

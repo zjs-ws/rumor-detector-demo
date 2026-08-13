@@ -52,7 +52,7 @@ def _setup_executor_classes():
         sys.modules[name] = MagicMock()
 
     # Import real classes inside fixture
-    from langchain_core.messages import AIMessage, HumanMessage
+    from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 
     from deerflow.subagents.config import SubagentConfig
     from deerflow.subagents.executor import (
@@ -65,6 +65,7 @@ def _setup_executor_classes():
     classes = {
         "AIMessage": AIMessage,
         "HumanMessage": HumanMessage,
+        "ToolMessage": ToolMessage,
         "SubagentConfig": SubagentConfig,
         "SubagentExecutor": SubagentExecutor,
         "SubagentResult": SubagentResult,
@@ -166,6 +167,13 @@ class _MsgHelper:
         if msg_id:
             msg.id = msg_id
         return msg
+
+    def tool(self, content, tool_call_id="tool-1"):
+        return self.classes["ToolMessage"](
+            content=content,
+            name="web_fetch",
+            tool_call_id=tool_call_id,
+        )
 
 
 @pytest.fixture
@@ -275,6 +283,25 @@ class TestAsyncExecutionPath:
         assert len(result.ai_messages) == 2
         assert result.ai_messages[0]["id"] == "msg-1"
         assert result.ai_messages[1]["id"] == "msg-2"
+
+    @pytest.mark.anyio
+    async def test_aexecute_collects_tool_messages_for_provenance(self, classes, base_config, mock_agent, msg):
+        """Research callers can verify URLs against actual search/fetch output."""
+        SubagentExecutor = classes["SubagentExecutor"]
+
+        tool_message = msg.tool('{"source_url":"https://example.com/source"}', "fetch-1")
+        final_message = msg.ai('{"status":"ok","evidence":[]}', "final-1")
+        chunk1 = {"messages": [msg.human("Task"), tool_message]}
+        chunk2 = {"messages": [msg.human("Task"), tool_message, final_message]}
+        mock_agent.astream = lambda *args, **kwargs: async_iterator([chunk1, chunk2])
+
+        executor = SubagentExecutor(config=base_config, tools=[], thread_id="test-thread")
+        with patch.object(executor, "_create_agent", return_value=mock_agent):
+            result = await executor._aexecute("Task")
+
+        assert len(result.tool_messages) == 1
+        assert result.tool_messages[0]["tool_call_id"] == "fetch-1"
+        assert "https://example.com/source" in result.tool_messages[0]["content"]
 
     @pytest.mark.anyio
     async def test_aexecute_handles_duplicate_messages(self, classes, base_config, mock_agent, msg):

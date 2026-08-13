@@ -1,0 +1,974 @@
+{
+  "artifact_version": "rumorbuster-demo-capture-v1",
+  "graph_id": "rumor_agent",
+  "case_id": "science-url-claim",
+  "case_title": "科学主张与用户来源网页",
+  "category": "url",
+  "repeat": 1,
+  "input": {
+    "claim": "没有科学证据表明全球气候正在变暖",
+    "source_url": "https://science.nasa.gov/climate-change/evidence/"
+  },
+  "started_at": "2026-08-12T15:00:43.270409+00:00",
+  "thread_id_redacted": true,
+  "status": "completed",
+  "workflow": {
+    "input_message_id": "656201e1-6d5a-4e94-a943-0c13f68fb8b9",
+    "run_id": "dc08101676274302a1394a840e8529de",
+    "stage": "report",
+    "raw_input": "请核验以下主张：\n没有科学证据表明全球气候正在变暖\n\n来源页面：https://science.nasa.gov/climate-change/evidence/",
+    "source_url": "https://science.nasa.gov/climate-change/evidence/",
+    "initial_claim": "主张： 没有科学证据表明全球气候正在变暖",
+    "is_verification": true,
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true,
+      "authority_research": true,
+      "evidence_critic": true
+    },
+    "degradation_codes": [
+      "authority_research_unavailable"
+    ],
+    "trace": [
+      {
+        "stage": "reset_input",
+        "at": "2026-08-12T15:00:44.440472+00:00"
+      },
+      {
+        "stage": "fetch_original",
+        "at": "2026-08-12T15:00:45.910171+00:00"
+      },
+      {
+        "stage": "extract_claim",
+        "at": "2026-08-12T15:00:49.723570+00:00"
+      },
+      {
+        "stage": "checkability",
+        "at": "2026-08-12T15:00:49.726297+00:00"
+      },
+      {
+        "stage": "parallel_collection",
+        "at": "2026-08-12T15:00:49.728223+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T15:01:27.728205+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T15:01:29.952014+00:00"
+      },
+      {
+        "stage": "supplementary_research",
+        "at": "2026-08-12T15:01:46.748645+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T15:01:46.755679+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T15:01:49.005788+00:00"
+      },
+      {
+        "stage": "adjudicate",
+        "at": "2026-08-12T15:01:49.013224+00:00"
+      },
+      {
+        "stage": "timeline",
+        "at": "2026-08-12T15:01:49.016840+00:00"
+      },
+      {
+        "stage": "explain",
+        "at": "2026-08-12T15:01:49.019585+00:00"
+      },
+      {
+        "stage": "report",
+        "at": "2026-08-12T15:01:51.783810+00:00"
+      }
+    ],
+    "original_page": {
+      "source_url": "https://science.nasa.gov/climate-change/evidence/",
+      "requested_url": "https://science.nasa.gov/climate-change/evidence/",
+      "fetched_at": "2026-08-12T15:00:45.909581+00:00",
+      "title": "Evidence - NASA Science",
+      "content": "# Evidence - NASA Science\n\n<p>Evidence - NASA Science</p>\n\nSuggested Searches\n------------------\n\n* Climate Change\n* Artemis\n* Expedition 64\n* Mars perseverance\n* SpaceX Crew-2\n* International Space Station\n* View All Topics A-Z\n\n* Home\n* Missions\n* Humans in Space\n* Earth\n* The Solar System\n* The Universe\n* Science\n* Aeronautics\n* Technology\n* Learning Resources\n* About NASA\n* Español\n* News & Events\n* Multimedia\n* NASA+\n\n### Highlights\n\n4 min read\n\n### What’s Up: August 2026 Skywatching Tips from NASA\n\narticle2 weeks ago\n\n4 min read\n\n### NASA Telescopes Create Colorful ‘Craft’ From Nearby Nebula\n\narticle24 hours ago\n\n5 min read\n\n### NASA Shares Station Research Today Supporting Moon, Mars Tomorrow\n\narticle1 day ago\n\n### Missions\n\n* Search All NASA Missions\n* A to Z List of Missions\n* Upcoming Launches and Landings\n* Spaceships and Rockets\n* Communicating with Missions\n* Artemis\n* James Webb Space Telescope\n* Hubble Space Telescope\n* International Space Station\n* OSIRIS-REx\n\n### Humans in Space\n\n* Why Go to Space\n* Astronauts\n* Commercial Space\n* Destinations\n* Spaceships and Rockets\n* Living in Space\n\n### Earth\n\n* Explore Earth Science\n* Climate Change\n* Earth, Our Planet\n* Earth Science in Action\n* Earth Multimedia\n* Earth Data\n* Earth Science Researchers\n\n### The Solar System\n\n* The Sun\n* Mercury\n* Venus\n* Earth\n* The Moon\n* Mars\n* Jupiter\n* Saturn\n* Uranus\n* Neptune\n* Pluto & Dwarf Planets\n* Asteroids, Comets & Meteors\n* The Kuiper Belt\n* The Oort Cloud\n* Skywatching\n\n### The Universe\n\n* Exoplanets\n* The Search for Life in the Universe\n* Stars\n* Galaxies\n* Black Holes\n* The Big Bang\n* Dark Matter\n* Dark Energy\n\n### Science\n\n* Earth Science\n* Planetary Science\n* Astrophysics & Space Science\n* The Sun & Heliophysics\n* Biological & Physical Sciences\n* Lunar Science\n* Citizen Science\n* Astromaterials\n* Aeronautics Research\n* Human Space Travel Research\n\n### Aeronautics\n\n* Science in the Air\n* NASA Aircraft\n* Flight Innovation\n* Supersonic Flight\n* Air Traffic Solutions\n* Green Aviation Tech\n* Drones & You\n\n### Technology\n\n* Technology Transfer & Spinoffs\n* Space Travel Technology\n* Technology Living in Space\n* Manufacturing and Materials\n* Robotics\n* Science Instruments\n* Computing\n\n### Learning Resources\n\n* For Kids and Students\n* For Educators\n* For Colleges and Universities\n* For Professionals\n* Science for Everyone\n* Requests for Exhibits, Artifacts, or Speakers\n* STEM Engagement at NASA\n\n### About NASA\n\n* NASA's Impacts\n* Centers and Facilities\n* Directorates\n* Organizations\n* People of NASA\n* Careers\n* Internships\n* Our History\n* Doing Business with NASA\n* Get Involved\n* Contact\n\n### NASA en Español\n\n* Ciencia\n* Aeronáutica\n* Ciencias Terrestres\n* Sistema Solar\n* Universo\n\n### News & Events\n\n* Recently Published\n* Video Series on NASA+\n* Podcasts & Audio\n* Blogs\n* Newsletters\n* Social Media\n* Media Resources\n\n### Multimedia\n\n* NASA+\n* Images\n* NASA Live\n* NASA Apps\n* Podcasts\n* Image of the Day\n* e-Books\n* 3D Resources\n* Interactives\n* STEM Multimedia\n* NASA Brand & Usage Guidelines\n\n### Highlights\n\n3 min read\n\n### Curiosity Blog, Sols 4968-4974: Rock Climbing Towards the Discontinuity\n\narticle 1 day ago\n\n4 min read\n\n### Lion Nebula Roars to Life With NASA’s Webb\n\narticle 2 days ago\n\n4 min read\n\n### NASA X-59 Explainer: Science of Sonic Booms\n\narticle 2 days ago\n\n### Highlights\n\n3 min read\n\n### NASA Will Attempt to Observe Rocket Part’s Lunar Impact\n\narticle 1 week ago\n\n4 min read\n\n### NASA Delivers Navigation System for Commercial Lunar Relay\n\narticle 1 week ago\n\n5 min read\n\n### Establishing Crew Exposure Limits of Martian Dust\n\narticle 3 weeks ago\n\n### Highlights\n\n3 min read\n\n### Stops Along the Path of Totality\n\narticle 11 hours ago\n\n4 min read\n\n### Bountiful Roebuck Bay\n\narticle 1 day ago\n\n5 min read\n\n### El Niño Alters Marine Life in the Pacific\n\narticle 2 days ago\n\n### Highlights\n\n5 min read\n\n### NASA Completes Astronaut-Deployed Science Instrument for Lunar Surface\n\narticle 19 hours ago\n\n2 min read\n\n### Community College Instructors Bring Astronomy Textbook Into 21st Century\n\narticle 2 days ago\n\n8 min read\n\n### Helio and You: Studying Eclipses Near and Far\n\narticle 5 days ago\n\n### Highlights\n\n4 min read\n\n### NASA Telescopes Create Colorful ‘Craft’ From Nearby Nebula\n\narticle 24 hours ago\n\n4 min read\n\n### Lion Nebula Roars to Life With NASA’s Webb\n\narticle 2 days ago\n\n8 min read\n\n### Helio and You: Studying Eclipses Near and Far\n\narticle 5 days ago\n\n### Highlights\n\n3 min read\n\n### Quality Assessment Report Evaluates Polar Geospatial Center EarthDEM Elevation Products\n\narticle 37 minutes ago\n\n5 min read\n\n### NASA Completes Astronaut-Deployed Science Instrument for Lunar Surface\n\narticle 19 hours ago\n\n4 min read\n\n### Lion Nebula Roars to Life With NASA’s Webb\n\narticle 2 days ago\n\n### Highlights\n\n2 min read\n\n### Michael T. Lippert\n\narticle 3 weeks ago\n\n4 min read\n\n### NASA, GE Aerospace Work Enables Hybrid-Electric Flight Demonstration\n\narticle 3 weeks ago\n\n3 min read\n\n### NASA Pushes New Wing Design to Find Structural Limits\n\narticle 4 weeks ago\n\n### Highlights\n\n5 min read\n\n### NASA Completes Astronaut-Deployed Science Instrument for Lunar Surface\n\narticle 19 hours ago\n\n1 min read\n\n### Update to A.1 Earth Science Research Overview: Earth Science proposals that include NASA high-end computing resources must include costs\n\narticle 1 week ago\n\n4 min read\n\n### NASA Delivers Navigation System for Commercial Lunar Relay\n\narticle 1 week ago\n\n### Highlights\n\n4 min read\n\n### Launch Into a New School Year With NASA\n\narticle 2 days ago\n\n### Highlights\n\n2 min read\n\n### NASA+ Debuts on discovery+, Coming Soon to HBO Max\n\narticle 2 days ago\n\n5 min read\n\n### NASA Shares Station Research Today Supporting Moon, Mars Tomorrow\n\narticle 1 day ago\n\n4 min read\n\n### Building the Moon Base: NASA Stories at the Ion\n\narticle 1 day ago\n\n### Highlights\n\n11 min read\n\n### La NASA anuncia la cobertura de la misión lunar Artemis II\n\narticle 5 months ago\n\n15 min read\n\n### Agenda diaria de la misión a la Luna de Artemis II de la NASA\n\narticle 5 months ago\n\n6 min read\n\n### La NASA refuerza Artemis: añade una misión y perfecciona su arquitectura general\n\narticle 5 months ago\n\nEvidence\n========\n\nThere is unequivocal evidence that Earth is warming at an unprecedented rate. Human activity is the principal cause.\n\nEn español\n\n### Takeaways\n\n* While Earth’s climate has changed throughout its history, the current warming is happening at a rate not seen in the past 10,000 years.\n* According to the Intergovernmental Panel on Climate Change (IPCC), \"Since systematic scientific assessments began in the 1970s, the influence of human activity on the warming of the climate system has evolved from theory to established fact.\"^1\n* Scientific information taken from natural sources (such as ice cores, rocks, and tree rings) and from modern equipment (like satellites and instruments) all show the signs of a changing climate.\n* From global temperature rise to melting ice sheets, the evidence of a warming planet abounds.\n\nThe rate of change since the mid-20th century is unprecedented over millennia.\n------------------------------------------------------------------------------\n\nEarth's climate has changed throughout history. Just in the last 800,000 years, there have been eight cycles of ice ages and warmer periods, with the end of the last ice age about 11,700 years ago marking the beginning of the modern climate era — and of human civilization. Most of these climate changes are attributed to very small variations in Earth’s orbit that change the amount of solar energy our planet receives.\n\nThis graph, based on the comparison of atmospheric samples contained in ice cores and more recent direct measurements, provides evidence that atmospheric CO2 has increased since the Industrial Revolution.\n\nLuthi, D., et al.. 2008; Etheridge, D.M., et al. 2010; Vostok ice core data/J.R. Petit et al.; NOAA Mauna Loa CO2 record. Find out more about ice cores (external site).\n\nThe current warming trend is different because it is clearly the result of human activities since the mid-1800s, and is proceeding at a rate not seen over many recent millennia.^1 It is undeniable that human activities have produced the atmospheric gases that have trapped more of the Sun’s energy in the Earth system. This extra energy has warmed the atmosphere, ocean, and land, and widespread and rapid changes in the atmosphere, ocean, cryosphere, and biosphere have occurred.\n\nDo scientists agree on climate change?\n\nEarth-orbiting satellites and new technologies have helped scientists see the big picture, collecting many different types of information about our planet and its climate all over the world. These data, collected over many years, reveal the signs and patterns of a changing climate.\n\nScientists demonstrated the heat-trapping nature of carbon dioxide and other gases in the mid-19th century.^2 Many of the science instruments NASA uses to study our climate focus on how these gases affect the movement of infrared radiation through the atmosphere. From the measured impacts of increases in these gases, there is no question that increased greenhouse gas levels warm Earth in response.\n\nScientific evidence for warming of the climate system is unequivocal.\n---------------------------------------------------------------------\n\nIntergovernmental Panel on Climate Change\n\nIce cores drawn from Greenland, Antarctica, and tropical mountain glaciers show that Earth’s climate responds to changes in greenhouse gas levels. Ancient evidence can also be found in tree rings, ocean sediments, coral reefs, and layers of sedimentary rocks. This ancient, or paleoclimate, evidence reveals that current warming is occurring roughly 10 times faster than the average rate of warming after an ice age. Carbon dioxide from human activities is increasing about 250 times faster than it did from natural sources after the last Ice Age.^3\n\nThe Evidence for Rapid Climate Change Is Compelling:\n----------------------------------------------------\n\n* ### Global Temperature Is Rising\n\n  The planet's average surface temperature has risen about 2 degrees Fahrenheit (1 degrees Celsius) since the late 19th century, a change driven largely by increased carbon dioxide emissions into the atmosphere and other human activities.^4 Most of the warming occurred in the past 40 years, with the seven most recent years being the warmest. The years 2016 and 2020 are tied for the warmest year on record.^5\n\n  \\_Image credit: Ashwin Kumar, Creative Commons Attribution-Share Alike 2.0 Generic.\n* ### The Ocean Is Getting Warmer\n\n  The ocean has absorbed much of this increased heat, with the top 100 meters (about 328 feet) of ocean showing warming of 0.67 degrees Fahrenheit (0.33 degrees Celsius) since 1969.^6 Earth stores 90% of the extra energy in the ocean.\n\n  \\_Image credit: Kelsey Roberts/USGS\n* ### The Ice Sheets Are Shrinking\n\n  The Greenland and Antarctic ice sheets have decreased in mass. Data from NASA's Gravity Recovery and Climate Experiment show Greenland lost an average of 279 billion tons of ice per year between 1993 and 2019, while Antarctica lost about 148 billion tons of ice per year.^7\n\n  \\_Image: The Antarctic Peninsula, Credit: NASA\n* ### Glaciers Are Retreating\n\n  Glaciers are retreating almost everywhere around the world — including in the Alps, Himalayas, Andes, Rockies, Alaska, and Africa.^8\n\n  \\_Image: Miles Glacier, Alaska Image credit: NASA\n* ### Snow Cover Is Decreasing\n\n  Satellite observations reveal that the amount of spring snow cover in the Northern Hemisphere has decreased over the past five decades and the snow is melting earlier.^9\n\n  \\_Image credit: NASA/JPL-Caltech\n* ### Sea Level Is Rising\n\n  Global sea level rose about 8 inches (20 centimeters) in the last century. The rate in the last two decades, however, is nearly double that of the last century and accelerating slightly every year.^10\n\n  \\_Image credit: U.S. Army Corps of Engineers Norfolk District\n\n  TANGIER, Va. -- A re",
+      "content_chars": 12000,
+      "original_content_chars": 20842,
+      "truncated": true
+    },
+    "claim_context": {
+      "normalized_claim": "没有科学证据表明全球气候正在变暖",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "全球气候变暖缺乏科学证据",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": null,
+      "source_url": "https://science.nasa.gov/climate-change/evidence/",
+      "domain": "science",
+      "domain_reason": "命中受控专业关键词：科学"
+    },
+    "normalized_claim": "没有科学证据表明全球气候正在变暖",
+    "checkability": {
+      "claim": "没有科学证据表明全球气候正在变暖",
+      "claim_type": "public_fact",
+      "checkability": "checkable_now",
+      "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+      "claim_context": {
+        "normalized_claim": "没有科学证据表明全球气候正在变暖",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "全球气候变暖缺乏科学证据",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": "https://science.nasa.gov/climate-change/evidence/",
+        "domain": "science",
+        "domain_reason": "命中受控专业关键词：科学"
+      }
+    },
+    "rag_result": {
+      "status": "ok",
+      "query": "没有科学证据表明全球气候正在变暖",
+      "matches": [
+        {
+          "record_id": "nasa-climate-001",
+          "canonical_claim": "没有科学证据表明全球气候正在变暖",
+          "similarity": 0.694,
+          "matched_variant": "没有科学证据表明全球气候正在变暖",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://science.nasa.gov/climate-change/evidence/"
+          ],
+          "event_date": null,
+          "temporal_warning": null
+        },
+        {
+          "record_id": "fda-fraud-007",
+          "canonical_claim": "产品用户的个人见证可以替代科学证据证明疗效",
+          "similarity": 0.0783,
+          "matched_variant": "产品用户的个人见证可以替代科学证据证明疗效",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.fda.gov/downloads/forconsumers/protectyourself/healthfraud/ucm302359.pdf"
+          ],
+          "event_date": "2011-11-01",
+          "temporal_warning": null
+        }
+      ],
+      "threshold": 0.05,
+      "authoritative": false,
+      "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+    },
+    "classifier_signal": {
+      "status": "unavailable",
+      "role": "auxiliary_signal",
+      "label": "uncertain",
+      "rationale": "分类器未配置",
+      "authoritative": false
+    },
+    "evidence": [
+      {
+        "id": "web-1",
+        "title": "关于气候变化的科学共识（维基百科）",
+        "url": "https://zh.wikipedia.org/zh-hans/关于气候变化的科学共识",
+        "publisher": "维基百科",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "B",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "维基百科-科学共识",
+        "content_fingerprint": "4b824d17bb2e15df",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T15:01:14.228561+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "全球气候变暖缺乏科学证据（待核验原文：没有科学证据表明全球气候正在变暖）",
+        "change_summary": "",
+        "summary": "该页面系统整理了关于气候变化的科学共识：科学界明确共识是地球气候正在变暖且主要由人类活动造成。文中引用2013年对近12,000篇同行评审论文的研究，97%表达观点的论文同意全球暖化正在发生且人为活动是原因；2021年研究显示超过99%科学论文同意人类活动导致气候变化。IPCC第五次评估报告指出气候系统变暖迹象'明确'，人类影响'极有可能'（95-100%概率）是1951-2010年全球变暖主因。世界各国科学院包括中国、美国、英国等均已签署声明认可这一结论。文章明确指出'没任何具有国家或国际地位的科学机构对IPCC的结论提出异议'。这些内容直接反驳'全球气候变暖缺乏科学证据'的主张。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-2",
+        "title": "IPCC AR6报告关于气候变化影响和风险主要结论的解读",
+        "url": "https://www.climatechange.cn/article/2022/1673-1719/1673-1719-18-4-389.shtml",
+        "publisher": "《气候变化研究进展》（Advances in Climate Change Research）",
+        "published_at": "2022-05-13",
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "A",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "气候变化研究进展/IPCC AR6解读",
+        "content_fingerprint": "77c28cfd037a81b8",
+        "temporal_relevance": "current",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T15:01:12.919134+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "全球气候变暖缺乏科学证据（claim-1）",
+        "change_summary": "",
+        "summary": "该文由中国气象局国家气候中心学者王蕾、韩振宇等撰写，系统解读IPCC第六次评估报告（AR6）第二工作组报告。文中明确指出'气候变化已经对自然和人类系统造成了广泛的不利影响'，包括极端天气事件频率和强度增加、全球约40亿人每年经历至少1个月的严重缺水、约7亿人经历更长干旱等。报告还指出'有越来越多的证据表明，与极端事件相关的影响可以归因于人为排放等人类活动'。文章进一步评估了气候变化风险框架，识别了127个关键风险和8个代表性关键风险，并指出随气候变暖加剧将对人类和生态系统造成更普遍和不可逆的影响。这些内容直接证实全球气候变暖具有充分的科学证据基础，反驳'缺乏科学证据'的主张。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-3",
+        "title": "中国学者解读IPCC最新报告：气候变化前所未有，人类影响已毋庸置疑",
+        "url": "https://www.tsinghua.edu.cn/info/1182/103052.htm",
+        "publisher": "清华大学",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "A",
+        "verified_source_level": "C",
+        "source_grade_reason": "搜索摘要最高按C级线索处理",
+        "directness": "snippet_only",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "清华大学/IPCC宣讲",
+        "content_fingerprint": "5b7b8ded7f25a805",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T15:01:11.759586+00:00",
+        "extraction_status": "snippet_only",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "全球气候变暖人类影响已毋庸置疑",
+        "change_summary": "",
+        "summary": "搜索摘要显示该页面报道IPCC AR6宣讲活动，IPCC AR6第一工作组联合主席翟盘茂指出'气候变化前所未有'，标题明确称'人类影响已毋庸置疑'。页面实际抓取时因编码问题无法提取正文，但搜索摘要已提供有力线索。",
+        "provenance": "web"
+      }
+    ],
+    "research_rejected": [
+      {
+        "evidence_id": "web-1",
+        "reason_code": "url_not_observed",
+        "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+      },
+      {
+        "evidence_id": "web-2",
+        "reason_code": "url_not_observed",
+        "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+      },
+      {
+        "evidence_id": "web-3",
+        "reason_code": "url_not_observed",
+        "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+      },
+      {
+        "evidence_id": "web-1",
+        "reason_code": "time_unknown",
+        "explanation": "证据时间字段未通过代码校验"
+      },
+      {
+        "evidence_id": "web-3",
+        "reason_code": "time_unknown",
+        "explanation": "证据时间字段未通过代码校验"
+      }
+    ],
+    "branch_status": {
+      "rag": {
+        "status": "completed",
+        "started_at": "2026-08-12T15:00:49.730901+00:00",
+        "finished_at": "2026-08-12T15:00:49.739442+00:00",
+        "duration_ms": 9,
+        "result_count": 2,
+        "error_code": null
+      },
+      "web": {
+        "status": "completed",
+        "started_at": "2026-08-12T15:00:49.739468+00:00",
+        "finished_at": "2026-08-12T15:01:27.722836+00:00",
+        "duration_ms": 37984,
+        "result_count": 3,
+        "error_code": null
+      },
+      "classifier": {
+        "status": "skipped",
+        "result_count": 0
+      },
+      "authority": {
+        "status": "unavailable",
+        "started_at": "2026-08-12T15:00:49.771131+00:00",
+        "finished_at": "2026-08-12T15:01:13.309448+00:00",
+        "duration_ms": 23539,
+        "result_count": 0,
+        "error_code": "authority_research_unavailable"
+      },
+      "supplement": {
+        "status": "completed",
+        "started_at": "2026-08-12T15:01:29.955583+00:00",
+        "finished_at": "2026-08-12T15:01:46.748582+00:00",
+        "duration_ms": 16793,
+        "result_count": 3,
+        "error_code": null
+      }
+    },
+    "evidence_review": {
+      "status": "completed",
+      "coverage_by_claim": {
+        "claim-1": "covered"
+      },
+      "missing_claim_ids": [],
+      "conflict_claim_ids": [],
+      "duplicate_groups": [],
+      "threshold_gap": true,
+      "preliminary_reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "supplement_needed": false,
+      "supplement_query": "",
+      "notes": "所有三条证据均直接针对claim-1（全球气候变暖缺乏科学证据），且全部为反方立场（refute），通过提供科学共识、IPCC报告和学者解读等证据反驳该子主张。证据间不存在支持与反驳的冲突，也未发现重复或答非所问的情况。维基百科和IPCC解读虽来源等级为C，但均直接相关且内容实质覆盖。"
+    },
+    "supplement_count": 1,
+    "decision": {
+      "verdict": "证据不足",
+      "strength": "insufficient",
+      "accepted_evidence_ids": [],
+      "excluded_evidence": [
+        {
+          "evidence_id": "web-1",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "web-2",
+          "reason_code": "source_too_weak",
+          "explanation": "来源等级未达到裁决门槛"
+        },
+        {
+          "evidence_id": "web-3",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "web-1",
+          "reason_code": "url_not_observed",
+          "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+        },
+        {
+          "evidence_id": "web-2",
+          "reason_code": "url_not_observed",
+          "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+        },
+        {
+          "evidence_id": "web-3",
+          "reason_code": "url_not_observed",
+          "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+        }
+      ],
+      "reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "classifier_consistency": "unavailable_or_uncertain",
+      "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+      "subclaim_decisions": {}
+    },
+    "timeline": {
+      "timeline_status": "insufficient",
+      "events": [],
+      "note": "规则裁决证据不足，因此不生成传播时间线。"
+    }
+  },
+  "report": {
+    "schema_version": "rumorbuster-report-v3",
+    "claim": {
+      "normalized_claim": "没有科学证据表明全球气候正在变暖",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "全球气候变暖缺乏科学证据",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": null,
+      "source_url": "https://science.nasa.gov/climate-change/evidence/",
+      "domain": "science",
+      "domain_reason": "命中受控专业关键词：科学"
+    },
+    "checkability": {
+      "claim": "没有科学证据表明全球气候正在变暖",
+      "claim_type": "public_fact",
+      "checkability": "checkable_now",
+      "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+      "claim_context": {
+        "normalized_claim": "没有科学证据表明全球气候正在变暖",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "全球气候变暖缺乏科学证据",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": "https://science.nasa.gov/climate-change/evidence/",
+        "domain": "science",
+        "domain_reason": "命中受控专业关键词：科学"
+      }
+    },
+    "domain_route": {
+      "domain": "science",
+      "reason": "命中受控专业关键词：科学"
+    },
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true,
+      "authority_research": true,
+      "evidence_critic": true
+    },
+    "original_page": {
+      "source_url": "https://science.nasa.gov/climate-change/evidence/",
+      "requested_url": "https://science.nasa.gov/climate-change/evidence/",
+      "title": "Evidence - NASA Science",
+      "content_chars": 12000,
+      "truncated": true
+    },
+    "research_branches": {
+      "rag": {
+        "status": "completed",
+        "started_at": "2026-08-12T15:00:49.730901+00:00",
+        "finished_at": "2026-08-12T15:00:49.739442+00:00",
+        "duration_ms": 9,
+        "result_count": 2,
+        "error_code": null
+      },
+      "web": {
+        "status": "completed",
+        "started_at": "2026-08-12T15:00:49.739468+00:00",
+        "finished_at": "2026-08-12T15:01:27.722836+00:00",
+        "duration_ms": 37984,
+        "result_count": 3,
+        "error_code": null
+      },
+      "classifier": {
+        "status": "skipped",
+        "result_count": 0
+      },
+      "authority": {
+        "status": "unavailable",
+        "started_at": "2026-08-12T15:00:49.771131+00:00",
+        "finished_at": "2026-08-12T15:01:13.309448+00:00",
+        "duration_ms": 23539,
+        "result_count": 0,
+        "error_code": "authority_research_unavailable"
+      },
+      "supplement": {
+        "status": "completed",
+        "started_at": "2026-08-12T15:01:29.955583+00:00",
+        "finished_at": "2026-08-12T15:01:46.748582+00:00",
+        "duration_ms": 16793,
+        "result_count": 3,
+        "error_code": null
+      }
+    },
+    "rag": {
+      "status": "ok",
+      "query": "没有科学证据表明全球气候正在变暖",
+      "matches": [
+        {
+          "record_id": "nasa-climate-001",
+          "canonical_claim": "没有科学证据表明全球气候正在变暖",
+          "similarity": 0.694,
+          "matched_variant": "没有科学证据表明全球气候正在变暖",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://science.nasa.gov/climate-change/evidence/"
+          ],
+          "event_date": null,
+          "temporal_warning": null
+        },
+        {
+          "record_id": "fda-fraud-007",
+          "canonical_claim": "产品用户的个人见证可以替代科学证据证明疗效",
+          "similarity": 0.0783,
+          "matched_variant": "产品用户的个人见证可以替代科学证据证明疗效",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.fda.gov/downloads/forconsumers/protectyourself/healthfraud/ucm302359.pdf"
+          ],
+          "event_date": "2011-11-01",
+          "temporal_warning": null
+        }
+      ],
+      "threshold": 0.05,
+      "authoritative": false,
+      "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+    },
+    "classifier_signal": {
+      "status": "unavailable",
+      "role": "auxiliary_signal",
+      "label": "uncertain",
+      "rationale": "分类器未配置",
+      "authoritative": false
+    },
+    "evidence": [
+      {
+        "id": "web-1",
+        "title": "关于气候变化的科学共识（维基百科）",
+        "url": "https://zh.wikipedia.org/zh-hans/关于气候变化的科学共识",
+        "publisher": "维基百科",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "B",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "维基百科-科学共识",
+        "content_fingerprint": "4b824d17bb2e15df",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T15:01:14.228561+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "全球气候变暖缺乏科学证据（待核验原文：没有科学证据表明全球气候正在变暖）",
+        "change_summary": "",
+        "summary": "该页面系统整理了关于气候变化的科学共识：科学界明确共识是地球气候正在变暖且主要由人类活动造成。文中引用2013年对近12,000篇同行评审论文的研究，97%表达观点的论文同意全球暖化正在发生且人为活动是原因；2021年研究显示超过99%科学论文同意人类活动导致气候变化。IPCC第五次评估报告指出气候系统变暖迹象'明确'，人类影响'极有可能'（95-100%概率）是1951-2010年全球变暖主因。世界各国科学院包括中国、美国、英国等均已签署声明认可这一结论。文章明确指出'没任何具有国家或国际地位的科学机构对IPCC的结论提出异议'。这些内容直接反驳'全球气候变暖缺乏科学证据'的主张。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-2",
+        "title": "IPCC AR6报告关于气候变化影响和风险主要结论的解读",
+        "url": "https://www.climatechange.cn/article/2022/1673-1719/1673-1719-18-4-389.shtml",
+        "publisher": "《气候变化研究进展》（Advances in Climate Change Research）",
+        "published_at": "2022-05-13",
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "A",
+        "verified_source_level": "C",
+        "source_grade_reason": "未进入权威来源配置，最高按普通网页处理",
+        "directness": "direct",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "气候变化研究进展/IPCC AR6解读",
+        "content_fingerprint": "77c28cfd037a81b8",
+        "temporal_relevance": "current",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T15:01:12.919134+00:00",
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "全球气候变暖缺乏科学证据（claim-1）",
+        "change_summary": "",
+        "summary": "该文由中国气象局国家气候中心学者王蕾、韩振宇等撰写，系统解读IPCC第六次评估报告（AR6）第二工作组报告。文中明确指出'气候变化已经对自然和人类系统造成了广泛的不利影响'，包括极端天气事件频率和强度增加、全球约40亿人每年经历至少1个月的严重缺水、约7亿人经历更长干旱等。报告还指出'有越来越多的证据表明，与极端事件相关的影响可以归因于人为排放等人类活动'。文章进一步评估了气候变化风险框架，识别了127个关键风险和8个代表性关键风险，并指出随气候变暖加剧将对人类和生态系统造成更普遍和不可逆的影响。这些内容直接证实全球气候变暖具有充分的科学证据基础，反驳'缺乏科学证据'的主张。",
+        "provenance": "web"
+      },
+      {
+        "id": "web-3",
+        "title": "中国学者解读IPCC最新报告：气候变化前所未有，人类影响已毋庸置疑",
+        "url": "https://www.tsinghua.edu.cn/info/1182/103052.htm",
+        "publisher": "清华大学",
+        "published_at": null,
+        "stance": "refute",
+        "source_level": "C",
+        "claimed_source_level": "A",
+        "verified_source_level": "C",
+        "source_grade_reason": "搜索摘要最高按C级线索处理",
+        "directness": "snippet_only",
+        "authority_scope": false,
+        "authority_reason": "",
+        "independent_group": "清华大学/IPCC宣讲",
+        "content_fingerprint": "5b7b8ded7f25a805",
+        "temporal_relevance": "unknown",
+        "current_validity_confirmed": false,
+        "fetched_at": "2026-08-12T15:01:11.759586+00:00",
+        "extraction_status": "snippet_only",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "全球气候变暖人类影响已毋庸置疑",
+        "change_summary": "",
+        "summary": "搜索摘要显示该页面报道IPCC AR6宣讲活动，IPCC AR6第一工作组联合主席翟盘茂指出'气候变化前所未有'，标题明确称'人类影响已毋庸置疑'。页面实际抓取时因编码问题无法提取正文，但搜索摘要已提供有力线索。",
+        "provenance": "web"
+      }
+    ],
+    "evidence_review": {
+      "status": "completed",
+      "coverage_by_claim": {
+        "claim-1": "covered"
+      },
+      "missing_claim_ids": [],
+      "conflict_claim_ids": [],
+      "duplicate_groups": [],
+      "threshold_gap": true,
+      "preliminary_reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "supplement_needed": false,
+      "supplement_query": "",
+      "notes": "所有三条证据均直接针对claim-1（全球气候变暖缺乏科学证据），且全部为反方立场（refute），通过提供科学共识、IPCC报告和学者解读等证据反驳该子主张。证据间不存在支持与反驳的冲突，也未发现重复或答非所问的情况。维基百科和IPCC解读虽来源等级为C，但均直接相关且内容实质覆盖。"
+    },
+    "decision": {
+      "verdict": "证据不足",
+      "strength": "insufficient",
+      "accepted_evidence_ids": [],
+      "excluded_evidence": [
+        {
+          "evidence_id": "web-1",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "web-2",
+          "reason_code": "source_too_weak",
+          "explanation": "来源等级未达到裁决门槛"
+        },
+        {
+          "evidence_id": "web-3",
+          "reason_code": "time_unknown",
+          "explanation": "证据发布时间或当前有效性无法确认"
+        },
+        {
+          "evidence_id": "web-1",
+          "reason_code": "url_not_observed",
+          "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+        },
+        {
+          "evidence_id": "web-2",
+          "reason_code": "url_not_observed",
+          "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+        },
+        {
+          "evidence_id": "web-3",
+          "reason_code": "url_not_observed",
+          "explanation": "URL未出现在该研究分支的搜索或抓取结果中"
+        }
+      ],
+      "reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "classifier_consistency": "unavailable_or_uncertain",
+      "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+      "subclaim_decisions": {}
+    },
+    "timeline": {
+      "timeline_status": "insufficient",
+      "events": [],
+      "note": "规则裁决证据不足，因此不生成传播时间线。"
+    },
+    "limitations": [
+      "authority_research_unavailable"
+    ],
+    "workflow_trace": [
+      {
+        "stage": "reset_input",
+        "at": "2026-08-12T15:00:44.440472+00:00"
+      },
+      {
+        "stage": "fetch_original",
+        "at": "2026-08-12T15:00:45.910171+00:00"
+      },
+      {
+        "stage": "extract_claim",
+        "at": "2026-08-12T15:00:49.723570+00:00"
+      },
+      {
+        "stage": "checkability",
+        "at": "2026-08-12T15:00:49.726297+00:00"
+      },
+      {
+        "stage": "parallel_collection",
+        "at": "2026-08-12T15:00:49.728223+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T15:01:27.728205+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T15:01:29.952014+00:00"
+      },
+      {
+        "stage": "supplementary_research",
+        "at": "2026-08-12T15:01:46.748645+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T15:01:46.755679+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T15:01:49.005788+00:00"
+      },
+      {
+        "stage": "adjudicate",
+        "at": "2026-08-12T15:01:49.013224+00:00"
+      },
+      {
+        "stage": "timeline",
+        "at": "2026-08-12T15:01:49.016840+00:00"
+      },
+      {
+        "stage": "explain",
+        "at": "2026-08-12T15:01:49.019585+00:00"
+      },
+      {
+        "stage": "report",
+        "at": "2026-08-12T15:01:51.783810+00:00"
+      }
+    ],
+    "explanation": "经核验，现有三条证据均无法采纳：web-1和web-3因发布时间或当前有效性无法确认，web-2因来源等级未达裁决门槛；且三条证据的URL均未出现在对应研究分支的搜索或抓取结果中。因此，无论支持方还是反驳方，均未达到“一条A类或两条独立B类证据”的证明门槛，故结论为证据不足。"
+  },
+  "observed_urls": [
+    "https://science.nasa.gov/climate-change/evidence",
+    "https://www.climatechange.cn/article/2022/1673-1719/1673-1719-18-4-389.shtml",
+    "https://www.tsinghua.edu.cn/info/1182/103052.htm",
+    "https://zh.wikipedia.org/wiki/关于气候变化的科学共识",
+    "https://zh.wikipedia.org/zh-hans/关于气候变化的科学共识",
+    "https://zhuanlan.zhihu.com/p/636274880"
+  ],
+  "tool_messages": [],
+  "research_payloads": {
+    "web": {
+      "status": "ok",
+      "evidence": [
+        {
+          "id": "web-1",
+          "title": "关于气候变化的科学共识（维基百科）",
+          "url": "https://zh.wikipedia.org/zh-hans/关于气候变化的科学共识",
+          "publisher": "维基百科",
+          "published_at": null,
+          "stance": "refute",
+          "source_level": "B",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "维基百科作为百科平台系统归纳了IPCC综合报告、各国科学院联合声明及多项同行评审文献中关于气候变化科学共识的证据",
+          "independent_group": "维基百科-科学共识",
+          "content_fingerprint": "",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": true,
+          "fetched_at": "2026-08-12T15:01:14.228561+00:00",
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "全球气候变暖缺乏科学证据（待核验原文：没有科学证据表明全球气候正在变暖）",
+          "change_summary": "",
+          "summary": "该页面系统整理了关于气候变化的科学共识：科学界明确共识是地球气候正在变暖且主要由人类活动造成。文中引用2013年对近12,000篇同行评审论文的研究，97%表达观点的论文同意全球暖化正在发生且人为活动是原因；2021年研究显示超过99%科学论文同意人类活动导致气候变化。IPCC第五次评估报告指出气候系统变暖迹象'明确'，人类影响'极有可能'（95-100%概率）是1951-2010年全球变暖主因。世界各国科学院包括中国、美国、英国等均已签署声明认可这一结论。文章明确指出'没任何具有国家或国际地位的科学机构对IPCC的结论提出异议'。这些内容直接反驳'全球气候变暖缺乏科学证据'的主张。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-2",
+          "title": "IPCC AR6报告关于气候变化影响和风险主要结论的解读",
+          "url": "https://www.climatechange.cn/article/2022/1673-1719/1673-1719-18-4-389.shtml",
+          "publisher": "《气候变化研究进展》（Advances in Climate Change Research）",
+          "published_at": "2022-05-13",
+          "stance": "refute",
+          "source_level": "A",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "发表于中国气象局主办的权威期刊《气候变化研究进展》，作者来自中国气象局国家气候中心，对IPCC AR6报告进行学术解读，具有气候科学专业权威性",
+          "independent_group": "气候变化研究进展/IPCC AR6解读",
+          "content_fingerprint": "",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": true,
+          "fetched_at": "2026-08-12T15:01:12.919134+00:00",
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "全球气候变暖缺乏科学证据（claim-1）",
+          "change_summary": "",
+          "summary": "该文由中国气象局国家气候中心学者王蕾、韩振宇等撰写，系统解读IPCC第六次评估报告（AR6）第二工作组报告。文中明确指出'气候变化已经对自然和人类系统造成了广泛的不利影响'，包括极端天气事件频率和强度增加、全球约40亿人每年经历至少1个月的严重缺水、约7亿人经历更长干旱等。报告还指出'有越来越多的证据表明，与极端事件相关的影响可以归因于人为排放等人类活动'。文章进一步评估了气候变化风险框架，识别了127个关键风险和8个代表性关键风险，并指出随气候变暖加剧将对人类和生态系统造成更普遍和不可逆的影响。这些内容直接证实全球气候变暖具有充分的科学证据基础，反驳'缺乏科学证据'的主张。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-3",
+          "title": "中国学者解读IPCC最新报告：气候变化前所未有，人类影响已毋庸置疑",
+          "url": "https://www.tsinghua.edu.cn/info/1182/103052.htm",
+          "publisher": "清华大学",
+          "published_at": null,
+          "stance": "refute",
+          "source_level": "A",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "snippet_only",
+          "authority_scope": true,
+          "authority_reason": "清华大学官方网站发布的IPCC AR6报告宣讲报道，引用IPCC AR6第一工作组联合主席翟盘茂的解读",
+          "independent_group": "清华大学/IPCC宣讲",
+          "content_fingerprint": "",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": false,
+          "fetched_at": "2026-08-12T15:01:11.759586+00:00",
+          "extraction_status": "snippet_only",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "全球气候变暖人类影响已毋庸置疑",
+          "change_summary": "",
+          "summary": "搜索摘要显示该页面报道IPCC AR6宣讲活动，IPCC AR6第一工作组联合主席翟盘茂指出'气候变化前所未有'，标题明确称'人类影响已毋庸置疑'。页面实际抓取时因编码问题无法提取正文，但搜索摘要已提供有力线索。",
+          "provenance": "web"
+        }
+      ],
+      "notes": "维基百科科学共识页面和《气候变化研究进展》期刊文章均提供了直接、充分的证据表明全球气候变暖具有坚实的科学证据基础，多个权威来源（IPCC历次评估报告、近200个科学组织声明、多国科学院联合声明）一致确认气候变暖正在发生且主要由人类活动导致，直接反驳'全球气候变暖缺乏科学证据'的主张。清华大学页面抓取失败（编码问题），仅作为搜索摘要线索参考。",
+      "rejected_evidence": [],
+      "observed_urls": [
+        "https://www.climatechange.cn/article/2022/1673-1719/1673-1719-18-4-389.shtml",
+        "https://www.tsinghua.edu.cn/info/1182/103052.htm",
+        "https://zh.wikipedia.org/wiki/关于气候变化的科学共识",
+        "https://zh.wikipedia.org/zh-hans/关于气候变化的科学共识",
+        "https://zhuanlan.zhihu.com/p/636274880"
+      ],
+      "fetched_urls": [
+        "https://www.tsinghua.edu.cn/info/1182/103052.htm"
+      ]
+    },
+    "authority": {
+      "status": "unavailable",
+      "evidence": [],
+      "observed_urls": [],
+      "rejected_evidence": []
+    },
+    "supplement": {
+      "status": "ok",
+      "evidence": [
+        {
+          "id": "web-1",
+          "title": "Evidence - NASA Science",
+          "url": "https://science.nasa.gov/climate-change/evidence/",
+          "publisher": "NASA",
+          "published_at": null,
+          "stance": "refute",
+          "source_level": "A",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "NASA是美国联邦航天与地球科学机构，专责地球气候系统观测与科学研究，其气候科学数据被国际科学界广泛引用，对全球气候变暖的科学证据具有权威职权。",
+          "independent_group": "NASA Science",
+          "content_fingerprint": "",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": true,
+          "fetched_at": "2026-08-12T15:01:33.099641+00:00",
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "全球气候变暖缺乏科学证据（待核验原文为'没有科学证据表明全球气候正在变暖'）",
+          "change_summary": "",
+          "summary": "NASA科学页面明确指出：'There is unequivocal evidence that Earth is warming at an unprecedented rate. Human activity is the principal cause.'（存在明确无误的证据表明地球正在以前所未有的速度变暖，人类活动是主要原因）。页面详细列举科学证据：全球地表温度自19世纪末上升约2华氏度；海洋变暖；格陵兰和南极冰盖减薄；冰川退缩；北半球春季积雪减少；海平面上升约8英寸。引用IPCC结论：'人类活动对气候系统变暖的影响已从理论演变为既定事实'。这直接反驳了'全球气候变暖缺乏科学证据'的主张。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-2",
+          "title": "下一个冰期永远不会到来？警惕气候系统临界点'多米诺骨牌'倒下",
+          "url": "http://zgqxb.com.cn/zt/2021zt/20211115/2020010301/202203/t20220330_4706422.html",
+          "publisher": "中国气象报",
+          "published_at": "2022-03-30",
+          "stance": "refute",
+          "source_level": "B",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "snippet_only",
+          "authority_scope": true,
+          "authority_reason": "中国气象报隶属于中国气象局，是国家气象主管机构的官方媒体，在气候科学报道上具有专业权威性。",
+          "independent_group": "中国气象报社",
+          "content_fingerprint": "",
+          "temporal_relevance": "event_match",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "snippet_only",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "全球变暖'毫无疑问'（IPCC AR6结论）",
+          "change_summary": "",
+          "summary": "搜索摘要显示该文提及IPCC第六次评估报告（AR6）第一工作组报告《气候变化2021：自然科学基础》认定全球变暖'毫无疑问'。因仅获取搜索摘要，未能抓取完整正文。",
+          "provenance": "web"
+        },
+        {
+          "id": "web-3",
+          "title": "太阳如何影响地球的阴晴冷暖？",
+          "url": "https://www.weather.com.cn/hainan/zyqxxx/03/3167291.shtml",
+          "publisher": "中国天气网",
+          "published_at": null,
+          "stance": "context",
+          "source_level": "B",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "snippet_only",
+          "authority_scope": true,
+          "authority_reason": "中国天气网是气象领域的专业媒体，由中国气象局运营，在气候科学传播上具有专业依据。",
+          "independent_group": "中国天气网",
+          "content_fingerprint": "",
+          "temporal_relevance": "timeless",
+          "current_validity_confirmed": false,
+          "fetched_at": null,
+          "extraction_status": "snippet_only",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "全球变暖不能归因于太阳活动（间接支持人类活动致暖）",
+          "change_summary": "",
+          "summary": "搜索摘要提及卫星监测表明过去30年太阳能量输出并未增加，全球变暖不能归因于太阳活动，侧面支持人类活动导致气候变暖的科学共识。未能抓取完整正文。",
+          "provenance": "web"
+        }
+      ],
+      "notes": "核心证据为NASA官网科学页面（web-1），为A类权威直接证据，明确表述'存在明确无虞的证据表明地球正在以空前速度变暖'，直接反驳了claim-1（全球气候变暖缺乏科学证据）的主张。该页面包含IPCC权威引用及多项观测数据。FDA指定的PDF链接（https://www.fda.gov/downloads/forconsumers/protectyourself/healthfraud/ucm302359.pdf）抓取失败（PDF格式不受支持），且该内容与气候变化主题无关（FDA不负责气候科学）。搜索中的新唐人电视台来源为非权威媒体，未纳入证据。结论明确：claim-1所指'全球气候变暖缺乏科学证据'与NASA及IPCC的科学共识直接矛盾。",
+      "rejected_evidence": [],
+      "observed_urls": [],
+      "fetched_urls": []
+    }
+  },
+  "final_response": "## 谣言检测报告\n\n**待检测言论**：没有科学证据表明全球气候正在变暖\n**判定结论**：证据不足\n**证据强度**：insufficient\n\n> **规则约束**：最终结论由确定性证据规则生成，研究子 Agent、分类器和解释模型均不能覆盖。\n\n### 综合分析\n经核验，现有三条证据均无法采纳：web-1和web-3因发布时间或当前有效性无法确认，web-2因来源等级未达裁决门槛；且三条证据的URL均未出现在对应研究分支的搜索或抓取结果中。因此，无论支持方还是反驳方，均未达到“一条A类或两条独立B类证据”的证明门槛，故结论为证据不足。\n\n### 外部证据\n- [关于气候变化的科学共识（维基百科）](https://zh.wikipedia.org/zh-hans/关于气候变化的科学共识) — C级，未用于裁决：该页面系统整理了关于气候变化的科学共识：科学界明确共识是地球气候正在变暖且主要由人类活动造成。文中引用2013年对近12,000篇同行评审论文的研究，97%表达观点的论文同意全球暖化正在发生且人为活动是原因；2021年研究显示超过99%科学论文同意人类活动导致气候变化。IPCC第五次评估报告指出气候系统变暖迹象'明确'，人类影响'极有可能'（95-100%概率）是1951-2010年全球变暖主因。世界各国科学院包括中国、美国、英国等均已签署声明认可这一结论。文章明确指出'没任何具有国家或国际地位的科学机构对IPCC的结论提出异议'。这些内容直接反驳'全球气候变暖缺乏科学证据'的主张。\n- [IPCC AR6报告关于气候变化影响和风险主要结论的解读](https://www.climatechange.cn/article/2022/1673-1719/1673-1719-18-4-389.shtml) — C级，未用于裁决：该文由中国气象局国家气候中心学者王蕾、韩振宇等撰写，系统解读IPCC第六次评估报告（AR6）第二工作组报告。文中明确指出'气候变化已经对自然和人类系统造成了广泛的不利影响'，包括极端天气事件频率和强度增加、全球约40亿人每年经历至少1个月的严重缺水、约7亿人经历更长干旱等。报告还指出'有越来越多的证据表明，与极端事件相关的影响可以归因于人为排放等人类活动'。文章进一步评估了气候变化风险框架，识别了127个关键风险和8个代表性关键风险，并指出随气候变暖加剧将对人类和生态系统造成更普遍和不可逆的影响。这些内容直接证实全球气候变暖具有充分的科学证据基础，反驳'缺乏科学证据'的主张。\n- [中国学者解读IPCC最新报告：气候变化前所未有，人类影响已毋庸置疑](https://www.tsinghua.edu.cn/info/1182/103052.htm) — C级，未用于裁决：搜索摘要显示该页面报道IPCC AR6宣讲活动，IPCC AR6第一工作组联合主席翟盘茂指出'气候变化前所未有'，标题明确称'人类影响已毋庸置疑'。页面实际抓取时因编码问题无法提取正文，但搜索摘要已提供有力线索。\n\n### 局限\n- authority_research_unavailable",
+  "finished_at": "2026-08-12T15:01:51.814406+00:00",
+  "duration_ms": 68545,
+  "checks": {
+    "terminal_stage": true,
+    "report_schema_supported": true,
+    "decision_bound": true,
+    "observed_urls_only": true,
+    "timeline_traceable": true,
+    "expected_domain": true,
+    "expected_authority_branch": true,
+    "expected_rag_record": true,
+    "expected_original_page": true
+  },
+  "all_checks_passed": true
+}

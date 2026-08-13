@@ -1,0 +1,139 @@
+{
+  "dataset": {
+    "checkability": 10,
+    "rag": 30,
+    "decision": 15,
+    "workflow": 5
+  },
+  "metrics": {
+    "checkability_accuracy": 1.0,
+    "rag_recall_at_3": 1.0,
+    "workflow_stage_accuracy": 1.0,
+    "full_rule_accuracy": 1.0,
+    "classifier_only_accuracy": 0.0,
+    "without_time_check_accuracy": 0.8,
+    "without_independence_check_accuracy": 0.9333
+  },
+  "decision_details": [
+    {
+      "id": "decision-a-refute",
+      "expected": "谣言",
+      "full_rules": "谣言",
+      "classifier_only": "非谣言",
+      "without_time_check": "谣言",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-two-b-support",
+      "expected": "非谣言",
+      "full_rules": "非谣言",
+      "classifier_only": "谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "非谣言"
+    },
+    {
+      "id": "decision-duplicate-b",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-a-conflict",
+      "expected": "存疑",
+      "full_rules": "存疑",
+      "classifier_only": "非谣言",
+      "without_time_check": "存疑",
+      "without_independence_check": "存疑"
+    },
+    {
+      "id": "decision-stale-a",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-snippet-a",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-authority-mismatch",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-two-b-refute",
+      "expected": "谣言",
+      "full_rules": "谣言",
+      "classifier_only": "非谣言",
+      "without_time_check": "谣言",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-a-over-b",
+      "expected": "非谣言",
+      "full_rules": "非谣言",
+      "classifier_only": "谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "非谣言"
+    },
+    {
+      "id": "decision-unknown-date",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-historical-event",
+      "expected": "谣言",
+      "full_rules": "谣言",
+      "classifier_only": "非谣言",
+      "without_time_check": "谣言",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-current-old-guidance",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-ordinary-page-downgrade",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-mixed-subclaims",
+      "expected": "误导",
+      "full_rules": "误导",
+      "classifier_only": "谣言",
+      "without_time_check": "误导",
+      "without_independence_check": "误导"
+    },
+    {
+      "id": "decision-incomplete-subclaims",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    }
+  ]
+}

@@ -1,0 +1,454 @@
+{
+  "dataset": {
+    "checkability": 10,
+    "rag": 30,
+    "decision": 18,
+    "workflow": 5,
+    "v3_comprehensive_manifest": 40
+  },
+  "metrics": {
+    "checkability_accuracy": 1.0,
+    "rag_recall_at_3": 1.0,
+    "workflow_stage_accuracy": 1.0,
+    "full_rule_accuracy": 1.0,
+    "classifier_only_accuracy": 0.0,
+    "without_time_check_accuracy": 0.8333,
+    "without_independence_check_accuracy": 0.9444,
+    "v3_comprehensive_component_accuracy": 1.0
+  },
+  "v3_category_metrics": {
+    "checkability_boundary": 1.0,
+    "verified_rumor_rag": 1.0,
+    "evidence_conflict_and_professional": 1.0,
+    "mixed_subclaims": 1.0,
+    "url_and_failure_flow": 1.0
+  },
+  "v3_comprehensive_details": [
+    {
+      "id": "v3-boundary-01",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-001",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-02",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-002",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-03",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-003",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-04",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-004",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-05",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-005",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-06",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-006",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-07",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-007",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-08",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-008",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-09",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-009",
+      "correct": true
+    },
+    {
+      "id": "v3-boundary-10",
+      "category": "checkability_boundary",
+      "component": "checkability",
+      "case_id": "route-010",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-01",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-001",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-02",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-004",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-03",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-008",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-04",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-012",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-05",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-016",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-06",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-020",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-07",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-024",
+      "correct": true
+    },
+    {
+      "id": "v3-rag-08",
+      "category": "verified_rumor_rag",
+      "component": "rag",
+      "case_id": "rag-030",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-01",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-a-refute",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-02",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-two-b-support",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-03",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-duplicate-b",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-04",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-a-conflict",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-05",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-stale-a",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-06",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-snippet-a",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-07",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-authority-mismatch",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-08",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-two-b-refute",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-09",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-a-over-b",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-10",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-unknown-date",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-11",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-historical-event",
+      "correct": true
+    },
+    {
+      "id": "v3-evidence-12",
+      "category": "evidence_conflict_and_professional",
+      "component": "decision",
+      "case_id": "decision-current-old-guidance",
+      "correct": true
+    },
+    {
+      "id": "v3-mixed-01",
+      "category": "mixed_subclaims",
+      "component": "decision",
+      "case_id": "decision-mixed-subclaims",
+      "correct": true
+    },
+    {
+      "id": "v3-mixed-02",
+      "category": "mixed_subclaims",
+      "component": "decision",
+      "case_id": "decision-incomplete-subclaims",
+      "correct": true
+    },
+    {
+      "id": "v3-mixed-03",
+      "category": "mixed_subclaims",
+      "component": "decision",
+      "case_id": "decision-all-subclaims-supported",
+      "correct": true
+    },
+    {
+      "id": "v3-mixed-04",
+      "category": "mixed_subclaims",
+      "component": "decision",
+      "case_id": "decision-all-subclaims-refuted",
+      "correct": true
+    },
+    {
+      "id": "v3-mixed-05",
+      "category": "mixed_subclaims",
+      "component": "decision",
+      "case_id": "decision-three-subclaims-one-missing",
+      "correct": true
+    },
+    {
+      "id": "v3-workflow-01",
+      "category": "url_and_failure_flow",
+      "component": "workflow",
+      "case_id": "workflow-text",
+      "correct": true
+    },
+    {
+      "id": "v3-workflow-02",
+      "category": "url_and_failure_flow",
+      "component": "workflow",
+      "case_id": "workflow-url-only",
+      "correct": true
+    },
+    {
+      "id": "v3-workflow-03",
+      "category": "url_and_failure_flow",
+      "component": "workflow",
+      "case_id": "workflow-browser-selection",
+      "correct": true
+    },
+    {
+      "id": "v3-workflow-04",
+      "category": "url_and_failure_flow",
+      "component": "workflow",
+      "case_id": "workflow-chat",
+      "correct": true
+    },
+    {
+      "id": "v3-workflow-05",
+      "category": "url_and_failure_flow",
+      "component": "workflow",
+      "case_id": "workflow-url-fetch-failed",
+      "correct": true
+    }
+  ],
+  "decision_details": [
+    {
+      "id": "decision-a-refute",
+      "expected": "谣言",
+      "full_rules": "谣言",
+      "classifier_only": "非谣言",
+      "without_time_check": "谣言",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-two-b-support",
+      "expected": "非谣言",
+      "full_rules": "非谣言",
+      "classifier_only": "谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "非谣言"
+    },
+    {
+      "id": "decision-duplicate-b",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-a-conflict",
+      "expected": "存疑",
+      "full_rules": "存疑",
+      "classifier_only": "非谣言",
+      "without_time_check": "存疑",
+      "without_independence_check": "存疑"
+    },
+    {
+      "id": "decision-stale-a",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-snippet-a",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-authority-mismatch",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-two-b-refute",
+      "expected": "谣言",
+      "full_rules": "谣言",
+      "classifier_only": "非谣言",
+      "without_time_check": "谣言",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-a-over-b",
+      "expected": "非谣言",
+      "full_rules": "非谣言",
+      "classifier_only": "谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "非谣言"
+    },
+    {
+      "id": "decision-unknown-date",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-historical-event",
+      "expected": "谣言",
+      "full_rules": "谣言",
+      "classifier_only": "非谣言",
+      "without_time_check": "谣言",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-current-old-guidance",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-ordinary-page-downgrade",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-mixed-subclaims",
+      "expected": "误导",
+      "full_rules": "误导",
+      "classifier_only": "谣言",
+      "without_time_check": "误导",
+      "without_independence_check": "误导"
+    },
+    {
+      "id": "decision-incomplete-subclaims",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "非谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    },
+    {
+      "id": "decision-all-subclaims-supported",
+      "expected": "非谣言",
+      "full_rules": "非谣言",
+      "classifier_only": "谣言",
+      "without_time_check": "非谣言",
+      "without_independence_check": "非谣言"
+    },
+    {
+      "id": "decision-all-subclaims-refuted",
+      "expected": "谣言",
+      "full_rules": "谣言",
+      "classifier_only": "非谣言",
+      "without_time_check": "谣言",
+      "without_independence_check": "谣言"
+    },
+    {
+      "id": "decision-three-subclaims-one-missing",
+      "expected": "证据不足",
+      "full_rules": "证据不足",
+      "classifier_only": "谣言",
+      "without_time_check": "证据不足",
+      "without_independence_check": "证据不足"
+    }
+  ]
+}

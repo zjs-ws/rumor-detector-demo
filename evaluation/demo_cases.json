@@ -1,0 +1,37 @@
+[
+  {
+    "id": "boundary-opinion",
+    "title": "非事实表达边界",
+    "category": "boundary",
+    "claim": "我觉得这部电影很无聊",
+    "expected": {
+      "verdict": "非事实性表达",
+      "external_calls": 0,
+      "domain": "general"
+    }
+  },
+  {
+    "id": "medical-old-rumor",
+    "title": "医学旧谣言变体与权威研究",
+    "category": "professional",
+    "claim": "饮酒可以预防新冠肺炎",
+    "expected": {
+      "domain": "medical",
+      "authority_branch": "attempted",
+      "rag_record_id": "who-covid-007"
+    }
+  },
+  {
+    "id": "science-url-claim",
+    "title": "科学主张与用户来源网页",
+    "category": "url",
+    "claim": "没有科学证据表明全球气候正在变暖",
+    "source_url": "https://science.nasa.gov/climate-change/evidence/",
+    "expected": {
+      "domain": "science",
+      "authority_branch": "attempted",
+      "rag_record_id": "nasa-climate-001",
+      "original_page": "attempted"
+    }
+  }
+]

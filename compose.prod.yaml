@@ -1,0 +1,130 @@
+name: rumorbuster
+
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: Dockerfile.local
+  image: rumorbuster-backend:prod
+  init: true
+  restart: unless-stopped
+  env_file:
+    - path: .env
+      required: false
+    - path: .env.production
+      required: false
+  environment:
+    PYTHONPATH: /app
+    DEER_FLOW_CONFIG_PATH: /app/config.yaml
+    DEER_FLOW_HOME: /data
+    LANGSMITH_TRACING: "false"
+    LANGCHAIN_TRACING_V2: "false"
+  volumes:
+    - ./config.yaml:/app/config.yaml:ro
+    - ./deploy/langgraph.env:/app/.env:ro
+    - ./runtime:/data
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+services:
+  langgraph:
+    <<: *backend
+    command:
+      - langgraph
+      - dev
+      - --host
+      - 0.0.0.0
+      - --port
+      - "2024"
+      - --no-browser
+      - --allow-blocking
+      - --no-reload
+    expose:
+      - "2024"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:2024/docs"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  gateway:
+    <<: *backend
+    command:
+      - uvicorn
+      - app.gateway.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8001"
+    environment:
+      PYTHONPATH: /app
+      DEER_FLOW_CONFIG_PATH: /app/config.yaml
+      DEER_FLOW_HOME: /data
+      GATEWAY_HOST: 0.0.0.0
+      GATEWAY_PORT: "8001"
+      LANGGRAPH_INTERNAL_URL: ${LANGGRAPH_INTERNAL_URL:-http://langgraph:2024}
+      RUMOR_AGENT_GRAPH_ID: ${RUMOR_AGENT_GRAPH_ID:-rumor_agent}
+      RUMOR_CHECK_TIMEOUT_SECONDS: ${RUMOR_CHECK_TIMEOUT_SECONDS:-120}
+      LANGSMITH_TRACING: "false"
+      LANGCHAIN_TRACING_V2: "false"
+    expose:
+      - "8001"
+    depends_on:
+      langgraph:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8001/ready"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: prod
+    image: rumorbuster-frontend:prod
+    init: true
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_STATIC_WEBSITE_ONLY: "false"
+      SKIP_ENV_VALIDATION: "1"
+    expose:
+      - "3000"
+    depends_on:
+      gateway:
+        condition: service_healthy
+      langgraph:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - fetch('http://localhost:3000/workspace/chats/new').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 30s
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "${RUMORBUSTER_HTTP_PORT:-8080}:80"
+    volumes:
+      - ./deploy/nginx/rumorbuster.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+      langgraph:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s

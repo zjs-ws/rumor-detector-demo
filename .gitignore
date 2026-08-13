@@ -26,11 +26,16 @@ config.yaml
 
 # Claude Code settings
 .claude/settings.local.json
+.claude/deepseek.env
 
 # Local secrets
 .env
 .env.local
+.env.production
 .env.*.local
 runtime/
 local-backups/
 .DS_Store
+
+# Local paper references; do not publish copyrighted documents.
+模型微调/*.docx

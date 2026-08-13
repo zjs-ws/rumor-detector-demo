@@ -149,3 +149,74 @@ def test_tool_call_messages_are_not_modified():
     )
 
     assert _apply([final]) is None
+
+
+def test_rule_decision_binds_markdown_and_projects_structured_state():
+    evidence = {
+        "id": "a-1",
+        "title": "主管部门公告",
+        "url": "https://authority.example/notice",
+        "publisher": "主管部门",
+        "stance": "refute",
+        "source_level": "A",
+        "directness": "direct",
+        "authority_scope": True,
+        "independent_group": "authority",
+        "temporal_relevance": "current",
+        "summary": "公告直接反驳待核验主张",
+        "provenance": "web",
+    }
+    decision = {
+        "verdict": "谣言",
+        "strength": "high",
+        "accepted_evidence_ids": ["a-1"],
+        "excluded_evidence": [],
+        "reason_codes": ["threshold_a"],
+        "classifier_consistency": "conflict",
+        "explanation": "A类主管来源达到门槛。",
+    }
+    assess_call = AIMessage(
+        content="",
+        tool_calls=[
+            {
+                "id": "assess-1",
+                "name": "assess_evidence",
+                "args": {"evidence": [evidence]},
+            }
+        ],
+    )
+    final = AIMessage(
+        content=_report(
+            sources="- [主管部门公告](https://authority.example/notice)",
+            verdict="非谣言",
+            strength="低",
+        )
+    )
+
+    result = _apply(
+        [
+            ToolMessage(
+                name="classify_checkability",
+                tool_call_id="route-1",
+                content=json.dumps({"checkability": "checkable_now"}),
+            ),
+            ToolMessage(
+                name="task",
+                tool_call_id="task-1",
+                content=json.dumps({"url": evidence["url"]}),
+            ),
+            assess_call,
+            ToolMessage(
+                name="assess_evidence",
+                tool_call_id="assess-1",
+                content=json.dumps(decision, ensure_ascii=False),
+            ),
+            final,
+        ]
+    )
+
+    assert result is not None
+    assert "**判定结论**：谣言" in result["messages"][0].content
+    assert "**证据强度**：high" in result["messages"][0].content
+    assert result["rumor_report"]["decision"] == decision
+    assert result["rumor_report"]["evidence"] == [evidence]

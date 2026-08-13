@@ -3,6 +3,7 @@ import json
 import os
 import re
 import socket
+from datetime import UTC, datetime
 from urllib.parse import urljoin, urlsplit
 
 import requests
@@ -158,6 +159,7 @@ def _build_structured_result(
         {
             "source_url": url,
             "requested_url": requested_url or url,
+            "fetched_at": datetime.now(UTC).isoformat(),
             "title": _extract_title(normalized_content, url),
             "content": bounded_content,
             "content_chars": len(bounded_content),

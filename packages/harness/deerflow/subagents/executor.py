@@ -14,7 +14,7 @@ from typing import Any
 from langchain.agents import create_agent
 from langchain.agents.middleware import ModelCallLimitMiddleware, ToolCallLimitMiddleware
 from langchain.tools import BaseTool
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_core.runnables import RunnableConfig
 
 from deerflow.agents.thread_state import SandboxState, ThreadDataState, ThreadState
@@ -57,11 +57,14 @@ class SubagentResult:
     started_at: datetime | None = None
     completed_at: datetime | None = None
     ai_messages: list[dict[str, Any]] | None = None
+    tool_messages: list[dict[str, Any]] | None = None
 
     def __post_init__(self):
         """Initialize mutable defaults."""
         if self.ai_messages is None:
             self.ai_messages = []
+        if self.tool_messages is None:
+            self.tool_messages = []
 
 
 # Global storage for background task results
@@ -184,6 +187,14 @@ class SubagentExecutor:
                     exit_behavior="continue",
                 )
             )
+        for tool_name, run_limit in self.config.tool_call_limits.items():
+            middlewares.append(
+                ToolCallLimitMiddleware(
+                    tool_name=tool_name,
+                    run_limit=run_limit,
+                    exit_behavior="continue",
+                )
+            )
 
         return create_agent(
             model=model,
@@ -240,28 +251,15 @@ class SubagentExecutor:
         try:
             if self.config.direct_tool is not None:
                 direct_tool = next(
-                    (
-                        tool
-                        for tool in self.tools
-                        if tool.name == self.config.direct_tool
-                    ),
+                    (tool for tool in self.tools if tool.name == self.config.direct_tool),
                     None,
                 )
                 if direct_tool is None:
-                    raise ValueError(
-                        f"Direct tool '{self.config.direct_tool}' is not available "
-                        f"to subagent '{self.config.name}'"
-                    )
+                    raise ValueError(f"Direct tool '{self.config.direct_tool}' is not available to subagent '{self.config.name}'")
 
-                tool_input = (
-                    self.config.direct_tool_input_builder(task)
-                    if self.config.direct_tool_input_builder is not None
-                    else task
-                )
+                tool_input = self.config.direct_tool_input_builder(task) if self.config.direct_tool_input_builder is not None else task
                 raw_result = await direct_tool.ainvoke(tool_input)
-                result.result = (
-                    raw_result if isinstance(raw_result, str) else str(raw_result)
-                )
+                result.result = raw_result if isinstance(raw_result, str) else str(raw_result)
                 result.status = SubagentStatus.COMPLETED
                 result.completed_at = datetime.now()
                 logger.info(
@@ -314,6 +312,12 @@ class SubagentExecutor:
                         if not is_duplicate:
                             result.ai_messages.append(message_dict)
                             logger.info(f"[trace={self.trace_id}] Subagent {self.config.name} captured AI message #{len(result.ai_messages)}")
+                    elif isinstance(last_message, ToolMessage):
+                        message_dict = last_message.model_dump()
+                        message_id = message_dict.get("id") or getattr(last_message, "tool_call_id", None)
+                        is_duplicate = any((item.get("id") or item.get("tool_call_id")) == message_id for item in result.tool_messages)
+                        if not is_duplicate:
+                            result.tool_messages.append(message_dict)
 
             logger.info(f"[trace={self.trace_id}] Subagent {self.config.name} completed async execution")
 
@@ -484,6 +488,7 @@ class SubagentExecutor:
                         _background_tasks[task_id].error = exec_result.error
                         _background_tasks[task_id].completed_at = datetime.now()
                         _background_tasks[task_id].ai_messages = exec_result.ai_messages
+                        _background_tasks[task_id].tool_messages = exec_result.tool_messages
                 except FuturesTimeoutError:
                     logger.error(f"[trace={self.trace_id}] Subagent {self.config.name} execution timed out after {self.config.timeout_seconds}s")
                     with _background_tasks_lock:

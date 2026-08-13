@@ -41,7 +41,11 @@ tools:
 subagents:
   agents:
     web-researcher:
-      timeout_seconds: 60
+      timeout_seconds: 55
+    authority-researcher:
+      timeout_seconds: 55
+    evidence-critic:
+      timeout_seconds: 20
 
 # “Local”指相对于应用进程本地运行。
 # 由于整个应用在 Docker 容器中，因此不会使用 Mac 本机的 Python 环境。

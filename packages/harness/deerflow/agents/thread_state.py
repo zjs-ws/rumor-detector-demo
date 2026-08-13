@@ -53,3 +53,5 @@ class ThreadState(AgentState):
     todos: NotRequired[list | None]
     uploaded_files: NotRequired[list[dict] | None]
     viewed_images: Annotated[dict[str, ViewedImageData], merge_viewed_images]  # image_path -> {base64, mime_type}
+    rumor_workflow: NotRequired[dict | None]
+    rumor_report: NotRequired[dict | None]

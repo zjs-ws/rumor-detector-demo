@@ -1,0 +1,38 @@
+=======================================================
+  对抗扰动测试集 构建报告
+=======================================================
+  源测试集:         早期预警测试集.json
+  扰动强度:         medium
+  总样本数:         200
+  被扰动样本数:     198 (99.0%)
+  平均扰动次数:     10.0
+-------------------------------------------------------
+  扰动类型分布:
+    字符穿插          影响  105 条样本
+    emoji干扰       影响  103 条样本
+    视觉混淆          影响   90 条样本
+    繁简混排          影响   69 条样本
+    谐音替换          影响   13 条样本
+    数字穿插          影响    8 条样本
+=======================================================
+
+  扰动示例:
+    原文: white house is aglow in the colors of the rainbow ...
+    脏版: white 💀 h0use is ag1ow in th3 col0r$ of the rainbo...
+    变更: {'视觉混淆': 9, 'emoji干扰': 2}
+
+    原文: nurses save lives of all different races and color...
+    脏版: nurses save 1ives of @ll different races @nd c0lor...
+    变更: {'视觉混淆': 5}
+
+    原文: 懂得沙士比亞的計程車司機...
+    脏版: 懂得沙士~比亞的計程車司機...
+    变更: {'字符穿插': 1}
+
+    原文: five people killed and two others seriously wounde...
+    脏版: five p3ople kil1ed 🔥 @nd two others $eriou$ly 💀 w0...
+    变更: {'视觉混淆': 8, 'emoji干扰': 3}
+
+    原文: man at salad bar has to say every item aloud as he...
+    脏版: man at $al@d ‼️ bar ha$ t0 s@y 3very item @loud @s...
+    变更: {'视觉混淆': 10, 'emoji干扰': 1}

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "expected-yes-1",
+    "text": "紧急通知：今晚十二点所有银行卡会自动冻结，请立即转发。",
+    "expected_raw_label": "Yes",
+    "kind": "single_claim"
+  },
+  {
+    "id": "expected-yes-2",
+    "text": "喝高度白酒可以杀死体内的新冠病毒。",
+    "expected_raw_label": "Yes",
+    "kind": "single_claim"
+  },
+  {
+    "id": "expected-yes-3",
+    "text": "手机开启飞行模式后会产生十倍辐射并导致癌症。",
+    "expected_raw_label": "Yes",
+    "kind": "single_claim"
+  },
+  {
+    "id": "expected-no-1",
+    "text": "世界卫生组织是联合国负责国际公共卫生的专门机构。",
+    "expected_raw_label": "No",
+    "kind": "single_claim"
+  },
+  {
+    "id": "expected-no-2",
+    "text": "地球围绕太阳公转。",
+    "expected_raw_label": "No",
+    "kind": "single_claim"
+  },
+  {
+    "id": "expected-no-3",
+    "text": "水在标准大气压下约一百摄氏度沸腾。",
+    "expected_raw_label": "No",
+    "kind": "single_claim"
+  },
+  {
+    "id": "expected-unknown-1",
+    "text": "一家未具名公司将在明天秘密裁员。",
+    "expected_raw_label": "Unknown",
+    "kind": "private_or_future"
+  },
+  {
+    "id": "expected-unknown-2",
+    "text": "地球围绕太阳公转，而且月球完全由奶酪构成。",
+    "expected_raw_label": "Unknown",
+    "kind": "mixed_subclaims"
+  },
+  {
+    "id": "expected-unknown-3",
+    "text": "水在标准大气压下约一百摄氏度沸腾，而且某市下个月一定发生七级地震。",
+    "expected_raw_label": "Unknown",
+    "kind": "mixed_subclaims"
+  }
+]

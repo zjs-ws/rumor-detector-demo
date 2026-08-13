@@ -1,0 +1,10 @@
+{"id":"route-001","claim":"某地教育局今天发布了停课通知","expected":"checkable_now"}
+{"id":"route-002","claim":"喝热水可以杀死体内病毒","expected":"checkable_now"}
+{"id":"route-003","claim":"明天彩票中奖号码是多少","expected":"checkable_later"}
+{"id":"route-004","claim":"预言下周一定会发生地震","expected":"checkable_later"}
+{"id":"route-005","claim":"某人的银行卡密码是什么","expected":"not_publicly_checkable"}
+{"id":"route-006","claim":"有人私下说了什么","expected":"not_publicly_checkable"}
+{"id":"route-007","claim":"我认为这部电影很无聊","expected":"not_a_factual_claim"}
+{"id":"route-008","claim":"某明星演技很差","expected":"not_a_factual_claim"}
+{"id":"route-009","claim":"这只是一个恶搞段子","expected":"not_a_factual_claim"}
+{"id":"route-010","claim":"真假","expected":"needs_clarification"}

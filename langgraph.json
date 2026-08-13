@@ -7,7 +7,8 @@
   "env": ".env",
   "graphs": {
     "lead_agent": "deerflow.agents:make_lead_agent",
-    "rumor_agent": "deerflow.agents.rumor_agent:make_rumor_agent"
+    "rumor_agent": "deerflow.agents.rumor_agent:make_rumor_agent",
+    "rumor_agent_v2": "deerflow.agents.rumor_agent:make_rumor_agent_v2"
   },
   "checkpointer": {
     "path": "./packages/harness/deerflow/agents/checkpointer/async_provider.py:make_checkpointer"

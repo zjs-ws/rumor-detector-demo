@@ -1,0 +1,182 @@
+{
+  "artifact_version": "rumorbuster-demo-capture-v1",
+  "graph_id": "rumor_agent_v2",
+  "case_id": "boundary-opinion",
+  "case_title": "非事实表达边界",
+  "category": "boundary",
+  "repeat": 1,
+  "input": {
+    "claim": "我觉得这部电影很无聊",
+    "source_url": null
+  },
+  "started_at": "2026-08-12T14:20:15.052151+00:00",
+  "thread_id_redacted": true,
+  "status": "completed",
+  "workflow": {
+    "input_message_id": "5c3d0ad9-d5a3-4481-86e0-0fb9feeacf5b",
+    "stage": "report",
+    "raw_input": "请核验以下主张：\n我觉得这部电影很无聊",
+    "source_url": null,
+    "claim_context": {
+      "normalized_claim": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": "null",
+      "source_url": null,
+      "domain": "unknown",
+      "domain_reason": ""
+    },
+    "normalized_claim": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+    "checkability": {
+      "claim": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+      "claim_type": "opinion",
+      "checkability": "not_a_factual_claim",
+      "reason": "主张主要表达个人评价，缺少统一客观真假标准。",
+      "claim_context": {
+        "normalized_claim": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": "null",
+        "source_url": null,
+        "domain": "unknown",
+        "domain_reason": ""
+      }
+    },
+    "original_page": null,
+    "rag_result": null,
+    "research_result": {
+      "status": "unavailable",
+      "evidence": [],
+      "notes": ""
+    },
+    "research_rejected": [],
+    "classifier_signal": null,
+    "evidence": [],
+    "decision": null,
+    "timeline": null,
+    "degradation_codes": [],
+    "trace": [
+      {
+        "tool": "classify_checkability",
+        "status": "completed",
+        "calls": 1
+      }
+    ],
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true
+    }
+  },
+  "report": {
+    "schema_version": "rumorbuster-report-v2",
+    "claim": {
+      "normalized_claim": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": "null",
+      "source_url": null,
+      "domain": "unknown",
+      "domain_reason": ""
+    },
+    "checkability": {
+      "claim": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+      "claim_type": "opinion",
+      "checkability": "not_a_factual_claim",
+      "reason": "主张主要表达个人评价，缺少统一客观真假标准。",
+      "claim_context": {
+        "normalized_claim": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": "null",
+        "source_url": null,
+        "domain": "unknown",
+        "domain_reason": ""
+      }
+    },
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true
+    },
+    "original_page": null,
+    "rag": null,
+    "classifier_signal": null,
+    "evidence": [],
+    "decision": {
+      "verdict": "非事实性表达",
+      "strength": "not_applicable",
+      "accepted_evidence_ids": [],
+      "excluded_evidence": [],
+      "reason_codes": [
+        "not_a_factual_claim"
+      ],
+      "classifier_consistency": "not_comparable",
+      "explanation": "主张主要表达个人评价，缺少统一客观真假标准。",
+      "subclaim_decisions": {}
+    },
+    "timeline": {
+      "timeline_status": "insufficient",
+      "events": [],
+      "note": "没有足够的带日期可追溯事件。"
+    },
+    "limitations": [],
+    "workflow_trace": [
+      {
+        "tool": "classify_checkability",
+        "status": "completed",
+        "calls": 1
+      }
+    ]
+  },
+  "observed_urls": [],
+  "tool_messages": [
+    {
+      "name": "classify_checkability",
+      "tool_call_id": "call_00_v59923O2nCwzeqOsRXES7539",
+      "content": "{\"claim\":\"某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。\",\"claim_type\":\"opinion\",\"checkability\":\"not_a_factual_claim\",\"reason\":\"主张主要表达个人评价，缺少统一客观真假标准。\",\"claim_context\":{\"normalized_claim\":\"某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。\",\"subclaims\":[{\"id\":\"claim-1\",\"text\":\"某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。\",\"material\":true}],\"temporality\":\"unknown\",\"event_date\":\"null\",\"source_url\":null,\"domain\":\"unknown\",\"domain_reason\":\"\"}}",
+      "truncated": false
+    }
+  ],
+  "research_payloads": {},
+  "final_response": "## 谣言检测报告\n\n**待检测言论**：某用户认为某部电影很无聊（对影片的主观娱乐性/观赏体验评价）。\n\n**可核验状态**：not_a_factual_claim\n\n**判定结论**：非事实性表达\n**证据强度**：not_applicable\n\n> **证据策略校正**：最终结论已按确定性规则结果校正，通用模型无权覆盖该结果。\n\n### 外部证据核验\n本轮没有通过结构校验的外部证据。\n\n### RAG 历史命中\n未命中；不会因此推断真假。\n\n### 综合分析\n主张主要表达个人评价，缺少统一客观真假标准。\n\n### 来源\n本轮未获得可引用来源。",
+  "finished_at": "2026-08-12T14:20:34.977881+00:00",
+  "duration_ms": 19926,
+  "checks": {
+    "terminal_stage": true,
+    "report_schema_supported": true,
+    "decision_bound": true,
+    "observed_urls_only": true,
+    "timeline_traceable": true,
+    "expected_verdict": true,
+    "expected_domain": false,
+    "expected_external_calls": false
+  },
+  "all_checks_passed": false
+}

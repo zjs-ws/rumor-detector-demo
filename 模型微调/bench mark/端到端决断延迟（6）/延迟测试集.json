@@ -1,0 +1,480 @@
+[
+  {
+    "text": "【《二叔》成黑马 年末获重奖】年终岁尾，大剧混战，山东卫视同海宁北辰影视公司联合打造的订制剧《二叔》杀出重围，收视率一路攀升，全国网和46测量仪城市冲进省级卫视第二，收视成长高达110%！观众反应热烈，几乎零差评。鉴于该剧优良的社会效果和优异的收视表现，山东卫视决定对该剧给予百万巨奖。",
+    "true_label": "non_rumor",
+    "char_length": 143,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 0
+  },
+  {
+    "text": "afghan woman picked up her dead son's gun and helped kill 25 taliban militants to save village",
+    "true_label": "unknown",
+    "char_length": 94,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 1
+  },
+  {
+    "text": "expect to see russian forces at us events to provide “security” - this is illegal under posse comitatus!",
+    "true_label": "rumor",
+    "char_length": 104,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 2
+  },
+  {
+    "text": "cdc whistleblower exposes ebola vaccinations containing rfid chips | national report via",
+    "true_label": "rumor",
+    "char_length": 88,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 3
+  },
+  {
+    "text": "after the orlando shooting this is how they protest, and the shooter was a registered democrat...",
+    "true_label": "unknown",
+    "char_length": 97,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 4
+  },
+  {
+    "text": "【三星赔30卡车的硬币 苹果你慢慢数去吧】今天上午30辆装满5美分硬币的卡车停在了加利福尼亚州苹果公司的总部。最初，公司的安保部门以为是转移错了地方，但是在数分钟之后，蒂姆·库克收到一个来自三星CEO的电话，电话中解释道这就是他们将要支付给美国苹果公司的10亿美元的罚款。",
+    "true_label": "rumor",
+    "char_length": 136,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 5
+  },
+  {
+    "text": "13 questions with the 16-year-old singer discovered on youtube:",
+    "true_label": "non_rumor",
+    "char_length": 63,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 6
+  },
+  {
+    "text": "calm down everyone, banksy hasn't been arrested",
+    "true_label": "rumor",
+    "char_length": 47,
+    "language": "en",
+    "length_bucket": "短文本",
+    "index": 7
+  },
+  {
+    "text": "【鲜血染红病房墙面[感冒]】据外媒报道，近日，美国一名护士在社交媒体分享了儿子确诊新冠去世的一组照片，整个病房的墙壁、地板沾满鲜血。据报道，佩顿年仅13岁，于10月25日确诊为新冠肺炎，送医后，血氧水平居然低到了44%，而正常人的血氧水平应该是95%-100%之间。6天后，医生插管抢救时，孩子胸腔里淤积的鲜血一下子喷洒在了病房的墙上，最终不幸去世。沸点国际的微博视频",
+    "true_label": "non_rumor",
+    "char_length": 184,
+    "language": "zh",
+    "length_bucket": "长文本",
+    "index": 8
+  },
+  {
+    "text": "so ebola was found in hair extensions? all my bitches wear weave 😳",
+    "true_label": "rumor",
+    "char_length": 66,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 9
+  },
+  {
+    "text": "【爆炸消息：中国移动9月1日起对微信微博收费】两种收费标准：1，包月10元/月；2、按条数收费，100条以下免费，600条5元，600至1200条10元，超过1200条每条收两分钱。联通牵手百度制衡微信，电信与网易合作以翼信对抗微信；中移动对微信收费的同时，还要给电信上缴长途光缆租赁费以及流量网间结算费。",
+    "true_label": "rumor",
+    "char_length": 153,
+    "language": "zh",
+    "length_bucket": "长文本",
+    "index": 10
+  },
+  {
+    "text": "【又现英勇“抱火哥” 冒死抱出喷火液化气罐】9日中午，张家口怀来县某店面内液化气罐起火，燃烧的火焰达到近1米高。一名消防战士不顾生命危险，在战友水枪掩护下，果断拎起起火罐冲出室外，最后成功将火扑灭。转发↓↓↓为“抱火哥”点[赞]（央视记者：李文超 介海申）",
+    "true_label": "non_rumor",
+    "char_length": 128,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 11
+  },
+  {
+    "text": "dna confirms hakeem from ‘empire’ is jay-z's biological son[read details backhand_index_pointing_down backhand_index_pointing_down backhand_index_pointing_down backhand_index_pointing_down backhand_index_pointing_down_medium-dark_skin_tone backhand_index_pointing_down_dark_skin_tone",
+    "true_label": "rumor",
+    "char_length": 283,
+    "language": "en",
+    "length_bucket": "长文本",
+    "index": 12
+  },
+  {
+    "text": "【80吨国库黄金下落不明】香港《动向》：财政部、央行、监察部和审计署已经成立专案组，调查存放在八个省市国库内的黄金储备有八十吨下落不明。若属实，相关官员肯定有合伙盗窃的重大嫌疑。战乱时期，蒋介石把450万两黄金运往台湾都没弄丢一两，国库的80吨黄金为什么会不翼而飞？",
+    "true_label": "rumor",
+    "char_length": 133,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 13
+  },
+  {
+    "text": "一只幼猴紧紧搂住即将被“活取猴脑”的妈妈。（转）",
+    "true_label": "rumor",
+    "char_length": 24,
+    "language": "zh",
+    "length_bucket": "短文本",
+    "index": 14
+  },
+  {
+    "text": "meet kenny the tiger. he was born with down syndrome. he's proof you don't have to be perfect to be beautiful ❤️",
+    "true_label": "unknown",
+    "char_length": 112,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 15
+  },
+  {
+    "text": "请大家转发，提醒国人。。。。。。。两名带头打砸抢的罪犯都是日本留学生。。。",
+    "true_label": "rumor",
+    "char_length": 37,
+    "language": "zh",
+    "length_bucket": "短文本",
+    "index": 16
+  },
+  {
+    "text": "刚刚收到消息，本市今晚将实施临时交通管制。",
+    "true_label": "unknown",
+    "char_length": 21,
+    "language": "zh",
+    "length_bucket": "短文本",
+    "complexity": "low",
+    "note": "极短文本，模拟最快响应场景",
+    "index": 17
+  },
+  {
+    "text": "【朝鲜两大文艺团来华演出】今天，朝鲜国家功勋合唱团、牡丹峰乐团抵达辽宁丹东，将于12-14日在国家大剧院演出。国家功勋合唱团曾隶属朝鲜人民军协奏团，1992年被授予\"功勋\"称号，代表曲目有《金正日将军之歌》等。牡丹峰乐团是金正恩于2012年组建，代表曲目有《学习吧》等，这是该乐团首次来华演出。",
+    "true_label": "non_rumor",
+    "char_length": 147,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 18
+  },
+  {
+    "text": "【网传刘翔退赛惊人内幕 伦敦粗心竟令栏间距增加！】刘翔的七步上栏法是针对从起跑点到第一个栏杆之间的距离13.72米，但是这次伦敦把这个距离增加到13.85米，这就不难理解刘翔在第一个栏就踩栏，也导致同组多名选手踩栏，而英国选手练的就是13.85米，所以顺利晋级！关注中，求真相 ！[汗] 高级黑？",
+    "true_label": "rumor",
+    "char_length": 148,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 19
+  },
+  {
+    "text": "\"our children should not have to be worried about the water that they're drinking\" —on the situation in flint",
+    "true_label": "non_rumor",
+    "char_length": 109,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 20
+  },
+  {
+    "text": "什么时候才能停止杀戮？[泪][泪][泪]",
+    "true_label": "non_rumor",
+    "char_length": 20,
+    "language": "zh",
+    "length_bucket": "短文本",
+    "index": 21
+  },
+  {
+    "text": "breaking: a leaked internal document from a major tech company reveals plans to lay off 15,000 employees globally. the document, allegedly signed by the ceo, outlines cost-cutting measures including closing 3 research labs and freezing all hiring. company stock dropped 8% in after-hours trading. a spokesperson declined to comment on the leaked memo.",
+    "true_label": "unknown",
+    "char_length": 351,
+    "language": "en",
+    "length_bucket": "长文本",
+    "complexity": "high",
+    "note": "英文长文本，涉及多个可验证事实",
+    "index": 22
+  },
+  {
+    "text": "more: official: gunman holding at least five hostages in paris market has threatened to kill them if police approach:",
+    "true_label": "unknown",
+    "char_length": 117,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 23
+  },
+  {
+    "text": "清晨想到的第一个人和夜晚想到的最后一个人，不是让你幸福的人，就是让你痛苦的人。",
+    "true_label": "non_rumor",
+    "char_length": 39,
+    "language": "zh",
+    "length_bucket": "短文本",
+    "index": 24
+  },
+  {
+    "text": "1991, book written saying trump says \"laziness is a trait in all blacks\"",
+    "true_label": "unknown",
+    "char_length": 72,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 25
+  },
+  {
+    "text": "massachusetts court finds that it’s ‘reasonable’ for black men to run from police to avoid racial profiling…",
+    "true_label": "unknown",
+    "char_length": 108,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 26
+  },
+  {
+    "text": "【早啊！新闻来了〔2015.12.11〕】①屠呦呦领取“2015年诺贝尔生理学或医学奖” ②2016年部分节假日安排昨发布 ③驾考改革意见稿公布：可自学直考 ④北京积分落户征求意见稿：需北京居住证、不满45岁、在京连续缴纳社保7年以上、符合计生政策、无犯罪记录。",
+    "true_label": "non_rumor",
+    "char_length": 131,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 27
+  },
+  {
+    "text": "he's 17 and can squat 875(!) pounds. joseph pena is not of this world.",
+    "true_label": "unknown",
+    "char_length": 70,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 28
+  },
+  {
+    "text": "【新闻】吃货们！！请立即停止使用微波炉！！！！去德国的确看到他们国家的家庭中几乎看不到微波炉，大家都知道微波炉的危害之大，所以都不用，女儿告诉我不要再用了，我还不当回事，习惯吃热饭，又懒得蒸，看到下面这篇文~！！ (8.weibo.com)",
+    "true_label": "rumor",
+    "char_length": 120,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 29
+  },
+  {
+    "text": "【tvreport独家】[李洪基,确定出演<SNL6>]22日据电视台表示,李洪基确定以主持的身份出演12月5日播出的 Korea6",
+    "true_label": "non_rumor",
+    "char_length": 66,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 30
+  },
+  {
+    "text": "通过长达十天两会的召开.新的婚姻法中规定 男女双方只要年满18周岁就可以结婚.并不是之前女方满20周男方满22周才可制成婚约.如今结婚证是国家级证书.高考时还可加3学分.现在在大学期间结婚.学费还可减半;跨民族结婚 生一个孩子奖励一万.请大家相互转告.好完成那些早婚人的梦想.",
+    "true_label": "rumor",
+    "char_length": 138,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 31
+  },
+  {
+    "text": ".announces new rule aimed to advance",
+    "true_label": "non_rumor",
+    "char_length": 36,
+    "language": "en",
+    "length_bucket": "短文本",
+    "index": 32
+  },
+  {
+    "text": "怒，广州飞往成都的机票都是打折扣的，然而在地震发生几小时后，航空公司却将打折取消，变为全价票。现在飞成都的乘客，多是救援、志愿者、医护、记者、伤亡者亲人。什么叫卑鄙？什么叫无耻？一群五毛水军叫嚷着说不可能，我不知你们有没有查过，网上随手打开订票网站都会看到这样的信息",
+    "true_label": "rumor",
+    "char_length": 133,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 33
+  },
+  {
+    "text": "u.s. navy sends ship near contested island in south china sea to challenge claims by china, taiwan and vietnam.",
+    "true_label": "unknown",
+    "char_length": 111,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 34
+  },
+  {
+    "text": "\"we have now cut off every single path that iran could have used to build a bomb.\" — <>",
+    "true_label": "unknown",
+    "char_length": 87,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 35
+  },
+  {
+    "text": "【无赖与无耻】 经证实，这个是姜瑜从发言台上说出口的，不是网友杜撰。 美国驻华大使馆不断发表北京空气质量低劣的报告， 为此中国外交部发言人姜瑜表示：“根据国际公约，众所周知美国使馆区是美国领土，他们在那里监测到的数据只能说明美国空气质量不好。”",
+    "true_label": "rumor",
+    "char_length": 122,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 36
+  },
+  {
+    "text": "【亲，睡觉时把手机扔远点】近十年来，胶质瘤患者明显增多。胶质瘤是最常见的脑肿瘤，致死和致残率极高。其高发与过度使用电子产品有关，贴身携带手机、常煲电话粥、睡觉时手机放枕边，会导致人体内辐射累积，让体内自我修复系统“疲劳”。儿童头皮与头骨都较薄，对辐射更敏感。（都市快报）",
+    "true_label": "rumor",
+    "char_length": 135,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 37
+  },
+  {
+    "text": "《百年的新娘》第2集中字来啦！江洲小的时候发生了什么事情？杨真诚分别饰演的两个角色是什么关系？女鬼到底是什么来历，更多剧情的谜团等你来解开。详情请戳： 萌孩子更推：百年的新娘真的很有意思啊！",
+    "true_label": "non_rumor",
+    "char_length": 95,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 38
+  },
+  {
+    "text": "at least 39 migrants, including children, drown as boat sinks between turkey & greece",
+    "true_label": "unknown",
+    "char_length": 85,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 39
+  },
+  {
+    "text": "【大妈！您太有才啦！】山东一位老大妈受够了汽车在她家门前斑马线呼啸而过，且当地相关部门又帮不上什么忙，让她十分恼怒。她灵机一动，把一个穿着性感薄纱內衣的充气娃娃绑在附近的一棵树上，果然引得司机们纷纷把车速慢下来看个究竟！门前飙车状况大幅改观！（都市快报）",
+    "true_label": "rumor",
+    "char_length": 127,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 40
+  },
+  {
+    "text": "网传某市自来水中检测出大量氯化物超标，多个小区居民出现皮肤过敏症状。据称该市水务局已紧急停水检修，但官方尚未发布通报。有居民拍摄视频显示水龙头流出的水呈黄色浑浊状态，并声称多名儿童饮水后出现腹泻症状被送医。环保组织呼吁政府公开水质检测数据。",
+    "true_label": "rumor",
+    "char_length": 120,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "complexity": "high",
+    "note": "多线索长文本，需要多次外部查证",
+    "index": 41
+  },
+  {
+    "text": ".<>: \"this is about hrc having made repeated representations that have turned out to be false.\"",
+    "true_label": "unknown",
+    "char_length": 95,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 42
+  },
+  {
+    "text": "update: donald trump advocates abortion ban and \"some form of punishment\" for women who have an abortion. - <>",
+    "true_label": "unknown",
+    "char_length": 110,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 43
+  },
+  {
+    "text": "【青岛找到证据链：且在冷冻条件下长期存活】青岛市副市长栾新总结此次疫情防控的青岛经验，栾新介绍，青岛此次疫情防控工作在世界上首次找到了充分的证据链，表明新冠病毒可由物传人、冷冻条件可长期存活。(青岛新闻)",
+    "true_label": "non_rumor",
+    "char_length": 102,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 44
+  },
+  {
+    "text": "【男子酒吧被阉割系发生在湖州】凌晨网友称温州某酒吧男子生殖器被割，经过查证核实，此事系发生在浙江湖州莉丽玛莲酒吧。“湖州一帅哥在酒吧闹事并殴打服务员，被内保请到里间武力开导，结果砍刀过于锋利，直接被“切睾”了，到医院的时候就已经死了。另还有三四人被砍倒。”",
+    "true_label": "rumor",
+    "char_length": 128,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 45
+  },
+  {
+    "text": "update: uk prime minister david describes apparent beheading of david as 'an act of pure evil'",
+    "true_label": "non_rumor",
+    "char_length": 94,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 46
+  },
+  {
+    "text": "【连小s都关注的微博，你值得关注】聪明女人记住： 和别人交往，你要知道，你只是他的一个选择而非唯一，你也只能把他当成你的一个选择而非生命中的某个优先。不要轻易去依赖一个人，当分别来临，你失去的不是某个人，而是你精神的支柱。【一个让女人受益终生的微博，怎么能少了你！】",
+    "true_label": "rumor",
+    "char_length": 133,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 47
+  },
+  {
+    "text": "president's daughter malia obama spotted wearing a pro era t-shirt",
+    "true_label": "rumor",
+    "char_length": 66,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 48
+  },
+  {
+    "text": "powell breaks silence: clintons trying to 'pin' scandal on me!",
+    "true_label": "unknown",
+    "char_length": 62,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 49
+  },
+  {
+    "text": "ugh. abc reportedly paid a 'mid to high' six figure fee for his interview: ht",
+    "true_label": "rumor",
+    "char_length": 77,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 50
+  },
+  {
+    "text": "【】据美国约翰斯·霍普金斯大学疫情实时监测系统显示，截至美东时间6月1日下午5时44分，美国已有新冠病毒感染病例1804206例，其中包括死亡病例104799例。越来越多州长和公共卫生专家担心，。多位美国卫生专家担忧，抗议活动中人群密集，许多人不戴口罩，还有人高喊口号或大声喊叫。（人民日报）",
+    "true_label": "non_rumor",
+    "char_length": 146,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 51
+  },
+  {
+    "text": "confirmed: pepsico is making a doritos-flavored mountain dew called \"dewitos\"",
+    "true_label": "non_rumor",
+    "char_length": 77,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 52
+  },
+  {
+    "text": "紧急通知大家千万不要购买樱桃：今年樱桃里寄生了一种蛆虫，几乎100%的樱桃里面都有。实验方法：找最好看最新鲜的樱桃，放透明玻璃杯中，倒进水去后放点盐，大约2分钟就会看到这些蛆虫从完好的表皮往外钻。求扩散！ [抓狂][抓狂][抓狂]",
+    "true_label": "rumor",
+    "char_length": 115,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 53
+  },
+  {
+    "text": "不能更魔性！这喵绝对是二哈变的，哈哈哈的配乐也是没sei了！[哈哈]",
+    "true_label": "non_rumor",
+    "char_length": 34,
+    "language": "zh",
+    "length_bucket": "短文本",
+    "index": 54
+  },
+  {
+    "text": "in the wake of paul walker's tragic death, what's the future of the <> movies?",
+    "true_label": "non_rumor",
+    "char_length": 78,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 55
+  },
+  {
+    "text": "看了让人心酸 ！一只幼猴紧紧搂住即将被“活取猴脑”的妈妈.. 仿佛他已经知道接下来要发生的一切。没有买卖，就没有杀害！我们一起拒绝这种残忍的饮食方式！因果报应真实不虚，请不要再遗弃、虐待、食用和杀戮！[流泪][流泪][流泪]",
+    "true_label": "rumor",
+    "char_length": 112,
+    "language": "zh",
+    "length_bucket": "中文本",
+    "index": 56
+  },
+  {
+    "text": "victoria woodhull ran for us president 144 years before hillary clinton 📻",
+    "true_label": "unknown",
+    "char_length": 73,
+    "language": "en",
+    "length_bucket": "中文本",
+    "index": 57
+  },
+  {
+    "text": "你见过的情商最高的行为是什么？",
+    "true_label": "non_rumor",
+    "char_length": 15,
+    "language": "zh",
+    "length_bucket": "短文本",
+    "index": 58
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "social_context_input": {
+    "source": "user_supplied",
+    "comments": [
+      {
+        "id": "comment-1",
+        "text": "示例评论：这里提到了一个需要另行核验的外部说法。",
+        "parent_id": null,
+        "published_at": "2026-08-13T10:00:00+08:00",
+        "url": "https://example.com/comments/1"
+      }
+    ]
+  }
+}

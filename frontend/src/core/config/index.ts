@@ -35,7 +35,7 @@ export function getLangGraphBaseURL(isMock?: boolean) {
     if (typeof window !== "undefined") {
       return `${window.location.origin}/api/langgraph`;
     }
-    // Fallback for SSR
-    return "http://localhost:2026/api/langgraph";
+    // SSR stays inside the Docker network; browsers always use the same origin.
+    return "http://langgraph:2024";
   }
 }

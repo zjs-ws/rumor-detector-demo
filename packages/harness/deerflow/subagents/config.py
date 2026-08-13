@@ -18,6 +18,7 @@ class SubagentConfig:
         model: Model to use - 'inherit' uses parent's model.
         max_turns: Maximum number of agent turns before stopping.
         max_tool_calls: Optional maximum number of tool calls in one run.
+        tool_call_limits: Optional per-tool call limits for deterministic budgets.
         direct_tool: Optional tool to invoke without an intermediate model pass.
         direct_tool_input_builder: Converts the delegated task into direct tool input.
         timeout_seconds: Maximum execution time in seconds (default: 900 = 15 minutes).
@@ -31,6 +32,7 @@ class SubagentConfig:
     model: str = "inherit"
     max_turns: int = 50
     max_tool_calls: int | None = None
+    tool_call_limits: dict[str, int] = field(default_factory=dict)
     direct_tool: str | None = None
     direct_tool_input_builder: Callable[[str], dict[str, Any]] | None = None
     timeout_seconds: int = 900

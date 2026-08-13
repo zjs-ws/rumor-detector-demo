@@ -1,0 +1,581 @@
+{
+  "artifact_version": "rumorbuster-demo-capture-v1",
+  "graph_id": "rumor_agent",
+  "case_id": "medical-old-rumor",
+  "case_title": "医学旧谣言变体与权威研究",
+  "category": "professional",
+  "repeat": 1,
+  "input": {
+    "claim": "饮酒可以预防新冠肺炎",
+    "source_url": null
+  },
+  "started_at": "2026-08-12T14:21:14.935990+00:00",
+  "thread_id_redacted": true,
+  "status": "completed",
+  "workflow": {
+    "input_message_id": "67330bdc-cf14-45d2-bacc-c6f3809a3d85",
+    "run_id": "5ecae5c1949f4790976bc28521b0ffcc",
+    "stage": "report",
+    "raw_input": "请核验以下主张：\n饮酒可以预防新冠肺炎",
+    "source_url": null,
+    "initial_claim": "主张： 饮酒可以预防新冠肺炎",
+    "is_verification": true,
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true,
+      "authority_research": true,
+      "evidence_critic": true
+    },
+    "degradation_codes": [
+      "web_research_unavailable"
+    ],
+    "trace": [
+      {
+        "stage": "reset_input",
+        "at": "2026-08-12T14:21:15.982459+00:00"
+      },
+      {
+        "stage": "extract_claim",
+        "at": "2026-08-12T14:21:16.402333+00:00"
+      },
+      {
+        "stage": "checkability",
+        "at": "2026-08-12T14:21:16.405095+00:00"
+      },
+      {
+        "stage": "parallel_collection",
+        "at": "2026-08-12T14:21:16.407636+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T14:21:30.613445+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T14:21:32.062314+00:00"
+      },
+      {
+        "stage": "adjudicate",
+        "at": "2026-08-12T14:21:32.066768+00:00"
+      },
+      {
+        "stage": "timeline",
+        "at": "2026-08-12T14:21:32.069342+00:00"
+      },
+      {
+        "stage": "explain",
+        "at": "2026-08-12T14:21:32.071930+00:00"
+      },
+      {
+        "stage": "report",
+        "at": "2026-08-12T14:21:34.108938+00:00"
+      }
+    ],
+    "claim_context": {
+      "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "主张： 饮酒可以预防新冠肺炎",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": null,
+      "source_url": null,
+      "domain": "medical",
+      "domain_reason": "命中受控专业关键词：新冠"
+    },
+    "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+    "checkability": {
+      "claim": "主张： 饮酒可以预防新冠肺炎",
+      "claim_type": "public_fact",
+      "checkability": "checkable_now",
+      "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+      "claim_context": {
+        "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "主张： 饮酒可以预防新冠肺炎",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": null,
+        "domain": "medical",
+        "domain_reason": "命中受控专业关键词：新冠"
+      }
+    },
+    "rag_result": {
+      "status": "ok",
+      "query": "主张： 饮酒可以预防新冠肺炎",
+      "matches": [
+        {
+          "record_id": "who-covid-007",
+          "canonical_claim": "饮酒可以预防新冠肺炎",
+          "similarity": 0.5048,
+          "matched_variant": "饮酒可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-009",
+          "canonical_claim": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "similarity": 0.2459,
+          "matched_variant": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-011",
+          "canonical_claim": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "similarity": 0.2386,
+          "matched_variant": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        }
+      ],
+      "threshold": 0.05,
+      "authoritative": false,
+      "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+    },
+    "classifier_signal": {
+      "status": "unavailable",
+      "role": "auxiliary_signal",
+      "label": "uncertain",
+      "rationale": "分类器未配置",
+      "authoritative": false
+    },
+    "evidence": [
+      {
+        "id": "authority-1",
+        "title": "2019冠状病毒病的传言和事实",
+        "url": "https://www.who.int/zh/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters",
+        "publisher": "世界卫生组织（WHO）",
+        "published_at": "2022-01-19",
+        "stance": "refute",
+        "source_level": "A",
+        "claimed_source_level": "A",
+        "verified_source_level": "A",
+        "source_grade_reason": "官方域名且代码校验职权匹配",
+        "directness": "direct",
+        "authority_scope": true,
+        "authority_reason": "官方来源注册表中的职权关键词与主张匹配",
+        "independent_group": "世界卫生组织",
+        "content_fingerprint": "a7b3108f559e748b",
+        "temporal_relevance": "current",
+        "current_validity_confirmed": false,
+        "fetched_at": null,
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "世界卫生组织在'2019冠状病毒病的传言和事实'（Myth-busters）专栏中明确指出：'饮酒并不能保护您免受COVID-19侵害，反而可能会带来危害'，并进一步说明'频繁或过量饮酒可能会加剧健康问题'。WHO同时强调，饮用甲醇、乙醇或漂白剂不能预防或治愈COVID-19，且可能非常危险，会导致残疾和死亡。",
+        "provenance": "web"
+      }
+    ],
+    "research_rejected": [],
+    "branch_status": {
+      "rag": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:21:16.409436+00:00",
+        "finished_at": "2026-08-12T14:21:16.419793+00:00",
+        "duration_ms": 10,
+        "result_count": 3,
+        "error_code": null
+      },
+      "web": {
+        "status": "unavailable",
+        "started_at": "2026-08-12T14:21:16.419823+00:00",
+        "finished_at": "2026-08-12T14:21:29.730865+00:00",
+        "duration_ms": 13311,
+        "result_count": 0,
+        "error_code": "web_research_unavailable"
+      },
+      "classifier": {
+        "status": "skipped",
+        "result_count": 0
+      },
+      "authority": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:21:16.444885+00:00",
+        "finished_at": "2026-08-12T14:21:30.608947+00:00",
+        "duration_ms": 14164,
+        "result_count": 1,
+        "error_code": null
+      }
+    },
+    "evidence_review": {
+      "status": "completed",
+      "coverage_by_claim": {
+        "claim-1": "covered"
+      },
+      "missing_claim_ids": [],
+      "conflict_claim_ids": [],
+      "duplicate_groups": [],
+      "supplement_needed": false,
+      "supplement_query": "",
+      "notes": "单一证据（WHO官方来源）直接针对claim-1，明确反驳饮酒预防新冠肺炎的主张，无答非所问或支持/反驳冲突。"
+    },
+    "decision": {
+      "verdict": "证据不足",
+      "strength": "insufficient",
+      "accepted_evidence_ids": [],
+      "excluded_evidence": [
+        {
+          "evidence_id": "authority-1",
+          "reason_code": "fetch_not_verified",
+          "explanation": "网页证据没有合法的正文抓取时间，不能按直接证据参与裁决"
+        }
+      ],
+      "reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "classifier_consistency": "unavailable_or_uncertain",
+      "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+      "subclaim_decisions": {}
+    },
+    "timeline": {
+      "timeline_status": "insufficient",
+      "events": [],
+      "note": "规则裁决证据不足，因此不生成传播时间线。"
+    }
+  },
+  "report": {
+    "schema_version": "rumorbuster-report-v3",
+    "claim": {
+      "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+      "subclaims": [
+        {
+          "id": "claim-1",
+          "text": "主张： 饮酒可以预防新冠肺炎",
+          "material": true
+        }
+      ],
+      "temporality": "unknown",
+      "event_date": null,
+      "source_url": null,
+      "domain": "medical",
+      "domain_reason": "命中受控专业关键词：新冠"
+    },
+    "checkability": {
+      "claim": "主张： 饮酒可以预防新冠肺炎",
+      "claim_type": "public_fact",
+      "checkability": "checkable_now",
+      "reason": "主张包含原则上可以通过公开证据核验的事实内容。",
+      "claim_context": {
+        "normalized_claim": "主张： 饮酒可以预防新冠肺炎",
+        "subclaims": [
+          {
+            "id": "claim-1",
+            "text": "主张： 饮酒可以预防新冠肺炎",
+            "material": true
+          }
+        ],
+        "temporality": "unknown",
+        "event_date": null,
+        "source_url": null,
+        "domain": "medical",
+        "domain_reason": "命中受控专业关键词：新冠"
+      }
+    },
+    "domain_route": {
+      "domain": "medical",
+      "reason": "命中受控专业关键词：新冠"
+    },
+    "capabilities": {
+      "web_search": true,
+      "web_fetch": true,
+      "classifier": false,
+      "rag": true,
+      "authority_research": true,
+      "evidence_critic": true
+    },
+    "original_page": null,
+    "research_branches": {
+      "rag": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:21:16.409436+00:00",
+        "finished_at": "2026-08-12T14:21:16.419793+00:00",
+        "duration_ms": 10,
+        "result_count": 3,
+        "error_code": null
+      },
+      "web": {
+        "status": "unavailable",
+        "started_at": "2026-08-12T14:21:16.419823+00:00",
+        "finished_at": "2026-08-12T14:21:29.730865+00:00",
+        "duration_ms": 13311,
+        "result_count": 0,
+        "error_code": "web_research_unavailable"
+      },
+      "classifier": {
+        "status": "skipped",
+        "result_count": 0
+      },
+      "authority": {
+        "status": "completed",
+        "started_at": "2026-08-12T14:21:16.444885+00:00",
+        "finished_at": "2026-08-12T14:21:30.608947+00:00",
+        "duration_ms": 14164,
+        "result_count": 1,
+        "error_code": null
+      }
+    },
+    "rag": {
+      "status": "ok",
+      "query": "主张： 饮酒可以预防新冠肺炎",
+      "matches": [
+        {
+          "record_id": "who-covid-007",
+          "canonical_claim": "饮酒可以预防新冠肺炎",
+          "similarity": 0.5048,
+          "matched_variant": "饮酒可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-009",
+          "canonical_claim": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "similarity": 0.2459,
+          "matched_variant": "向身体喷洒或注入漂白剂可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        },
+        {
+          "record_id": "who-covid-011",
+          "canonical_claim": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "similarity": 0.2386,
+          "matched_variant": "在25摄氏度以上晒太阳可以预防新冠肺炎",
+          "historical_verdict": "rumor",
+          "authoritative_sources": [
+            "https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+          ],
+          "event_date": "2022-01-19",
+          "temporal_warning": null
+        }
+      ],
+      "threshold": 0.05,
+      "authoritative": false,
+      "note": "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+    },
+    "classifier_signal": {
+      "status": "unavailable",
+      "role": "auxiliary_signal",
+      "label": "uncertain",
+      "rationale": "分类器未配置",
+      "authoritative": false
+    },
+    "evidence": [
+      {
+        "id": "authority-1",
+        "title": "2019冠状病毒病的传言和事实",
+        "url": "https://www.who.int/zh/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters",
+        "publisher": "世界卫生组织（WHO）",
+        "published_at": "2022-01-19",
+        "stance": "refute",
+        "source_level": "A",
+        "claimed_source_level": "A",
+        "verified_source_level": "A",
+        "source_grade_reason": "官方域名且代码校验职权匹配",
+        "directness": "direct",
+        "authority_scope": true,
+        "authority_reason": "官方来源注册表中的职权关键词与主张匹配",
+        "independent_group": "世界卫生组织",
+        "content_fingerprint": "a7b3108f559e748b",
+        "temporal_relevance": "current",
+        "current_validity_confirmed": false,
+        "fetched_at": null,
+        "extraction_status": "ok",
+        "claim_ids": [
+          "claim-1"
+        ],
+        "claim_variant": "饮酒可以预防新冠肺炎",
+        "change_summary": "",
+        "summary": "世界卫生组织在'2019冠状病毒病的传言和事实'（Myth-busters）专栏中明确指出：'饮酒并不能保护您免受COVID-19侵害，反而可能会带来危害'，并进一步说明'频繁或过量饮酒可能会加剧健康问题'。WHO同时强调，饮用甲醇、乙醇或漂白剂不能预防或治愈COVID-19，且可能非常危险，会导致残疾和死亡。",
+        "provenance": "web"
+      }
+    ],
+    "evidence_review": {
+      "status": "completed",
+      "coverage_by_claim": {
+        "claim-1": "covered"
+      },
+      "missing_claim_ids": [],
+      "conflict_claim_ids": [],
+      "duplicate_groups": [],
+      "supplement_needed": false,
+      "supplement_query": "",
+      "notes": "单一证据（WHO官方来源）直接针对claim-1，明确反驳饮酒预防新冠肺炎的主张，无答非所问或支持/反驳冲突。"
+    },
+    "decision": {
+      "verdict": "证据不足",
+      "strength": "insufficient",
+      "accepted_evidence_ids": [],
+      "excluded_evidence": [
+        {
+          "evidence_id": "authority-1",
+          "reason_code": "fetch_not_verified",
+          "explanation": "网页证据没有合法的正文抓取时间，不能按直接证据参与裁决"
+        }
+      ],
+      "reason_codes": [
+        "threshold_not_met",
+        "threshold_not_met"
+      ],
+      "classifier_consistency": "unavailable_or_uncertain",
+      "explanation": "支持方：未达到一条A类或两条独立B类证据的门槛；反驳方：未达到一条A类或两条独立B类证据的门槛。",
+      "subclaim_decisions": {}
+    },
+    "timeline": {
+      "timeline_status": "insufficient",
+      "events": [],
+      "note": "规则裁决证据不足，因此不生成传播时间线。"
+    },
+    "limitations": [
+      "web_research_unavailable"
+    ],
+    "workflow_trace": [
+      {
+        "stage": "reset_input",
+        "at": "2026-08-12T14:21:15.982459+00:00"
+      },
+      {
+        "stage": "extract_claim",
+        "at": "2026-08-12T14:21:16.402333+00:00"
+      },
+      {
+        "stage": "checkability",
+        "at": "2026-08-12T14:21:16.405095+00:00"
+      },
+      {
+        "stage": "parallel_collection",
+        "at": "2026-08-12T14:21:16.407636+00:00"
+      },
+      {
+        "stage": "evidence_normalization",
+        "at": "2026-08-12T14:21:30.613445+00:00"
+      },
+      {
+        "stage": "evidence_review",
+        "at": "2026-08-12T14:21:32.062314+00:00"
+      },
+      {
+        "stage": "adjudicate",
+        "at": "2026-08-12T14:21:32.066768+00:00"
+      },
+      {
+        "stage": "timeline",
+        "at": "2026-08-12T14:21:32.069342+00:00"
+      },
+      {
+        "stage": "explain",
+        "at": "2026-08-12T14:21:32.071930+00:00"
+      },
+      {
+        "stage": "report",
+        "at": "2026-08-12T14:21:34.108938+00:00"
+      }
+    ],
+    "explanation": "经核验，唯一证据（世界卫生组织专栏）虽内容直接反驳“饮酒可预防新冠肺炎”，且来源等级为A，但该网页证据缺少合法的正文抓取时间，无法确认其当前有效性，故按规则不能作为直接证据参与裁决。因此，支持方与反驳方均未达到“一条A类或两条独立B类证据”的门槛，整体证据不足，无法作出肯定或否定结论。"
+  },
+  "observed_urls": [
+    "http://www.cneb.gov.cn/2020/02/12/ARTI1581499473795456.shtml",
+    "https://responsibledrinkingapac.org/cn/how-risky-is-your-drinking-cn-2",
+    "https://v.qq.com/x/cover/mzc00200ic4q7yt/v3056yjymim.html",
+    "https://www.cnjiyin.com/zixun/00320210710_37382.html",
+    "https://www.who.int/zh/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+  ],
+  "tool_messages": [],
+  "research_payloads": {
+    "web": {
+      "status": "unavailable",
+      "evidence": [],
+      "observed_urls": [],
+      "rejected_evidence": []
+    },
+    "authority": {
+      "status": "ok",
+      "evidence": [
+        {
+          "id": "authority-1",
+          "title": "2019冠状病毒病的传言和事实",
+          "url": "https://www.who.int/zh/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters",
+          "publisher": "世界卫生组织（WHO）",
+          "published_at": "2022-01-19",
+          "stance": "refute",
+          "source_level": "A",
+          "claimed_source_level": null,
+          "verified_source_level": null,
+          "source_grade_reason": "",
+          "directness": "direct",
+          "authority_scope": true,
+          "authority_reason": "世界卫生组织是全球公共卫生领域的最高权威机构，直接负责COVID-19公共卫生指导与辟谣信息发布",
+          "independent_group": "世界卫生组织",
+          "content_fingerprint": "",
+          "temporal_relevance": "current",
+          "current_validity_confirmed": true,
+          "fetched_at": null,
+          "extraction_status": "ok",
+          "claim_ids": [
+            "claim-1"
+          ],
+          "claim_variant": "饮酒可以预防新冠肺炎",
+          "change_summary": "",
+          "summary": "世界卫生组织在'2019冠状病毒病的传言和事实'（Myth-busters）专栏中明确指出：'饮酒并不能保护您免受COVID-19侵害，反而可能会带来危害'，并进一步说明'频繁或过量饮酒可能会加剧健康问题'。WHO同时强调，饮用甲醇、乙醇或漂白剂不能预防或治愈COVID-19，且可能非常危险，会导致残疾和死亡。",
+          "provenance": "web"
+        }
+      ],
+      "notes": "世界卫生组织官方辟谣页面明确否认饮酒可预防COVID-19，主张与权威来源直接矛盾。WHO指出饮酒不仅不能预防，频繁或过量饮酒反而可能加剧健康问题。",
+      "rejected_evidence": [],
+      "observed_urls": [
+        "http://www.cneb.gov.cn/2020/02/12/ARTI1581499473795456.shtml",
+        "https://responsibledrinkingapac.org/cn/how-risky-is-your-drinking-cn-2/",
+        "https://v.qq.com/x/cover/mzc00200ic4q7yt/v3056yjymim.html",
+        "https://www.cnjiyin.com/zixun/00320210710_37382.html",
+        "https://www.who.int/zh/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters"
+      ]
+    }
+  },
+  "final_response": "## 谣言检测报告\n\n**待检测言论**：主张： 饮酒可以预防新冠肺炎\n**判定结论**：证据不足\n**证据强度**：insufficient\n\n> **规则约束**：最终结论由确定性证据规则生成，研究子 Agent、分类器和解释模型均不能覆盖。\n\n### 综合分析\n经核验，唯一证据（世界卫生组织专栏）虽内容直接反驳“饮酒可预防新冠肺炎”，且来源等级为A，但该网页证据缺少合法的正文抓取时间，无法确认其当前有效性，故按规则不能作为直接证据参与裁决。因此，支持方与反驳方均未达到“一条A类或两条独立B类证据”的门槛，整体证据不足，无法作出肯定或否定结论。\n\n### 外部证据\n- [2019冠状病毒病的传言和事实](https://www.who.int/zh/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters) — A级，未用于裁决：世界卫生组织在'2019冠状病毒病的传言和事实'（Myth-busters）专栏中明确指出：'饮酒并不能保护您免受COVID-19侵害，反而可能会带来危害'，并进一步说明'频繁或过量饮酒可能会加剧健康问题'。WHO同时强调，饮用甲醇、乙醇或漂白剂不能预防或治愈COVID-19，且可能非常危险，会导致残疾和死亡。\n\n### 局限\n- web_research_unavailable",
+  "finished_at": "2026-08-12T14:21:34.126233+00:00",
+  "duration_ms": 19190,
+  "checks": {
+    "terminal_stage": true,
+    "report_schema_supported": true,
+    "decision_bound": true,
+    "observed_urls_only": true,
+    "timeline_traceable": true,
+    "expected_domain": true,
+    "expected_authority_branch": true,
+    "expected_rag_record": true
+  },
+  "all_checks_passed": true
+}

@@ -9,6 +9,7 @@ from app.gateway.routers import (
     agents,
     artifacts,
     channels,
+    checks,
     mcp,
     memory,
     models,
@@ -100,10 +101,14 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
         """,
         version="0.1.0",
         lifespan=lifespan,
-        docs_url="/docs",
-        redoc_url="/redoc",
-        openapi_url="/openapi.json",
+        docs_url="/api/docs",
+        redoc_url="/api/redoc",
+        openapi_url="/api/openapi.json",
         openapi_tags=[
+            {
+                "name": "checks",
+                "description": "Create and query RumorBuster fact checks",
+            },
             {
                 "name": "models",
                 "description": "Operations for querying available AI models and their configurations",
@@ -184,6 +189,9 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
     # Channels API is mounted at /api/channels
     app.include_router(channels.router)
 
+    # Public fact-check API is mounted at /api/v1/checks
+    app.include_router(checks.router)
+
     @app.get("/health", tags=["health"])
     async def health_check() -> dict:
         """Health check endpoint.
@@ -192,6 +200,12 @@ This gateway provides custom endpoints for models, MCP configuration, skills, an
             Service health status information.
         """
         return {"status": "healthy", "service": "rumor-buster-gateway"}
+
+    @app.get("/ready", tags=["health"])
+    async def readiness_check() -> dict[str, str]:
+        """Confirm that Gateway can reach the configured RumorBuster graph."""
+
+        return await checks.check_langgraph_ready()
 
     return app
 

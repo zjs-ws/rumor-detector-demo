@@ -1,6 +1,7 @@
 """Tests for structured and traceable webpage fetching."""
 
 import json
+from datetime import datetime
 
 from deerflow.community.jina_ai import tools
 
@@ -39,6 +40,7 @@ def test_web_fetch_returns_structured_source_metadata(monkeypatch):
     assert payload["content"] == "Title: 示例报道\n\nMarkdown Content:\n\n这是网页正文。"
     assert payload["truncated"] is False
     assert payload["content_chars"] == len(payload["content"])
+    assert datetime.fromisoformat(payload["fetched_at"]).tzinfo is not None
 
 
 def test_web_fetch_blocks_non_public_urls(monkeypatch):

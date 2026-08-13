@@ -1,0 +1,34 @@
+{
+  "schema_version": "rumorbuster-demo-summary-v1",
+  "generated_at": "2026-08-12T14:20:36.420136+00:00",
+  "base_url": "http://langgraph:2024",
+  "graphs": [
+    "rumor_agent_v2",
+    "rumor_agent"
+  ],
+  "repeats": 1,
+  "runs": [
+    {
+      "graph_id": "rumor_agent_v2",
+      "case_id": "boundary-opinion",
+      "repeat": 1,
+      "status": "completed",
+      "verdict": "非事实性表达",
+      "domain": "—",
+      "duration_ms": 19926,
+      "checks": "需检查"
+    },
+    {
+      "graph_id": "rumor_agent",
+      "case_id": "boundary-opinion",
+      "repeat": 1,
+      "status": "completed",
+      "verdict": "非事实性表达",
+      "domain": "general",
+      "duration_ms": 1434,
+      "checks": "通过"
+    }
+  ],
+  "passed": 1,
+  "total": 2
+}

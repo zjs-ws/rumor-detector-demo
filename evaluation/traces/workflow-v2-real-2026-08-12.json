@@ -1,0 +1,34 @@
+{
+  "run_date": "2026-08-12",
+  "run_type": "real_langgraph_deepseek_smoke",
+  "input": "请核验：饮酒可以预防新冠肺炎",
+  "terminal_stage": "report",
+  "trace": [
+    {"tool": "classify_checkability", "status": "completed", "calls": 1},
+    {"tool": "retrieve_verified_rumors", "status": "completed", "calls": 1},
+    {"tool": "task", "status": "completed", "calls": 1},
+    {"tool": "assess_evidence", "status": "completed", "calls": 1}
+  ],
+  "rag": {
+    "status": "ok",
+    "threshold": 0.05,
+    "top_matches": ["who-covid-007", "who-covid-017", "who-covid-011"],
+    "authoritative": false
+  },
+  "research": {
+    "status": "ok",
+    "tool_message_is_strict_json": true,
+    "verified_source_levels": ["B", "A", "C", "C"]
+  },
+  "decision": {
+    "verdict": "证据不足",
+    "explanation": "RAG 只提供历史相似记录；本轮网页直接证据未满足代码规定的正文抓取、来源、时效和门槛要求。"
+  },
+  "timeline": {
+    "timeline_status": "insufficient",
+    "explanation": "裁决未达到有效证据门槛，因此不展示传播时间线。"
+  },
+  "degradation_codes": [],
+  "schema_version": "rumorbuster-report-v2",
+  "privacy_note": "线程 ID、模型密钥和完整模型消息未写入留痕文件。"
+}

@@ -43,7 +43,7 @@ async def task_tool(
     runtime: ToolRuntime[ContextT, ThreadState],
     description: str,
     prompt: str,
-    subagent_type: Literal["general-purpose", "bash", "web-researcher", "knowledge-analyst", "rag-analyst", "evidence-archiver"],
+    subagent_type: Literal["general-purpose", "bash", "web-researcher", "authority-researcher", "evidence-critic", "knowledge-analyst", "rag-analyst", "evidence-archiver"],
     tool_call_id: Annotated[str, InjectedToolCallId],
     max_turns: int | None = None,
 ) -> str:
@@ -62,6 +62,10 @@ async def task_tool(
       git operations, build processes, or when command output would be verbose.
     - **web-researcher**: Fact-checking specialist that searches the web for evidence
       to verify or debunk a claim. Use for claims involving recent events or facts.
+    - **authority-researcher**: Restricted professional-source researcher used for
+      medical, legal, finance, policy, science, and technology claims.
+    - **evidence-critic**: Reviews only the coverage and conflicts in an existing
+      evidence batch. It cannot search, add sources, or decide the verdict.
     - **knowledge-analyst**: Reasoning specialist that analyzes claims using common
       sense, logic, and domain knowledge. Use for logical or knowledge-based analysis.
     - **rag-analyst**: Professional-domain RAG analyst that searches authoritative and
@@ -88,7 +92,7 @@ async def task_tool(
     # Get subagent configuration
     config = get_subagent_config(subagent_type)
     if config is None:
-        return f"Error: Unknown subagent type '{subagent_type}'. Available: general-purpose, bash, web-researcher, knowledge-analyst, rag-analyst, evidence-archiver"
+        return f"Error: Unknown subagent type '{subagent_type}'. Available: general-purpose, bash, web-researcher, authority-researcher, evidence-critic, knowledge-analyst, rag-analyst, evidence-archiver"
 
     # Build config overrides
     overrides: dict = {}
@@ -225,6 +229,7 @@ async def task_tool(
                 writer({"type": "task_timed_out", "task_id": task_id})
                 return f"Task polling timed out after {timeout_minutes} minutes. This may indicate the background task is stuck. Status: {result.status.value}"
     except asyncio.CancelledError:
+
         async def cleanup_when_done() -> None:
             max_cleanup_polls = max_poll_count
             cleanup_poll_count = 0
@@ -239,9 +244,7 @@ async def task_tool(
                     return
 
                 if cleanup_poll_count > max_cleanup_polls:
-                    logger.warning(
-                        f"[trace={trace_id}] Deferred cleanup for task {task_id} timed out after {cleanup_poll_count} polls"
-                    )
+                    logger.warning(f"[trace={trace_id}] Deferred cleanup for task {task_id} timed out after {cleanup_poll_count} polls")
                     return
 
                 await asyncio.sleep(5)

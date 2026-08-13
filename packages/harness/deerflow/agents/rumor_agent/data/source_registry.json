@@ -1,0 +1,48 @@
+{
+  "official_sources": [
+    {
+      "domains": ["who.int", "nhc.gov.cn", "cdc.gov"],
+      "scope_keywords": ["卫生", "健康", "疾病", "医疗", "诊疗", "治疗", "指南", "药物", "疫苗", "新冠", "covid"]
+    },
+    {
+      "domains": ["fda.gov", "samr.gov.cn"],
+      "scope_keywords": ["药品", "食品", "产品", "市场监管", "质量", "召回", "广告", "医疗器械"]
+    },
+    {
+      "domains": ["mps.gov.cn"],
+      "scope_keywords": ["公安", "治安", "犯罪", "诈骗", "交通", "户籍", "警方"]
+    },
+    {
+      "domains": ["un.org"],
+      "scope_keywords": ["联合国", "国际", "人道", "维和", "制裁"]
+    },
+    {
+      "domains": ["gov.cn"],
+      "scope_keywords": ["国务院", "中央政府", "国家政策", "政策", "行政法规"]
+    },
+    {
+      "domains": ["npc.gov.cn", "court.gov.cn", "spp.gov.cn"],
+      "scope_keywords": ["法律", "法规", "司法解释", "法院", "检察院", "判决", "刑法", "民法"]
+    },
+    {
+      "domains": ["pbc.gov.cn", "csrc.gov.cn", "stats.gov.cn"],
+      "scope_keywords": ["金融", "货币", "利率", "证券", "上市公司", "经济", "统计", "监管"]
+    },
+    {
+      "domains": ["nasa.gov", "ipcc.ch"],
+      "scope_keywords": ["气候", "全球变暖", "地球", "大气", "海洋", "温室气体", "climate", "warming"]
+    }
+  ],
+  "professional_hosts": [
+    "reuters.com",
+    "apnews.com",
+    "bbc.com",
+    "xinhuanet.com",
+    "people.com.cn",
+    "nature.com",
+    "science.org",
+    "thelancet.com",
+    "nejm.org"
+  ],
+  "personal_host_keywords": ["blog", "weibo", "zhihu", "douyin", "twitter", "x.com"]
+}

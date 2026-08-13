@@ -1,0 +1,35 @@
+[
+  {
+    "id": "workflow-text",
+    "messages": [{"type": "human", "content": "请核验某地发布了停课通知"}],
+    "capabilities": {"web_search": true, "web_fetch": true, "classifier": false},
+    "expected_stage": "checkability"
+  },
+  {
+    "id": "workflow-url-only",
+    "messages": [{"type": "human", "content": "请核验这个网页：https://example.com/news"}],
+    "capabilities": {"web_search": true, "web_fetch": true, "classifier": false},
+    "expected_stage": "fetch_original"
+  },
+  {
+    "id": "workflow-browser-selection",
+    "messages": [{"type": "human", "content": "请核验以下网页内容：\n\n某地发布了停课通知\n\n来源页面：https://example.com/news"}],
+    "capabilities": {"web_search": true, "web_fetch": true, "classifier": false},
+    "expected_stage": "checkability"
+  },
+  {
+    "id": "workflow-chat",
+    "messages": [{"type": "human", "content": "你好"}],
+    "capabilities": {"web_search": true, "web_fetch": true, "classifier": true},
+    "expected_stage": "conversation"
+  },
+  {
+    "id": "workflow-url-fetch-failed",
+    "messages": [
+      {"type": "human", "content": "请核验这个网页：https://example.com/news"},
+      {"type": "tool", "name": "web_fetch", "tool_call_id": "fetch-1", "content": "Error: timeout"}
+    ],
+    "capabilities": {"web_search": true, "web_fetch": true, "classifier": false},
+    "expected_stage": "needs_input"
+  }
+]

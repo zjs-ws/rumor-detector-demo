@@ -1,0 +1,164 @@
+[
+  {
+    "id": "decision-a-refute",
+    "expected": "谣言",
+    "classifier_label": "non_rumor",
+    "evidence": [
+      {"id":"a1","title":"主管部门公告","url":"https://authority.example/a1","publisher":"主管部门","stance":"refute","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"authority","temporal_relevance":"current","summary":"公告直接否认该主张","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-two-b-support",
+    "expected": "非谣言",
+    "classifier_label": "rumor",
+    "evidence": [
+      {"id":"b1","title":"媒体一核查","url":"https://media-one.example/b1","publisher":"媒体一","stance":"support","source_level":"B","directness":"direct","independent_group":"media-one","temporal_relevance":"event_match","summary":"采访原始当事人并核对文件","provenance":"web"},
+      {"id":"b2","title":"媒体二核查","url":"https://media-two.example/b2","publisher":"媒体二","stance":"support","source_level":"B","directness":"direct","independent_group":"media-two","temporal_relevance":"event_match","summary":"独立获得同一事实","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-duplicate-b",
+    "expected": "证据不足",
+    "classifier_label": "rumor",
+    "evidence": [
+      {"id":"b3","title":"原稿","url":"https://media.example/b3","publisher":"媒体","stance":"refute","source_level":"B","directness":"direct","independent_group":"same-wire","temporal_relevance":"current","summary":"一篇报道","provenance":"web"},
+      {"id":"b4","title":"转载稿","url":"https://mirror.example/b4","publisher":"转载站","stance":"refute","source_level":"B","directness":"direct","independent_group":"same-wire","temporal_relevance":"current","summary":"转载同一报道","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-a-conflict",
+    "expected": "存疑",
+    "classifier_label": "non_rumor",
+    "evidence": [
+      {"id":"a2","title":"主管机构一","url":"https://agency-one.example/a2","publisher":"机构一","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-one","temporal_relevance":"current","summary":"直接支持","provenance":"web"},
+      {"id":"a3","title":"主管机构二","url":"https://agency-two.example/a3","publisher":"机构二","stance":"refute","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-two","temporal_relevance":"current","summary":"直接反驳","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-stale-a",
+    "expected": "证据不足",
+    "classifier_label": "non_rumor",
+    "evidence": [
+      {"id":"a4","title":"过期公告","url":"https://authority.example/a4","publisher":"主管部门","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"authority","temporal_relevance":"stale","summary":"只适用于多年前的政策","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-snippet-a",
+    "expected": "证据不足",
+    "classifier_label": "rumor",
+    "evidence": [
+      {"id":"s1","title":"搜索摘要","url":"https://authority.example/snippet","publisher":"主管部门","stance":"refute","source_level":"A","directness":"snippet_only","authority_scope":true,"independent_group":"authority","temporal_relevance":"current","summary":"只有搜索摘要","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-authority-mismatch",
+    "expected": "证据不足",
+    "classifier_label": "non_rumor",
+    "evidence": [
+      {"id":"a5","title":"非主管机构公告","url":"https://authority.example/unrelated","publisher":"非主管机构","stance":"support","source_level":"A","directness":"direct","authority_scope":false,"independent_group":"unrelated","temporal_relevance":"current","summary":"机构无权确认该事项","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-two-b-refute",
+    "expected": "谣言",
+    "classifier_label": "non_rumor",
+    "evidence": [
+      {"id":"b5","title":"独立调查一","url":"https://media-three.example/report","publisher":"媒体三","stance":"refute","source_level":"B","directness":"direct","independent_group":"media-three","temporal_relevance":"event_match","summary":"采访事件主管人员并取得原始公告","provenance":"web"},
+      {"id":"b6","title":"独立调查二","url":"https://media-four.example/report","publisher":"媒体四","stance":"refute","source_level":"B","directness":"direct","independent_group":"media-four","temporal_relevance":"event_match","summary":"查阅现场记录并独立访问当事人","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-a-over-b",
+    "expected": "非谣言",
+    "classifier_label": "rumor",
+    "evidence": [
+      {"id":"a6","title":"主管部门确认","url":"https://authority.example/confirm","publisher":"主管部门","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"authority","temporal_relevance":"current","summary":"主管部门直接确认主张","provenance":"web"},
+      {"id":"b7","title":"相反报道一","url":"https://media-five.example/report","publisher":"媒体五","stance":"refute","source_level":"B","directness":"direct","independent_group":"media-five","temporal_relevance":"current","summary":"媒体根据匿名消息反驳","provenance":"web"},
+      {"id":"b8","title":"相反报道二","url":"https://media-six.example/report","publisher":"媒体六","stance":"refute","source_level":"B","directness":"direct","independent_group":"media-six","temporal_relevance":"current","summary":"另一媒体根据现场推测反驳","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-unknown-date",
+    "expected": "证据不足",
+    "classifier_label": "non_rumor",
+    "claim_context": {"normalized_claim":"目前该政策仍然有效","temporality":"current_status","subclaims":[{"id":"claim-1","text":"目前该政策仍然有效","material":true}]},
+    "evidence": [
+      {"id":"a7","title":"无日期政策页","url":"https://example.gov.cn/policy","publisher":"政府部门","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"government","temporal_relevance":"unknown","summary":"页面没有可验证日期","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-historical-event",
+    "expected": "谣言",
+    "classifier_label": "non_rumor",
+    "claim_context": {"normalized_claim":"2020年某项卫生建议包含该说法","temporality":"event_bound","event_date":"2020-05-01","subclaims":[{"id":"claim-1","text":"2020年某项卫生建议包含该说法","material":true}]},
+    "evidence": [
+      {"id":"a8","title":"历史卫生公告","url":"https://who.int/history","publisher":"WHO","published_at":"2020-05-01","stance":"refute","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"who","temporal_relevance":"historical_match","summary":"历史公告直接反驳当年的说法","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-current-old-guidance",
+    "expected": "证据不足",
+    "classifier_label": "non_rumor",
+    "claim_context": {"normalized_claim":"目前该治疗指南仍然有效","temporality":"current_status","subclaims":[{"id":"claim-1","text":"目前该治疗指南仍然有效","material":true}]},
+    "evidence": [
+      {"id":"a9","title":"旧治疗指南","url":"https://who.int/old-guidance","publisher":"WHO","published_at":"2020-05-01","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"who","temporal_relevance":"current","current_validity_confirmed":false,"summary":"旧指南没有当前有效性确认","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-ordinary-page-downgrade",
+    "expected": "证据不足",
+    "classifier_label": "non_rumor",
+    "evidence": [
+      {"id":"a10","title":"普通博客自称官方","url":"https://ordinary.invalid/post","publisher":"未知站点","published_at":"2026-08-01","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"ordinary","temporal_relevance":"current","summary":"普通网页自称权威","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-mixed-subclaims",
+    "expected": "误导",
+    "classifier_label": "rumor",
+    "claim_context": {"normalized_claim":"事件发生且造成十人受伤","temporality":"event_bound","subclaims":[{"id":"c1","text":"事件发生","material":true},{"id":"c2","text":"造成十人受伤","material":true}]},
+    "evidence": [
+      {"id":"a11","title":"事件通报","url":"https://agency-one.example/event","publisher":"机构一","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-one","temporal_relevance":"event_match","claim_ids":["c1"],"summary":"通报确认事件发生","provenance":"web"},
+      {"id":"a12","title":"伤亡通报","url":"https://agency-two.example/casualty","publisher":"机构二","stance":"refute","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-two","temporal_relevance":"event_match","claim_ids":["c2"],"summary":"通报明确无人受伤","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-incomplete-subclaims",
+    "expected": "证据不足",
+    "classifier_label": "non_rumor",
+    "claim_context": {"normalized_claim":"事件发生且造成十人受伤","temporality":"event_bound","subclaims":[{"id":"c1","text":"事件发生","material":true},{"id":"c2","text":"造成十人受伤","material":true}]},
+    "evidence": [
+      {"id":"a13","title":"事件通报","url":"https://agency-one.example/event-two","publisher":"机构一","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-one","temporal_relevance":"event_match","claim_ids":["c1"],"summary":"只确认事件发生","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-all-subclaims-supported",
+    "expected": "非谣言",
+    "classifier_label": "rumor",
+    "claim_context": {"normalized_claim":"事件发生且两条道路临时封闭","temporality":"event_bound","subclaims":[{"id":"c1","text":"事件发生","material":true},{"id":"c2","text":"两条道路临时封闭","material":true}]},
+    "evidence": [
+      {"id":"a14","title":"事件通报","url":"https://agency-one.example/event-three","publisher":"机构一","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-one","temporal_relevance":"event_match","claim_ids":["c1"],"summary":"确认事件发生","provenance":"web"},
+      {"id":"a15","title":"交通通报","url":"https://agency-two.example/roads","publisher":"机构二","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-two","temporal_relevance":"event_match","claim_ids":["c2"],"summary":"确认两条道路封闭","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-all-subclaims-refuted",
+    "expected": "谣言",
+    "classifier_label": "non_rumor",
+    "claim_context": {"normalized_claim":"学校停课且考试延期","temporality":"current_status","subclaims":[{"id":"c1","text":"学校停课","material":true},{"id":"c2","text":"考试延期","material":true}]},
+    "evidence": [
+      {"id":"a16","title":"学校公告","url":"https://agency-one.example/classes","publisher":"学校","stance":"refute","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"school","temporal_relevance":"current","claim_ids":["c1"],"summary":"明确正常上课","provenance":"web"},
+      {"id":"a17","title":"考试公告","url":"https://agency-two.example/exam","publisher":"考试机构","stance":"refute","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"exam-office","temporal_relevance":"current","claim_ids":["c2"],"summary":"明确考试日期不变","provenance":"web"}
+    ]
+  },
+  {
+    "id": "decision-three-subclaims-one-missing",
+    "expected": "证据不足",
+    "classifier_label": "rumor",
+    "claim_context": {"normalized_claim":"发生事故、道路封闭并有十人受伤","temporality":"event_bound","subclaims":[{"id":"c1","text":"发生事故","material":true},{"id":"c2","text":"道路封闭","material":true},{"id":"c3","text":"十人受伤","material":true}]},
+    "evidence": [
+      {"id":"a18","title":"事故通报","url":"https://agency-one.example/event-four","publisher":"机构一","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-one","temporal_relevance":"event_match","claim_ids":["c1"],"summary":"确认事故发生","provenance":"web"},
+      {"id":"a19","title":"交通通告","url":"https://agency-two.example/closure","publisher":"机构二","stance":"support","source_level":"A","directness":"direct","authority_scope":true,"independent_group":"agency-two","temporal_relevance":"event_match","claim_ids":["c2"],"summary":"确认道路封闭","provenance":"web"}
+    ]
+  }
+]

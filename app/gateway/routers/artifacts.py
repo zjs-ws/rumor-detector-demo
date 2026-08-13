@@ -19,6 +19,22 @@ ACTIVE_CONTENT_MIME_TYPES = {
     "image/svg+xml",
 }
 
+ACTIVE_CONTENT_SUFFIX_MIME_TYPES = {
+    ".htm": "text/html",
+    ".html": "text/html",
+    ".svg": "image/svg+xml",
+    ".xhtml": "application/xhtml+xml",
+}
+
+
+def _guess_artifact_mime_type(path: str | Path) -> str | None:
+    """Return a stable MIME type for active content across host platforms."""
+    suffix = Path(path).suffix.lower()
+    if suffix in ACTIVE_CONTENT_SUFFIX_MIME_TYPES:
+        return ACTIVE_CONTENT_SUFFIX_MIME_TYPES[suffix]
+    mime_type, _ = mimetypes.guess_type(path)
+    return mime_type
+
 
 def _build_content_disposition(disposition_type: str, filename: str) -> str:
     """Build an RFC 5987 encoded Content-Disposition header value."""
@@ -136,7 +152,7 @@ async def get_artifact(thread_id: str, path: str, request: Request, download: bo
             raise HTTPException(status_code=404, detail=f"File '{internal_path}' not found in skill archive")
 
         # Determine MIME type based on the internal file
-        mime_type, _ = mimetypes.guess_type(internal_path)
+        mime_type = _guess_artifact_mime_type(internal_path)
         # Add cache headers to avoid repeated ZIP extraction (cache for 5 minutes)
         cache_headers = {"Cache-Control": "private, max-age=300"}
         download_name = Path(internal_path).name or actual_skill_path.stem
@@ -162,7 +178,7 @@ async def get_artifact(thread_id: str, path: str, request: Request, download: bo
     if not actual_path.is_file():
         raise HTTPException(status_code=400, detail=f"Path is not a file: {path}")
 
-    mime_type, _ = mimetypes.guess_type(actual_path)
+    mime_type = _guess_artifact_mime_type(actual_path)
 
     if download:
         return FileResponse(path=actual_path, filename=actual_path.name, media_type=mime_type, headers=_build_attachment_headers(actual_path.name))

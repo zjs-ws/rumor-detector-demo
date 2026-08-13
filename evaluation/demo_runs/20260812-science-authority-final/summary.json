@@ -1,0 +1,23 @@
+{
+  "schema_version": "rumorbuster-demo-summary-v1",
+  "generated_at": "2026-08-12T15:01:51.820244+00:00",
+  "base_url": "http://langgraph:2024",
+  "graphs": [
+    "rumor_agent"
+  ],
+  "repeats": 1,
+  "runs": [
+    {
+      "graph_id": "rumor_agent",
+      "case_id": "science-url-claim",
+      "repeat": 1,
+      "status": "completed",
+      "verdict": "证据不足",
+      "domain": "science",
+      "duration_ms": 68545,
+      "checks": "通过"
+    }
+  ],
+  "passed": 1,
+  "total": 1
+}

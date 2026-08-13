@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Claude Code provider
+
+When the user starts Claude Code with `./scripts/claude-deepseek.sh`, requests
+are sent to DeepSeek's Anthropic-compatible endpoint. The launcher reads
+`DEEPSEEK_API_KEY` from the process environment, the ignored
+`.claude/deepseek.env`, or the ignored root `.env`, in that order. Never copy
+the key into this file, README, `.claude/settings.json`, logs, tests, or Git
+history. The default primary model is `deepseek-v4-pro[1m]`; lightweight and
+subagent calls use `deepseek-v4-flash`.
+
+For the current milestone order and takeover checkpoint, read
+`docs/CLAUDE_HANDOFF.md`. The project skills `/continue-rumorbuster` and
+`/validate-rumorbuster` provide the standard resume and pre-commit workflows.
+
 ## Project Overview
 
 ### RumorBuster branch note
@@ -15,24 +29,34 @@ LangGraph on 2024, and the Gateway on 8001.
 The frontend Dockerfile copies dependency manifests before application source,
 so ordinary UI edits reuse the cached dependency-install layer.
 
-The `rumor_agent` only exposes web-research delegation when a `web_search` tool
-is configured, and only exposes the fine-tuned classifier when
-`RUMOR_MODEL_BASE_URL` is explicitly set. Its prompt must never advertise
-disabled capabilities. Model and tool call limit middleware are required to
-prevent repeated agent/tool loops.
+`rumor_agent` is the V3 explicit `StateGraph`; `rumor_agent_v2` preserves the
+previous `create_agent` plus workflow-gate implementation for regression and
+rollback. Keep both graph IDs and the existing API paths compatible. Each new
+user turn gets a fresh `run_id` and must clear current-run evidence while
+retaining checkpointed conversation history.
 
 `config.example.yaml` enables the keyless DuckDuckGo `web_search` provider.
-The parent rumor agent must not receive `web_search` directly; only its
-single-call `web-researcher` delegation may use search. The parent may receive
-`web_fetch` directly for one user-supplied source URL per run.
+The V3 graph never exposes `web_search` to the extraction/explanation model.
+After checkability, it fans out local TF-IDF RAG, `web-researcher`, optional
+classifier, and professional-domain `authority-researcher` with LangGraph
+`Send`, then reducers fan in before normalization and deterministic
+adjudication. `evidence-critic` has no tools and may only describe coverage or
+threshold gaps; deterministic code runs a preliminary adjudication and allows
+at most one supplement. Coverage alone is not enough when the available
+evidence still misses the A / two-independent-B threshold.
 LangGraph Server may provide the active thread ID through runtime context,
 `config.configurable`, or `config.metadata`; task delegation must preserve all
 three fallbacks. A model may reduce a subagent's `max_turns`, but must never
-increase the configured limit. The web researcher has a 60-second timeout and
-a code-enforced single tool call per run.
-The web researcher uses `direct_tool="web_search"` so raw structured search
-results reach the parent agent without an intermediate LLM rewriting URLs or
-source summaries.
+increase the configured limit. Ordinary research has a 55-second timeout,
+`web_search=1`, and `web_fetch<=4`; authority research has 55 seconds,
+`web_search=1`, and `web_fetch<=2`; classifier timeout is 12 seconds. Captured
+`ToolMessage` values are the URL provenance boundary. A successful structured
+`web_fetch` result supplies the only trusted `fetched_at` for direct web
+evidence; V3 binds it by normalized URL. Never trust a URL or fetch timestamp
+that appears only in a subagent's final text.
+NASA and IPCC are registered only for climate/Earth-science scope. Their URLs
+must still pass directness, fetch, date, and claim-coverage checks; a registry
+match alone never guarantees admission to the decision threshold.
 
 The unpacked Chrome Manifest V3 extension lives in `browser-extension/`. Its
 selection context-menu action opens `/workspace/chats/new` and passes the
@@ -44,18 +68,44 @@ side of the integration.
 
 `config.example.yaml` also enables the `web_fetch` provider for user-supplied
 public HTTP(S) URLs. Without `JINA_API_KEY` it uses a bounded local
-HTTP/readability fallback; with a key it prefers Jina Reader. The main rumor agent may call `web_fetch`
-directly at most once per run, before delegating its separate one-call search.
+HTTP/readability fallback; with a key it prefers Jina Reader. The V3 original-
+page node may call `web_fetch` once per run before claim extraction.
+Generic URL-only instructions such as "核验这个网页的主要内容" are not a
+claim. Claim extraction first tries structured output, then a strict plain-JSON
+fallback for providers that reject structured schemas; if both fail, request a
+specific claim instead of searching the generic instruction.
 The fetch tool must reject localhost/private/non-web targets and must return
-structured JSON containing `source_url`, `title`, bounded `content`, character
-counts, and truncation state. Reports must cite only URLs actually returned by
+structured JSON containing `source_url`, `fetched_at`, `title`, bounded
+`content`, character counts, and truncation state. Reports must cite only URLs actually returned by
 the current fetch/search calls, using standard clickable Markdown links, and
 must include a deduplicated Sources section. A successful page read is not
 independent confirmation of that page's claims. `RumorEvidencePolicyMiddleware`
 enforces this after the final model call: it removes clickable URLs absent from
 the current run's tool messages, restores a missing original-page source entry,
 and downgrades the verdict to evidence-insufficient/low whenever the final
-report cites no independently searched source.
+report cites no independently searched source. This middleware protects V2;
+V3 performs the equivalent checks explicitly in `normalize_research` and
+`finalize`, and deterministically renders a complete report even if the
+explanation model fails.
+
+V3 implementation entry points are
+`packages/harness/deerflow/agents/rumor_agent/graph_v3.py`,
+`packages/harness/deerflow/agents/rumor_agent/__init__.py`, and
+`langgraph.json`. `SubagentExecutor` returns captured tool messages as well as
+final text. Sandbox, Memory, historical `knowledge-analyst`, `rag-analyst`, and
+`evidence-archiver` are not part of the V3 truth-decision path; do not describe
+them as project algorithms or active voting agents.
+
+Artifact downloads must use the explicit active-content suffix mapping in
+`app/gateway/routers/artifacts.py`. Do not rely only on the host
+`mimetypes` database for HTML/XHTML/SVG because Linux images may classify
+`.xhtml` differently; active content must always be returned as an attachment.
+
+`evaluation/v3_comprehensive_cases.json` is the fixed 40-case course manifest:
+10 checkability, 8 RAG, 12 evidence/professional, 5 mixed-subclaim, and 5
+URL/failure-routing cases. It references deterministic component fixtures and
+must not be described as 40 live web runs. Run `scripts/evaluate_rumorbuster.py`
+to validate every reference and regenerate category metrics.
 
 DeerFlow is a LangGraph-based AI super agent system with a full-stack architecture. The backend provides a "super agent" with sandbox execution, persistent memory, subagent delegation, and extensible tool integration - all operating in per-thread isolated environments.
 
