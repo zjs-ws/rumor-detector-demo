@@ -72,90 +72,132 @@
 - 谣言智能体相关 72 项测试在 Docker 一次性容器中通过（含新增的时间线研究与向量 RAG 测试）；
 - 前端 TypeScript typecheck、`compose.yaml` 与 `compose.prod.yaml` 配置校验通过。
 
+截至 2026-08-17 的增量验证：
+
+- 信息源切换 Tavily（免费 key 即可用），并新增汇合后确定性补抓：对最多 2 条"已观察到但未成功抓取/摘引未验证"的 A/B 级直接证据，由代码抓取正文并按主张关键词选取逐字引文，通过校验后正常参与裁决，失败保持排除；
+- "抽烟有害身体健康"连续两轮真实运行均判"非谣言（high）"，分别由国家卫健委《中国吸烟危害健康报告2020》与 WHO 烟草实况报道的 A 级证据支撑；
+- 定向回归 127 项通过，40 条离线清单全部指标 1.0，无回归。
+
 继续开发中：
 
 - P0：短租 GPU，完成微调模型真机部署、9 条双跑冒烟和冻结评测集；
 - P0：三个真实网页案例各运行两次并保存脱敏报告；
-- P1：更稳定的可选搜索提供商和网页正文抓取；
 - P1：完善报告、PPT、视频和答辩材料；
 - P2：注册登录、生产鉴权、MCP 和更大规模知识库。
 
 > 当前版本为开发预览版，不建议直接暴露到公网。
 
-## 快速启动
+## 快速启动（小白 5 步上手）
 
-1. 克隆并进入项目：
+### 第 0 步：准备三样东西（约 5 分钟）
 
-   ```bash
-   git clone \
-     --branch feature/import-mcp-frontend \
-     --recurse-submodules \
-     https://github.com/zjs-ws/rumor-detector-demo.git
+| 需要什么 | 去哪弄 | 说明 |
+|---|---|---|
+| **Docker Desktop** | https://www.docker.com/products/docker-desktop | 安装后打开并等待引擎启动 |
+| **DeepSeek API Key**（付费） | https://platform.deepseek.com → 充值 → API Keys → 创建 | 大模型调用按量计费，一次核验约几分钱 |
+| **Tavily API Key**（免费） | https://tavily.com → 用 Google/GitHub 登录 → Dashboard 里复制 `tvly-` 开头的 key | 网页搜索与正文抓取，免费额度 1000 credits/月，一次核验约消耗 3~5 |
 
-   cd rumor-detector-demo
-   ```
+两个 key 都只需要复制粘贴，不要发给别人、不要提交到 Git。
 
-   已经克隆过仓库的队友执行：
+### 第 1 步：克隆项目
 
-   ```bash
-   git fetch origin
-   git switch feature/import-mcp-frontend
-   git pull --ff-only
-   git submodule update --init --recursive
-   ```
+```bash
+git clone \
+  --branch feature/import-mcp-frontend \
+  --recurse-submodules \
+  https://github.com/zjs-ws/rumor-detector-demo.git
 
-   `模型微调/数据集` 是冻结的独立数据仓库，以 Git 子模块方式引用。不要在主项目中重新生成、移动或提交该数据集。
+cd rumor-detector-demo
+```
 
-2. 创建本地配置：
+已经克隆过的队友：
 
-   `cp -n .env.example .env`
+```bash
+git fetch origin
+git switch feature/import-mcp-frontend
+git pull --ff-only
+git submodule update --init --recursive
+```
 
-   `cp -n config.example.yaml config.yaml`
+`模型微调/数据集` 是冻结的独立数据仓库，以 Git 子模块方式引用，不要在主项目中重新生成、移动或提交它。
 
-3. 编辑 `.env`，填写自己的 `DEEPSEEK_API_KEY`。
+### 第 2 步：创建本地配置（复制两个模板）
 
-   网页正文抓取默认使用浏览器 UA、瞬时错误有限重试、最多 5 跳重定向约束的
-   本地读取（PDF 会提取正文文本），空正文会返回错误让智能体改抓下一候选；
-   如需更稳定的复杂网页解析，可选填 `JINA_API_KEY` 启用 Jina Reader；或把
-   `config.yaml` 中 `web_search`/`web_fetch` 切换到 Tavily 工具（免费注册
-   `TAVILY_API_KEY`），搜索与抓取都在 Tavily 服务器完成，可渲染 JS、解析
-   PDF、绕开本机 IP 反爬。接入已上传的微调模型时，按
-   [微调模型部署与验收手册](docs/MODELSCOPE_CLASSIFIER_DEPLOYMENT.md)
-   建立 SSH 隧道；模型服务端口不应暴露公网。
+```bash
+cp -n .env.example .env
+cp -n config.example.yaml config.yaml
+```
 
-4. 一键启动：
+### 第 3 步：把两个 key 填进 `.env`
 
-   `./scripts/quickstart.sh`
+打开 `.env` 文件，把占位符替换成你自己的 key（别的行不用动）：
 
-   首次使用本地向量知识库前，单独构建 Chroma 索引。该命令会下载课件同栈的
-   `GanymedeNil/text2vec-large-chinese`，模型和索引均写入被忽略的 `runtime/`：
+```bash
+DEEPSEEK_API_KEY=sk-你的DeepSeek密钥
+TAVILY_API_KEY=tvly-你的Tavily密钥
+```
 
-   ```bash
-   docker compose -f compose.prod.yaml --profile maintenance run --rm rag-indexer
-   ```
+默认信息源是 **Tavily**（搜索和抓取都在 Tavily 服务器完成，能渲染 JS、解析
+PDF、不受本机 IP 反爬影响）。没有 Tavily key 时，也可以按 `config.example.yaml`
+里的注释把两处 `use:` 换成 DuckDuckGo + 本地抓取的无 key 备选方案（稳定性较差）。
 
-   若暂未构建索引，系统会自动退回现有 TF-IDF 检索，并在报告中显示
-   `rag_index_missing`，不会阻断网页取证和规则裁决。
+### 第 4 步：一键启动
 
-5. 确认服务和定向测试：
+```bash
+./scripts/quickstart.sh
+```
 
-   ```bash
-   docker compose ps
-   docker compose -f compose.prod.yaml config -q
+脚本会自动检查 Docker、校验两个 key、复制配置、构建并启动全部服务，最后
+打印访问地址。首次构建需要下载镜像，耐心等几分钟。
 
-   docker compose -f compose.prod.yaml run --rm -T \
-     -v "$PWD/packages:/app/packages:ro" \
-     -v "$PWD/tests:/app/tests:ro" \
-     -v "$PWD/scripts:/app/scripts:ro" \
-     -v "$PWD/evaluation:/app/evaluation:ro" \
-     langgraph uv run pytest \
-       tests/test_rumor_*.py \
-       tests/test_finetuned_classifier_evaluation.py \
-       tests/test_checks_api.py \
-       tests/test_demo_runner.py \
-       tests/test_jina_web_fetch.py \
-       tests/test_subagent_executor.py -q
-   ```
+首次使用本地向量知识库前，单独构建 Chroma 索引（可选，不构建也能用）：
+
+```bash
+docker compose -f compose.prod.yaml --profile maintenance run --rm rag-indexer
+```
+
+### 第 5 步：打开网页，试一条核验
+
+浏览器打开 **http://localhost:8080/workspace/chats/new**，输入：
+
+> 抽烟有害身体健康
+
+预期 30~60 秒后出报告：**判定结论"非谣言（高置信度）"**，证据列表里能看到
+国家卫健委或 WHO 的 A 级证据标注"用于裁决"，主张时态显示"普遍性事实"。
+
+服务健康检查（返回 `status: ready` 即正常）：
+
+```bash
+curl http://localhost:8080/healthz
+```
+
+### 常见问题（新手排错）
+
+| 现象 | 原因与处理 |
+|---|---|
+| `quickstart.sh` 提示 TAVILY_API_KEY 未配置 | 按第 0 步去 tavily.com 注册，把 key 填进 `.env` 重跑脚本 |
+| 报告显示"证据不足" | 最常见是网络抖动导致抓取失败——**再核验一次**；连续多轮仍不足才说明该主张确实缺证据或来源确实不可达 |
+| 启动后页面打不开 | `docker compose -f compose.prod.yaml ps` 看容器是否 healthy；`docker compose -f compose.prod.yaml logs -f` 看报错 |
+| 端口 8080 被占用 | 在 `.env` 里加 `RUMORBUSTER_HTTP_PORT=其他端口` 后重启 |
+| 想跑回归测试确认环境完好 | 见下方"队友接手顺序"的测试命令（127 项定向回归） |
+
+### 定向回归测试
+
+```bash
+docker compose -f compose.prod.yaml run --rm -T \
+  -v "$PWD/packages:/app/packages:ro" \
+  -v "$PWD/tests:/app/tests:ro" \
+  -v "$PWD/scripts:/app/scripts:ro" \
+  -v "$PWD/evaluation:/app/evaluation:ro" \
+  langgraph uv run pytest \
+    tests/test_rumor_*.py \
+    tests/test_tavily_web_fetch.py \
+    tests/test_jina_web_fetch.py \
+    tests/test_subagent_executor.py \
+    tests/test_finetuned_classifier_evaluation.py \
+    tests/test_checks_api.py \
+    tests/test_demo_runner.py -q
+```
 
 ## 队友接手顺序
 
@@ -326,11 +368,12 @@ python3 scripts/check_production_ready.py
 4. 智能体已加入模型/工具调用上限，后续仍需补齐真实证据源后的复杂流程测试。
 5. 当前智能体服务使用本地开发模式和无鉴权配置。
 6. 注册登录尚未接入；浏览器扩展当前为本地加载版，默认连接 `http://localhost:8080`，可在扩展设置中更换为未来的云端地址。
-7. 每轮最多抓取用户提供的 1 个公开 HTTP(S) URL，正文最多保留 12,000 个字符。登录墙、强动态渲染或阻止爬取的网页可能无法读取；私网、localhost 与非 HTTP(S) 地址会被拒绝。
+7. 每轮最多抓取用户提供的 1 个公开 HTTP(S) URL，正文最多保留 12,000 个字符。搜索与抓取默认走 Tavily（能渲染常见 JS 页面并解析 PDF），登录墙、付费墙或明确阻止爬取的网页仍可能无法读取；私网、localhost 与非 HTTP(S) 地址会被拒绝。无 key 备选方案（DuckDuckGo + 本地抓取）对反爬站点的成功率明显更低。
 8. 本地 RAG 已具备课件要求的 Loader、中文 Chunk、HuggingFace Embedding、Chroma Retriever 与 Prompt 上下文注入；当前正式语料仍以30条人工复核种子记录为主，未构建索引时自动退回TF-IDF。无论哪种模式，命中历史知识都不会直接决定当前主张。
 9. Sandbox 中间件已装配，但不是事实裁决核心；LocalSandbox 不是容器级安全边界，公网环境应使用更强隔离 Provider。
 10. 评论质证只保留接口草案，当前没有评论爬取、评论分析或传播树能力。
 11. 2026-08-14 的真实测试曾暴露历史主张误判时态、权威查询不定向和无正文引文等问题；相关代码已进入修复分支，但只有 `evaluation/real_e2e_cases.json` 的30条真实联网验收达到门槛后，才对外使用“稳定谣言核验系统”的表述。
+12. 确定性补抓每轮最多补抓 2 条 A/B 级直接证据，只对"已出现在本轮搜索结果中"的 URL 生效；补抓失败或引文无法与主张匹配时保持排除，不降低裁决门槛。
 
 ## 产品方向
 

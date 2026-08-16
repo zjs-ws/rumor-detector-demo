@@ -24,28 +24,26 @@ models:
 # 无需额外 API Key 的网页搜索。主智能体不会直接调用该工具，
 # 只会委托受调用次数限制的 web-researcher 收集公开来源。
 tools:
+  # 默认信息源：Tavily 搜索 + 提取一体，抓取在 Tavily 服务器完成
+  # （可渲染 JS、解析 PDF、不受本机 IP 反爬影响）。需要免费注册
+  # TAVILY_API_KEY 并写入 .env（注册：https://tavily.com）。
   - name: web_search
     group: web
-    use: deerflow.community.ddg_search.tools:web_search_tool
+    use: deerflow.community.tavily.tools:web_search_tool
     max_results: 5
 
-  # 可选信息源（推荐生产/演示使用）：Tavily 搜索 + 提取一体，抓取在 Tavily
-  # 服务器完成（可渲染 JS、解析 PDF、绕开本机 IP 被反爬），需要免费注册
-  # TAVILY_API_KEY 并写入 .env.production。切换时把上面 web_search 的 use
-  # 和下面 web_fetch 的 use 都改成 deerflow.community.tavily.tools 版本。
-  #  - name: web_search
-  #    group: web
-  #    use: deerflow.community.tavily.tools:web_search_tool
-  #    max_results: 5
-
-  # 读取用户直接提供的公开网页 URL。本地抓取使用浏览器 UA，
-  # 瞬时错误（429/5xx、连接失败）有限重试，最多 5 跳重定向，空正文报错，
-  # PDF 自动提取正文文本；配置 JINA_API_KEY 后优先使用 Jina Reader。
+  # 读取用户直接提供的公开网页 URL，结构化结果带来源与抓取时间溯源。
   - name: web_fetch
     group: web
-    use: deerflow.community.jina_ai.tools:web_fetch_tool
+    use: deerflow.community.tavily.tools:web_fetch_tool
     timeout: 12
     max_chars: 12000
+
+  # 无 key 备选方案（没有 TAVILY_API_KEY 时使用）：
+  # web_search 换成 deerflow.community.ddg_search.tools:web_search_tool，
+  # web_fetch 换成 deerflow.community.jina_ai.tools:web_fetch_tool
+  # （本地抓取：浏览器 UA、瞬时错误有限重试、最多 5 跳重定向、空正文报错、
+  # PDF 正文提取；配置 JINA_API_KEY 后优先使用 Jina Reader）。
 
 # 限制联网核验子智能体的最长运行时间，避免网络异常导致长时间等待。
 subagents:

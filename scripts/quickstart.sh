@@ -34,6 +34,13 @@ if grep -q 'your_deepseek_api_key_here' .env ||
   exit 1
 fi
 
+if grep -q 'your_tavily_api_key_here' .env ||
+   ! grep -Eq '^TAVILY_API_KEY=.{10,}$' .env; then
+  echo "⚠️  未检测到 TAVILY_API_KEY：搜索和网页抓取将不可用，核验会因缺少证据而失败。"
+  echo "    免费注册 https://tavily.com ，把 key 填进 .env 后重新运行本脚本。"
+  exit 1
+fi
+
 if [[ ! -f config.yaml ]]; then
   cp -n config.example.yaml config.yaml
   echo "✅ 已创建 config.yaml"
