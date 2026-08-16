@@ -5,7 +5,17 @@ import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { Toaster } from "sonner";
 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { CommandPalette } from "@/components/workspace/command-palette";
+import dynamic from "next/dynamic";
+
+const CommandPalette = dynamic(
+  () =>
+    import("@/components/workspace/command-palette").then(
+      (mod) => mod.CommandPalette,
+    ),
+  {
+    ssr: false,
+  },
+);
 import { WorkspaceSidebar } from "@/components/workspace/workspace-sidebar";
 import { getLocalSettings, useLocalSettings } from "@/core/settings";
 
