@@ -188,7 +188,7 @@ def normalized_temporal_relevance(
         # Publication age is not evidence staleness for a completed historical
         # event.  Official archives often expose no page publication date.
         return TemporalRelevance.EVENT_MATCH, None
-    if temporality == ClaimTemporality.TIMELESS and not _CURRENT_SENSITIVE.search(claim_text):
+    if temporality in {ClaimTemporality.TIMELESS, ClaimTemporality.GENERAL} and not _CURRENT_SENSITIVE.search(claim_text):
         return TemporalRelevance.TIMELESS, None
     if temporality == ClaimTemporality.CURRENT_STATUS or _CURRENT_SENSITIVE.search(claim_text):
         if not published:

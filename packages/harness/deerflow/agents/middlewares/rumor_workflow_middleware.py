@@ -53,23 +53,37 @@ def _latest_run(messages: list[Any]) -> tuple[object | None, list[Any]]:
     return None, []
 
 
-def _json_object(text: str) -> dict[str, Any] | None:
+_EXPECTED_TOP_LEVEL_KEYS = ("evidence", "rejected_evidence", "notes", "observed_urls", "fetched_urls", "status")
+_FENCED_CODE_RE = re.compile(r"^```[a-zA-Z]*\s*(.*?)\s*```$", re.DOTALL)
+
+
+def _json_object(text: str, required_keys: tuple[str, ...] = ()) -> dict[str, Any] | None:
+    """Extract a strict JSON object from subagent text.
+
+    Models occasionally wrap the payload in markdown fences or prefix it with
+    prose.  When ``required_keys`` is given, a decode candidate is accepted
+    only if the dict carries at least one of those keys, so a stray JSON
+    fragment in surrounding text can never be mistaken for the result.
+    """
     value = text.strip()
     if value.startswith(_TASK_PREFIX):
         value = value[len(_TASK_PREFIX) :].strip()
-    start = value.find("{")
-    if start < 0:
-        return None
-    try:
-        payload, _ = json.JSONDecoder().raw_decode(value[start:])
-    except (json.JSONDecodeError, TypeError):
-        return None
-    return payload if isinstance(payload, dict) else None
+    fenced = _FENCED_CODE_RE.match(value)
+    if fenced:
+        value = fenced.group(1).strip()
+    for start in (match.start() for match in re.finditer(r"[{\[]", value)):
+        try:
+            payload, _ = json.JSONDecoder().raw_decode(value[start:])
+        except (json.JSONDecodeError, TypeError):
+            continue
+        if isinstance(payload, dict) and (not required_keys or any(key in payload for key in required_keys)):
+            return payload
+    return None
 
 
 def parse_research_result(text: str) -> tuple[ResearchResult, list[dict[str, str]]]:
     """Parse a subagent JSON result without asking the main model to copy it."""
-    payload = _json_object(text)
+    payload = _json_object(text, required_keys=_EXPECTED_TOP_LEVEL_KEYS)
     if payload is None:
         return ResearchResult(status="unavailable", notes="研究结果不是合法JSON"), [{"reason_code": "invalid_research_json", "explanation": "研究子Agent未返回合法JSON对象"}]
 

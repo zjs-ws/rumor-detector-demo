@@ -3,30 +3,45 @@
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import json
 import threading
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
+import pytest
 from langchain_core.messages import HumanMessage
 
+import deerflow.agents.rumor_agent.graph_v3 as graph_v3_module
 from deerflow.agents.rumor_agent.graph_v3 import (
     RumorV3Services,
     _claim_candidate,
+    _select_verbatim_excerpt,
     apply_verified_fetch_provenance,
     build_evidence_review,
     build_rumor_graph_v3,
-    detect_verification_intent,
     detect_claim_domain,
+    detect_verification_intent,
     make_parallel_sends,
     merge_research_branches,
     parse_claim_context_response,
     repair_claim_context,
+    rescue_unverified_evidence,
     sanitize_text_risk_analysis,
 )
 from deerflow.agents.rumor_agent.research_plan import build_research_plan
 from deerflow.agents.rumor_agent.schemas import ClaimContext, KnowledgeRetrievalResult, Subclaim
+
+
+@pytest.fixture(autouse=True)
+def _disable_rescue_in_graph_tests(monkeypatch):
+    """Graph-level tests must never issue real rescue fetches."""
+
+    async def _noop(*_args, **_kwargs):
+        return 0
+
+    monkeypatch.setattr(graph_v3_module, "rescue_unverified_evidence", _noop)
 
 
 def _evidence(evidence_id: str, *, url: str, claim_ids: list[str] | None = None) -> dict:
@@ -259,7 +274,54 @@ def test_domain_words_alone_do_not_turn_unknown_claim_into_current_status():
             temporality="unknown",
         )
     )
-    assert context.temporality.value == "unknown"
+    assert context.temporality.value == "general"
+    assert context.temporality_basis == "no_temporal_marker"
+
+
+def test_markerless_model_current_status_is_downgraded_to_general():
+    context = repair_claim_context(
+        ClaimContext(
+            normalized_claim="抽烟有害身体健康",
+            subclaims=[Subclaim(id="claim-1", text="抽烟有害身体健康")],
+            temporality="current_status",
+            temporality_basis="model",
+        )
+    )
+    assert context.temporality.value == "general"
+    assert context.temporality_basis == "model_current_status_overridden"
+
+
+def test_current_marker_keeps_current_status():
+    context = repair_claim_context(
+        ClaimContext(
+            normalized_claim="目前该政策仍然有效",
+            subclaims=[Subclaim(id="claim-1", text="目前该政策仍然有效")],
+            temporality="current_status",
+        )
+    )
+    assert context.temporality.value == "current_status"
+    assert context.temporality_basis == "current_marker"
+
+
+def test_model_timeless_and_event_bound_are_kept():
+    timeless = repair_claim_context(
+        ClaimContext(
+            normalized_claim="吸烟增加患肺癌的风险",
+            subclaims=[Subclaim(id="claim-1", text="吸烟增加患肺癌的风险")],
+            temporality="timeless",
+            temporality_basis="model",
+        )
+    )
+    event_bound = repair_claim_context(
+        ClaimContext(
+            normalized_claim="某机构开展某实验",
+            subclaims=[Subclaim(id="claim-1", text="某机构开展某实验")],
+            temporality="event_bound",
+            temporality_basis="model",
+        )
+    )
+    assert timeless.temporality.value == "timeless"
+    assert event_bound.temporality.value == "event_bound"
 
 
 def test_research_plan_routes_known_entities_to_locked_authority_queries():
@@ -326,7 +388,7 @@ def test_plain_json_claim_extraction_normalizes_provider_field_variants():
 
     assert context["normalized_claim"] == "全球气候正在变暖"
     assert context["subclaims"] == [{"id": "claim-1", "text": "全球气候正在变暖", "material": True}]
-    assert context["temporality"] == "unknown"
+    assert context["temporality"] == "general"
     assert context["event_date"] is None
     assert context["domain"] == "science"
 
@@ -821,3 +883,202 @@ def test_rag_failure_produces_a_schema_valid_degraded_report():
 def test_branch_timestamps_are_iso_8601():
     now = datetime.now(UTC).isoformat()
     assert "+00:00" in now
+
+
+def _stub_rescue_tool(monkeypatch, url_results: dict[str, str]):
+    class FakeTool:
+        def __init__(self, results):
+            self.results = results
+
+        def invoke(self, args):
+            return self.results.get(args["url"], "Error: unavailable in test")
+
+    import deerflow.config as config_module
+    import deerflow.reflection as reflection_module
+
+    monkeypatch.setattr(
+        config_module,
+        "get_app_config",
+        lambda: type("Config", (), {"get_tool_config": lambda _self, _name: type("ToolConfig", (), {"use": "fake:tool"})()})(),
+    )
+    monkeypatch.setattr(reflection_module, "resolve_variable", lambda _use: FakeTool(url_results))
+
+
+def _rescue_claim() -> ClaimContext:
+    return ClaimContext(
+        normalized_claim="抽烟有害身体健康",
+        subclaims=[Subclaim(id="claim-1", text="抽烟有害身体健康")],
+    )
+
+
+def test_select_verbatim_excerpt_picks_claim_related_sentence():
+    content = "烟草使用导致多种疾病。吸烟危害健康是不争的医学结论。另有其他内容。"
+    excerpt = _select_verbatim_excerpt(content, ["抽烟有害身体健康", "吸烟危害健康"])
+    assert excerpt == "吸烟危害健康是不争的医学结论"
+
+
+def test_select_verbatim_excerpt_rejects_unrelated_content():
+    content = "今天天气晴朗。适合出门散步。"
+    assert _select_verbatim_excerpt(content, ["抽烟有害身体健康", "吸烟有害"]) is None
+
+
+def test_rescue_refetches_and_quotes_unverified_a_evidence(monkeypatch):
+    content = "吸烟危害健康是不争的医学结论。烟草使用可导致多种恶性肿瘤。"
+    _stub_rescue_tool(
+        monkeypatch,
+        {
+            "https://www.nhc.gov.cn/a": json.dumps(
+                {
+                    "source_url": "https://www.nhc.gov.cn/a",
+                    "fetched_at": "2026-08-17T00:00:00+00:00",
+                    "content": content,
+                }
+            )
+        },
+    )
+    item = _evidence("authority-1", url="https://www.nhc.gov.cn/a") | {
+        "source_level": "A",
+        "fetch_status": "not_fetched",
+        "excerpt": "吸烟危害健康",
+    }
+
+    rescued = asyncio.run(
+        rescue_unverified_evidence([item], _rescue_claim(), {"https://www.nhc.gov.cn/a"})
+    )
+
+    assert rescued == 1
+    assert item["fetch_status"] == "fetched"
+    assert item["extraction_status"] == "ok"
+    assert item["document_hash"] == hashlib.sha256(content.encode("utf-8")).hexdigest()
+    assert item["excerpt"] in content
+    assert item["fetch_attempts"][0]["via"] == "deterministic_rescue"
+
+
+def test_rescue_respects_two_fetch_budget(monkeypatch):
+    content = "吸烟危害健康是不争的医学结论。"
+    urls = {f"https://www.nhc.gov.cn/{index}": json.dumps({"source_url": f"https://www.nhc.gov.cn/{index}", "fetched_at": "2026-08-17T00:00:00+00:00", "content": content}) for index in range(3)}
+    _stub_rescue_tool(monkeypatch, urls)
+    items = [
+        _evidence(f"a-{index}", url=url) | {"source_level": "A", "fetch_status": "not_fetched"}
+        for index, url in enumerate(urls)
+    ]
+
+    rescued = asyncio.run(rescue_unverified_evidence(items, _rescue_claim(), set(urls)))
+
+    assert rescued == 2
+    assert sum(1 for item in items if item["fetch_status"] == "fetched") == 2
+
+
+def test_rescue_skips_low_grade_and_unobserved_urls(monkeypatch):
+    _stub_rescue_tool(
+        monkeypatch,
+        {
+            "https://www.nhc.gov.cn/a": json.dumps(
+                {"source_url": "https://www.nhc.gov.cn/a", "fetched_at": "2026-08-17T00:00:00+00:00", "content": "吸烟危害健康。"}
+            )
+        },
+    )
+    low_grade = _evidence("c-1", url="https://www.nhc.gov.cn/a") | {"source_level": "C", "fetch_status": "not_fetched"}
+    unobserved = _evidence("a-1", url="https://www.nhc.gov.cn/unobserved") | {"source_level": "A", "fetch_status": "not_fetched"}
+
+    rescued = asyncio.run(
+        rescue_unverified_evidence([low_grade, unobserved], _rescue_claim(), {"https://www.nhc.gov.cn/a"})
+    )
+
+    assert rescued == 0
+    assert low_grade["fetch_status"] == "not_fetched"
+    assert unobserved["fetch_status"] == "not_fetched"
+
+
+def test_rescue_skips_fetch_errors_and_empty_content(monkeypatch):
+    _stub_rescue_tool(monkeypatch, {"https://www.nhc.gov.cn/a": "Error: blocked"})
+    failing = _evidence("a-1", url="https://www.nhc.gov.cn/a") | {"source_level": "A", "fetch_status": "not_fetched"}
+
+    rescued = asyncio.run(rescue_unverified_evidence([failing], _rescue_claim(), {"https://www.nhc.gov.cn/a"}))
+
+    assert rescued == 0
+    assert failing["fetch_status"] == "not_fetched"
+
+
+def test_rescue_skips_already_verified_items(monkeypatch):
+    _stub_rescue_tool(monkeypatch, {})
+    verified = _evidence("a-1", url="https://www.nhc.gov.cn/a") | {"source_level": "A"}
+
+    rescued = asyncio.run(rescue_unverified_evidence([verified], _rescue_claim(), {"https://www.nhc.gov.cn/a"}))
+
+    assert rescued == 0
+
+
+def test_rescue_repairs_fetched_item_with_unverified_excerpt(monkeypatch):
+    content = "烟草使用导致多种疾病。吸烟危害健康是不争的医学结论。"
+    _stub_rescue_tool(
+        monkeypatch,
+        {
+            "https://www.nhc.gov.cn/a": json.dumps(
+                {"source_url": "https://www.nhc.gov.cn/a", "fetched_at": "2026-08-17T00:00:00+00:00", "content": content}
+            )
+        },
+    )
+    item = _evidence("authority-1", url="https://www.nhc.gov.cn/a") | {
+        "source_level": "A",
+        "directness": "indirect",
+        "extraction_status": "excerpt_unverified",
+        "excerpt": "吸烟危害健康",
+    }
+
+    rescued = asyncio.run(rescue_unverified_evidence([item], _rescue_claim(), {"https://www.nhc.gov.cn/a"}))
+
+    assert rescued == 1
+    assert item["directness"] == "direct"
+    assert item["extraction_status"] == "ok"
+    assert item["excerpt"] in content
+
+
+def test_rescue_skips_fetched_item_without_downgrade_marker(monkeypatch):
+    _stub_rescue_tool(monkeypatch, {})
+    model_indirect = _evidence("a-1", url="https://www.nhc.gov.cn/a") | {
+        "source_level": "A",
+        "directness": "indirect",
+        "extraction_status": "ok",
+    }
+
+    rescued = asyncio.run(rescue_unverified_evidence([model_indirect], _rescue_claim(), {"https://www.nhc.gov.cn/a"}))
+
+    assert rescued == 0
+
+
+def test_rescue_retries_transient_fetch_failure(monkeypatch):
+    import deerflow.config as config_module
+    import deerflow.reflection as reflection_module
+
+    content = "吸烟危害健康是不争的医学结论。"
+
+    class FlakyTool:
+        def __init__(self):
+            self.calls = 0
+
+        def invoke(self, args):
+            self.calls += 1
+            if self.calls == 1:
+                raise ConnectionError("transient TLS failure")
+            return json.dumps({"source_url": args["url"], "fetched_at": "2026-08-17T00:00:00+00:00", "content": content})
+
+    flaky = FlakyTool()
+    monkeypatch.setattr(
+        config_module,
+        "get_app_config",
+        lambda: type("Config", (), {"get_tool_config": lambda _self, _name: type("ToolConfig", (), {"use": "fake:tool"})()})(),
+    )
+    monkeypatch.setattr(reflection_module, "resolve_variable", lambda _use: flaky)
+
+    async def _no_sleep(_seconds):
+        return None
+
+    monkeypatch.setattr(asyncio, "sleep", _no_sleep)
+
+    item = _evidence("a-1", url="https://www.nhc.gov.cn/a") | {"source_level": "A", "fetch_status": "not_fetched"}
+    rescued = asyncio.run(rescue_unverified_evidence([item], _rescue_claim(), {"https://www.nhc.gov.cn/a"}))
+
+    assert flaky.calls == 2
+    assert rescued == 1
+    assert item["fetch_status"] == "fetched"

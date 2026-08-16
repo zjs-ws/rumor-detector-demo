@@ -75,6 +75,7 @@ flowchart TD
 - 规则裁决后按子主张计算 `consistent/conflict/uncertain/unavailable/not_comparable`；只有 `rumor/non_rumor` 能映射真假，非法标签不会默认当成“非谣言”。
 - `evidence-critic` 的模型输出只能补充说明和建议查询；代码会先用同一规则引擎检查覆盖后的证据是否达到 A / 两条独立 B 门槛。缺主张或门槛不足时才允许一次补检，并可把 RAG 中已复核记录的权威来源作为待抓取候选，而不是直接当作证据。
 - 模型解释失败时，终局节点仍使用结构化状态生成完整报告。
+- `repair_temporality` 用确定性优先级校正时态：历史/未来/显式当前标记（目前、现在、现行、最新、当前、截至）优先；无时态标记的普遍性事实（如“抽烟有害身体健康”）确定为 `general`，不适用 365 天时效淘汰，模型对无标记主张的 current_status 判定会被代码降级为 general 并记录 `model_current_status_overridden` 依据。
 
 ## V2 与 V3 的区别
 
@@ -116,6 +117,8 @@ flowchart TD
 - 全仓上游套件结果为 1023 通过、13 跳过、15 失败；其中 13 项来自扁平化课程目录与上游测试硬编码 `/scripts`、`/docker`、`/skills`/`backend` 路径不一致，2 项跨平台 XHTML MIME 断言随后已修复并单独通过。
 
 40 条清单复用可重复组件样本，不是 40 次实时联网运行。当前三个固定案例只各运行一次，医学与科学案例依赖实时搜索结果；“三个案例连续运行两次”仍待完成，因此不能写成“全部验收通过”。本轮原始产物位于 `evaluation/demo_runs/20260812-*`。
+
+8 月 17 日修复“抽烟有害身体健康”被判“证据不足”：新增 general 时态（`repair_temporality` 把无时态标记主张的模型 current_status 判定确定性降级，`normalized_temporal_relevance` 对 general/timeless 豁免 365 天规则，含“目前/最新/当前”等标记的主张仍走原规则）；本地抓取加固（浏览器 UA、429/5xx 与连接错误有限重试、最多 5 跳重定向、空正文返回 Error、max_chars 默认 12000、PDF 正文提取）；信息源切换 Tavily（搜索+提取在 Tavily 服务器完成，结构化溯源协议不变）；汇合后确定性补抓（最多 2 条 A/B 级“未抓取或摘引未验证”的直接证据，代码抓取正文并按主张关键词选取逐字引文，失败保持排除，不降门槛）。连续两轮真实运行均判“非谣言（high）”，分别由国家卫健委与 WHO 的 A 级证据支撑。定向回归 127 项通过，40 条清单 full_rule_accuracy 等全部 1.0，无回归。
 
 ## 两人学习与交叉讲解
 

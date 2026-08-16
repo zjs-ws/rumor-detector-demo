@@ -73,6 +73,10 @@ export interface RumorReportViewModel {
 }
 
 const publicLabels: Record<string, string> = {
+  current_status: "当前状态",
+  event_bound: "事件型",
+  timeless: "长期有效",
+  general: "普遍性事实",
   checkable_now: "当前可核验",
   checkable_later: "需等待事实发生",
   not_a_factual_claim: "非事实表达",

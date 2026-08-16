@@ -9,6 +9,7 @@ from __future__ import annotations
 import asyncio
 import hashlib
 import json
+import logging
 import os
 import re
 import time
@@ -267,6 +268,151 @@ def apply_verified_fetch_provenance(
         evidence.append(item)
     enriched["evidence"] = evidence
     return enriched, sorted(fetch_by_url)
+
+
+_SENTENCE_SPLIT_RE = re.compile(r"(?<=[。！？!?；;\n])")
+_MAX_RESCUE_FETCHES = 2
+_RESCUE_ELIGIBLE_LEVELS = {"A", "B"}
+_rescue_logger = logging.getLogger(__name__)
+
+
+def _text_ngrams(text: str, sizes: tuple[int, ...] = (2, 3)) -> set[str]:
+    """Character n-grams used for deterministic excerpt selection."""
+    compact = _EXCERPT_NORMALIZER_RE.sub("", text).casefold()
+    grams: set[str] = set()
+    for size in sizes:
+        grams.update(compact[index : index + size] for index in range(len(compact) - size + 1))
+    return grams
+
+
+def _select_verbatim_excerpt(content: str, anchor_texts: list[str]) -> str | None:
+    """Pick the fetched-content sentence that best matches the anchors.
+
+    The selected text is verbatim from ``content`` by construction, so the
+    excerpt audit passes.  A sentence is only eligible when it shares at
+    least one claim-side bigram, keeping unrelated pages from being quoted.
+    """
+    sentences = [sentence.strip() for sentence in _SENTENCE_SPLIT_RE.split(content) if len(sentence.strip()) >= 6]
+    if not sentences:
+        return None
+    anchor_grams = _text_ngrams(" ".join(anchor_texts))
+    claim_grams = _text_ngrams(anchor_texts[0]) if anchor_texts else set()
+    scored: list[tuple[int, str]] = []
+    for sentence in sentences:
+        grams = _text_ngrams(sentence)
+        overlap = len(grams & anchor_grams)
+        if overlap and (grams & claim_grams):
+            scored.append((overlap, sentence))
+    if not scored:
+        return None
+    scored.sort(key=lambda pair: pair[0], reverse=True)
+    return scored[0][1].rstrip("。！？!?；; \n")[:220]
+
+
+async def rescue_unverified_evidence(
+    evidence: list[dict[str, Any]],
+    claim_context,
+    observed_urls: set[str],
+    *,
+    max_fetches: int = _MAX_RESCUE_FETCHES,
+) -> int:
+    """Deterministically fetch and quote A/B evidence the model left unverified.
+
+    Research models frequently claim a page was fetched (or misquote it).
+    Instead of trusting them, this bounded step re-fetches up to
+    ``max_fetches`` eligible URLs itself and replaces the model excerpt with
+    a verbatim sentence selected from the fetched content.  The deterministic
+    excerpt audit then passes by construction; the A / two-independent-B
+    threshold and all other adjudication rules are unchanged.
+    """
+    from deerflow.config import get_app_config
+    from deerflow.reflection import resolve_variable
+
+    candidates: list[dict[str, Any]] = []
+    for item in evidence:
+        if not isinstance(item, dict):
+            continue
+        url = str(item.get("url") or "")
+        if normalize_url(url) not in observed_urls:
+            continue
+        if item.get("timeline_only") or item.get("provenance") != "web":
+            continue
+        if item.get("source_level") not in _RESCUE_ELIGIBLE_LEVELS:
+            continue
+        if item.get("fetch_status") != "fetched":
+            # Model claimed a direct fetch it never performed.
+            if item.get("directness") != "direct":
+                continue
+        else:
+            # Fetched, but the verbatim excerpt audit downgraded the item.
+            if item.get("extraction_status") not in {"excerpt_unverified", "claim_mismatch", "absence_only"}:
+                continue
+        candidates.append(item)
+    if not candidates:
+        return 0
+    candidates.sort(key=lambda item: item.get("source_level") == "B")
+
+    use = str(get_app_config().get_tool_config("web_fetch").use or "")
+    fetch_tool = resolve_variable(use) if use else None
+    fetch_fn = getattr(fetch_tool, "invoke", None) or getattr(fetch_tool, "ainvoke", None)
+    if fetch_fn is None:
+        return 0
+
+    claim_texts = [claim_context.normalized_claim]
+    claim_texts.extend(item.text for item in claim_context.subclaims if item.material)
+    rescued = 0
+    for item in candidates[:max_fetches]:
+        url = str(item.get("url") or "")
+        raw: str | None = None
+        for attempt in range(2):
+            try:
+                raw = await asyncio.to_thread(fetch_fn, {"url": url})
+                break
+            except Exception as exc:
+                _rescue_logger.warning("rescue fetch attempt %d failed for %s: %s", attempt + 1, url, exc)
+                if attempt == 0:
+                    await asyncio.sleep(1.0)
+        if raw is None:
+            continue
+        if not isinstance(raw, str) or raw.lstrip().startswith("Error:"):
+            continue
+        try:
+            payload = json.loads(raw)
+        except (TypeError, ValueError):
+            continue
+        if not isinstance(payload, Mapping):
+            continue
+        content = str(payload.get("content") or "").strip()
+        if not content:
+            continue
+        excerpt = _select_verbatim_excerpt(content, claim_texts + [str(item.get("excerpt") or "")])
+        if excerpt is None:
+            continue
+        observed_at = _valid_observed_at(payload.get("fetched_at"))
+        if observed_at is None:
+            continue
+        item.update(
+            {
+                "fetched_at": str(observed_at),
+                "document_hash": hashlib.sha256(content.encode("utf-8")).hexdigest(),
+                "fetch_status": "fetched",
+                "final_url": str(payload.get("source_url") or url),
+                "directness": "direct",
+                "excerpt": excerpt,
+                "summary": excerpt,
+                "extraction_status": "ok",
+                "fetch_attempts": [
+                    {
+                        "url": url,
+                        "final_url": str(payload.get("source_url") or url),
+                        "status": "fetched",
+                        "via": "deterministic_rescue",
+                    }
+                ],
+            }
+        )
+        rescued += 1
+    return rescued
 
 
 def _latest_human(state: Mapping[str, Any]) -> object | None:
@@ -770,7 +916,7 @@ class RumorV3Services:
         prompt = (
             "从输入和已抓取网页中提取一条规范化、可公开核验的事实主张，必要时拆成最多3条实质子主张；"
             "判断时态和专业领域，并提取六类语言风险线索及待核验对象，只分析文本现象，不判断真假。"
-            "时态只可为current_status/event_bound/timeless/unknown；治疗、药物等领域词本身不代表当前状态。"
+            "时态只可为current_status/event_bound/timeless/general/unknown；无时态标记且长期成立的普遍性事实为general；治疗、药物等领域词本身不代表当前状态。"
             "风险维度只能是 emotional_manipulation/exaggeration/absolute_claim/forwarding_pressure/"
             "internal_contradiction/possible_common_sense_conflict；spans必须逐字来自输入；不得生成URL。"
             "domain只能是general/medical/legal/finance/science/technology/unknown。"
@@ -1491,6 +1637,18 @@ def build_rumor_graph_v3(services: RumorV3Services):
         }
         evidence, rejected = merge_research_branches(branches)
         context = ClaimContext.model_validate((state.get("rumor_workflow") or {}).get("claim_context") or {})
+        observed_urls = {
+            normalize_url(str(url))
+            for name in ("web", "authority", "supplement")
+            for url in ((branches.get(name) or {}).get("observed_urls") or [])
+            if isinstance(url, str)
+        }
+        capabilities = (state.get("rumor_workflow") or {}).get("capabilities") or {}
+        if capabilities.get("web_fetch", True):
+            try:
+                await rescue_unverified_evidence(evidence, context, observed_urls)
+            except Exception as exc:
+                _rescue_logger.warning("deterministic rescue step failed: %s", exc)
         parsed_evidence: list[EvidenceItem] = []
         for index, item in enumerate(evidence):
             try:

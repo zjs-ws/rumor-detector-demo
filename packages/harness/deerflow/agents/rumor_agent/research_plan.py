@@ -52,12 +52,23 @@ def repair_temporality(context: ClaimContext) -> ClaimContext:
     elif _HISTORICAL_RE.search(claim) or _YEAR_RE.search(claim):
         temporality = ClaimTemporality.EVENT_BOUND
         basis = "historical_marker"
-    elif context.temporality != ClaimTemporality.UNKNOWN:
+    elif context.temporality == ClaimTemporality.CURRENT_STATUS:
+        # A markerless claim cannot be deterministically classified as
+        # current status.  Extraction models occasionally label universal
+        # facts (e.g. 抽烟有害身体健康) current_status, which would subject
+        # otherwise authoritative older evidence to the 365-day stale rule.
+        temporality = ClaimTemporality.GENERAL
+        basis = "model_current_status_overridden"
+    elif context.temporality in {ClaimTemporality.EVENT_BOUND, ClaimTemporality.TIMELESS}:
+        # Both are already exempt from the 365-day current-status rule.
         temporality = context.temporality
         basis = context.temporality_basis if context.temporality_basis not in {"", "unknown"} else "model"
     else:
-        temporality = ClaimTemporality.UNKNOWN
-        basis = "unknown"
+        # No temporal marker anywhere: treat as a general, ongoing statement
+        # rather than a current-status claim.  Explicit current markers are
+        # caught by the _CURRENT_RE branch above and keep the 365-day rule.
+        temporality = ClaimTemporality.GENERAL
+        basis = "no_temporal_marker"
     return context.model_copy(
         update={"temporality": temporality, "temporality_basis": basis}
     )

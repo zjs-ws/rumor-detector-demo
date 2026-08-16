@@ -29,8 +29,18 @@ tools:
     use: deerflow.community.ddg_search.tools:web_search_tool
     max_results: 5
 
-  # 读取用户直接提供的公开网页 URL。默认使用受限本地抓取；配置
-  # JINA_API_KEY 后优先使用 Jina Reader 处理复杂网页。
+  # 可选信息源（推荐生产/演示使用）：Tavily 搜索 + 提取一体，抓取在 Tavily
+  # 服务器完成（可渲染 JS、解析 PDF、绕开本机 IP 被反爬），需要免费注册
+  # TAVILY_API_KEY 并写入 .env.production。切换时把上面 web_search 的 use
+  # 和下面 web_fetch 的 use 都改成 deerflow.community.tavily.tools 版本。
+  #  - name: web_search
+  #    group: web
+  #    use: deerflow.community.tavily.tools:web_search_tool
+  #    max_results: 5
+
+  # 读取用户直接提供的公开网页 URL。本地抓取使用浏览器 UA，
+  # 瞬时错误（429/5xx、连接失败）有限重试，最多 5 跳重定向，空正文报错，
+  # PDF 自动提取正文文本；配置 JINA_API_KEY 后优先使用 Jina Reader。
   - name: web_fetch
     group: web
     use: deerflow.community.jina_ai.tools:web_fetch_tool

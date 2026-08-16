@@ -1,5 +1,7 @@
 import json
 import logging
+from datetime import UTC, datetime
+from urllib.parse import urlsplit
 
 from langchain.tools import tool
 from tavily import TavilyClient
@@ -102,6 +104,41 @@ def web_fetch_tool(url: str) -> str:
         return f"Error: {res['failed_results'][0]['error']}"
     elif "results" in res and len(res["results"]) > 0:
         result = res["results"][0]
-        return f"# {result['title']}\n\n{result['raw_content'][:4096]}"
+        return _build_structured_result(
+            str(result.get("url") or url),
+            str(result.get("raw_content") or ""),
+            requested_url=url,
+        )
     else:
         return "Error: No results found"
+
+
+def _build_structured_result(
+    url: str,
+    content: str,
+    *,
+    requested_url: str | None = None,
+) -> str:
+    """Preserve source metadata together with bounded extracted content.
+
+    The field contract mirrors ``jina_ai.tools._build_structured_result`` so
+    graph_v3 provenance binding works with any configured provider.
+    """
+    config = get_app_config().get_tool_config("web_fetch")
+    extra = _tool_extra(config)
+    max_chars = int(extra.get("max_chars") or 12000)
+    normalized_content = content.strip()
+    bounded_content = normalized_content[:max_chars]
+    return json.dumps(
+        {
+            "source_url": url,
+            "requested_url": requested_url or url,
+            "fetched_at": datetime.now(UTC).isoformat(),
+            "title": str(urlsplit(url).hostname or "Untitled"),
+            "content": bounded_content,
+            "content_chars": len(bounded_content),
+            "original_content_chars": len(normalized_content),
+            "truncated": len(normalized_content) > max_chars,
+        },
+        ensure_ascii=False,
+    )

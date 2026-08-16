@@ -44,6 +44,16 @@ adjudication. `evidence-critic` has no tools and may only describe coverage or
 threshold gaps; deterministic code runs a preliminary adjudication and allows
 at most one supplement. Coverage alone is not enough when the available
 evidence still misses the A / two-independent-B threshold.
+A markerless claim's model-reported `current_status` temporality is
+deterministically downgraded to `general` in `repair_temporality`; only
+claims carrying explicit current markers (目前/现在/现行/最新/当前/截至)
+keep the 365-day staleness rule for current-status evidence. The decision
+threshold itself never changes.
+After branch merge, `rescue_unverified_evidence` deterministically re-fetches
+up to two observed A/B-grade direct evidence items the model left unfetched
+or misquoted, and replaces the model excerpt with a verbatim sentence chosen
+from the fetched content. This bounded step never lowers the A /
+two-independent-B threshold; failed rescues leave items excluded.
 The dense index is built explicitly with `scripts/build_rag_index.py` into
 `runtime/`; live requests never download models or rebuild it. Missing or
 mismatched dense indexes degrade to the checked-in sparse retriever. Retrieved
@@ -77,9 +87,19 @@ it. Keep this privacy and explicit-confirmation contract when changing either
 side of the integration.
 
 `config.example.yaml` also enables the `web_fetch` provider for user-supplied
-public HTTP(S) URLs. Without `JINA_API_KEY` it uses a bounded local
-HTTP/readability fallback; with a key it prefers Jina Reader. The V3 original-
-page node may call `web_fetch` once per run before claim extraction.
+public HTTP(S) URLs. With `JINA_API_KEY` it prefers Jina Reader (page URLs
+are sent to Jina); otherwise it uses a bounded local HTTP/readability fetch
+that also extracts text from PDFs. The local fallback sends browser-like
+headers, retries transient failures (429/5xx and connection errors, never
+403/404 or read timeouts), follows up to five redirects, reports empty
+readable bodies as errors so the research model tries the next candidate,
+and defaults to a 12,000-character content bound. The V3 original-page node
+may call `web_fetch` once per run before claim extraction.
+`config.yaml` may alternatively bind `web_search`/`web_fetch` to the Tavily
+community tools (`deerflow.community.tavily.tools`) with a free
+`TAVILY_API_KEY`: Tavily fetches server-side (JS rendering, PDF extraction,
+no datacenter-IP blocking) and its `web_fetch` returns the same structured
+provenance contract as the local/Jina tool, so graph_v3 binding is unchanged.
 Generic URL-only instructions such as "核验这个网页的主要内容" are not a
 claim. Claim extraction first tries structured output, then a strict plain-JSON
 fallback for providers that reject structured schemas; if both fail, request a

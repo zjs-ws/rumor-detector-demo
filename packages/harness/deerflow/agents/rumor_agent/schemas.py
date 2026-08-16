@@ -63,6 +63,7 @@ class ClaimTemporality(StrEnum):
     CURRENT_STATUS = "current_status"
     EVENT_BOUND = "event_bound"
     TIMELESS = "timeless"
+    GENERAL = "general"
     UNKNOWN = "unknown"
 
 

@@ -308,3 +308,84 @@ def test_snippets_stale_pages_rag_and_unobserved_urls_are_excluded():
         "rag_not_authoritative",
         "url_not_observed",
     }
+
+
+def test_general_claim_accepts_old_a_grade_authority_evidence():
+    item = _evidence(
+        "cdc-a",
+        stance="support",
+        level="A",
+        url="https://www.cdc.gov/tobacco/about/cigarettes-and-cardiovascular-disease.html",
+        group="CDC",
+        authority_scope=True,
+    )
+    item["published_at"] = "2025-03-01"
+    item["claim_ids"] = ["claim-1"]
+
+    decision = decide_evidence(
+        evidence=[item],
+        allowed_urls={item["url"]},
+        claim_context={
+            "normalized_claim": "抽烟有害身体健康",
+            "subclaims": [{"id": "claim-1", "text": "抽烟有害身体健康", "material": True}],
+            "temporality": "general",
+            "domain": "medical",
+        },
+    )
+
+    assert decision.verdict == "非谣言"
+    assert decision.accepted_evidence_ids == ["cdc-a"]
+
+
+def test_current_status_claim_still_rejects_stale_evidence():
+    item = _evidence(
+        "cdc-a",
+        stance="support",
+        level="A",
+        url="https://www.cdc.gov/tobacco/about/cigarettes-and-cardiovascular-disease.html",
+        group="CDC",
+        authority_scope=True,
+    )
+    item["published_at"] = "2025-03-01"
+    item["claim_ids"] = ["claim-1"]
+
+    decision = decide_evidence(
+        evidence=[item],
+        allowed_urls={item["url"]},
+        claim_context={
+            "normalized_claim": "目前该政策仍然有效",
+            "subclaims": [{"id": "claim-1", "text": "目前该政策仍然有效", "material": True}],
+            "temporality": "current_status",
+            "domain": "general",
+        },
+    )
+
+    assert decision.verdict == "证据不足"
+    assert decision.excluded_evidence[0].reason_code == "stale_current_status"
+
+
+def test_general_claim_with_current_marker_still_applies_stale_rule():
+    item = _evidence(
+        "cdc-a",
+        stance="support",
+        level="A",
+        url="https://www.cdc.gov/tobacco/about/cigarettes-and-cardiovascular-disease.html",
+        group="CDC",
+        authority_scope=True,
+    )
+    item["published_at"] = "2025-03-01"
+    item["claim_ids"] = ["claim-1"]
+
+    decision = decide_evidence(
+        evidence=[item],
+        allowed_urls={item["url"]},
+        claim_context={
+            "normalized_claim": "目前该政策仍然有效",
+            "subclaims": [{"id": "claim-1", "text": "目前该政策仍然有效", "material": True}],
+            "temporality": "general",
+            "domain": "general",
+        },
+    )
+
+    assert decision.verdict == "证据不足"
+    assert decision.excluded_evidence[0].reason_code == "stale_current_status"

@@ -273,6 +273,32 @@ def test_research_json_is_parsed_directly_and_invalid_items_are_recorded():
     assert normalized_payload["evidence"][0]["id"] == "normalized"
 
 
+def test_research_json_accepts_fenced_and_prose_prefixed_payloads():
+    payload = json.dumps({"status": "ok", "evidence": [_item("fenced", url="https://media.example/fenced")]}, ensure_ascii=False)
+
+    fenced_result, _ = parse_research_result("```json\n" + payload + "\n```")
+    assert fenced_result.status == "ok"
+    assert [item.id for item in fenced_result.evidence] == ["fenced"]
+
+    prose_result, _ = parse_research_result("以下是我检索到的证据，请据此判断：\n" + payload + "\n希望有帮助。")
+    assert prose_result.status == "ok"
+    assert [item.id for item in prose_result.evidence] == ["fenced"]
+
+
+def test_research_json_skips_stray_fragments_and_requires_expected_keys():
+    result, _ = parse_research_result('{"a":1}\n\n{"status":"ok","evidence":[' + json.dumps(_item("keyed", url="https://media.example/keyed"), ensure_ascii=False) + '],"notes":"done"}')
+    assert result.status == "ok"
+    assert [item.id for item in result.evidence] == ["keyed"]
+
+    stray_only, rejected = parse_research_result('{"a":1}\n\n{"b":2}')
+    assert stray_only.status == "unavailable"
+    assert rejected[0]["reason_code"] == "invalid_research_json"
+
+    array_output, rejected = parse_research_result('[{"id":"x"}]')
+    assert array_output.status == "unavailable"
+    assert rejected[0]["reason_code"] == "invalid_research_json"
+
+
 def test_scripted_full_workflow_reaches_binding_decision_and_timeline():
     claim = "某地发布了停课通知"
     context = {
