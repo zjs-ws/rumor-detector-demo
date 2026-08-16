@@ -1,0 +1,29 @@
+{
+  "schema_version": "rumorbuster-real-failure-baseline-v1",
+  "recorded_at": "2026-08-14",
+  "source": "manual_observation_from_local_threads",
+  "purpose": "Preserve the failures that triggered the real-verdict repair. This file is not an evaluation result and contains no invented evidence.",
+  "cases": [
+    {
+      "id": "nasa-missing-day",
+      "claim": "NASA的计算机计算出历史上凭空少了一天，证明《圣经》中约书亚使太阳停住的故事真实发生。",
+      "observed_verdict": "证据不足",
+      "failure": "无关NASA页面可能被当作反驳线索；没有取得满足门槛的直接反驳正文。",
+      "required_regression": "无关页面和没有提及不得成为反驳证据；只有直接反驳材料达到门槛时才判谣言。"
+    },
+    {
+      "id": "cia-mkultra",
+      "claim": "CIA曾通过MKULTRA项目在不知情者身上进行致幻药物和行为控制实验。",
+      "observed_verdict": "证据不足",
+      "failure": "没有稳定命中并抓取CIA、国会或国家档案原始材料。",
+      "required_regression": "识别为event_bound，锁定CIA/Senate/Archives查询，直接官方档案达到门槛后判非谣言。"
+    },
+    {
+      "id": "tuskegee-study",
+      "claim": "美国公共卫生机构曾在塔斯基吉梅毒研究中让部分患者长期得不到有效治疗。",
+      "observed_verdict": "证据不足",
+      "failure": "治疗、药物等领域词干扰历史时态，旧档案被错误应用当前状态规则，且权威查询不稳定。",
+      "required_regression": "识别为event_bound，锁定CDC/HHS/Archives查询，历史官方档案不受365天淘汰。"
+    }
+  ]
+}

@@ -37,20 +37,30 @@ retaining checkpointed conversation history.
 
 `config.example.yaml` enables the keyless DuckDuckGo `web_search` provider.
 The V3 graph never exposes `web_search` to the extraction/explanation model.
-After checkability, it fans out local TF-IDF RAG, `web-researcher`, optional
-classifier, and professional-domain `authority-researcher` with LangGraph
+After checkability, it fans out local HuggingFace/Chroma plus TF-IDF hybrid RAG, ordinary web research, a separate
+deterministic timeline search/fetch branch, the optional classifier, and professional-domain `authority-researcher` with LangGraph
 `Send`, then reducers fan in before normalization and deterministic
 adjudication. `evidence-critic` has no tools and may only describe coverage or
 threshold gaps; deterministic code runs a preliminary adjudication and allows
 at most one supplement. Coverage alone is not enough when the available
 evidence still misses the A / two-independent-B threshold.
+The dense index is built explicitly with `scripts/build_rag_index.py` into
+`runtime/`; live requests never download models or rebuild it. Missing or
+mismatched dense indexes degrade to the checked-in sparse retriever. Retrieved
+knowledge chunks are bounded explanation context and never current evidence
+unless their source URL is fetched again and passes the normal evidence rules.
 LangGraph Server may provide the active thread ID through runtime context,
 `config.configurable`, or `config.metadata`; task delegation must preserve all
 three fallbacks. A model may reduce a subagent's `max_turns`, but must never
 increase the configured limit. Ordinary research has a 55-second timeout,
 `web_search=1`, and `web_fetch<=4`; authority research has 55 seconds,
-`web_search=1`, and `web_fetch<=2`; classifier timeout is 12 seconds. Captured
-`ToolMessage` values are the URL provenance boundary. A successful structured
+`web_search=1`, and `web_fetch<=2`; classifier timeout is 12 seconds. Timeline
+research does not run a model loop: code performs `web_search=1` followed by
+up to five concurrent `web_fetch` calls; every returned item is code-locked to `timeline_only=true` and cannot participate in
+adjudication. A ready timeline requires at least three distinct, dated,
+fetched records and may be shown alongside an insufficient verdict with an
+explicit non-verdict disclaimer. Captured `ToolMessage` values are the URL
+provenance boundary. A successful structured
 `web_fetch` result supplies the only trusted `fetched_at` for direct web
 evidence; V3 binds it by normalized URL. Never trust a URL or fetch timestamp
 that appears only in a subagent's final text.

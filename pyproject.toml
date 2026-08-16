@@ -16,6 +16,7 @@ dependencies = [
     "python-telegram-bot>=21.0",
     "langgraph-sdk>=0.1.51",
     "markdown-to-mrkdwn>=0.3.1",
+    "torch>=2.2,<3",
 ]
 
 [dependency-groups]
@@ -26,3 +27,11 @@ members = ["packages/harness"]
 
 [tool.uv.sources]
 deerflow-harness = { workspace = true }
+torch = [
+    { index = "pytorch-cpu", marker = "sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true

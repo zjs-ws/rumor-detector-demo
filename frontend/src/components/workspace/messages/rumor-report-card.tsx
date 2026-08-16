@@ -66,33 +66,30 @@ const targetKindLabels: Record<string, string> = {
   entity: "实体",
 };
 
-const eventTypeLabels: Record<string, string> = {
-  earliest_found: "本轮最早检索记录",
-  spread: "传播",
-  mutation: "变体",
-  amplification: "放大传播",
-  verification: "核验",
-  correction: "更正",
-  resurgence: "再次传播",
-};
-
 const degradationLabels: Record<string, string> = {
   original_fetch_unavailable: "原网页抓取不可用",
   checkability_unavailable: "可核验性判断降级",
   rag_unavailable: "历史知识库不可用",
+  rag_index_missing: "本地向量索引尚未构建，已使用TF-IDF降级检索",
+  rag_index_mismatch: "向量索引与当前模型或语料版本不一致",
+  rag_index_corrupt: "本地向量索引损坏",
+  rag_dense_unavailable: "语义向量检索不可用，已使用关键词检索",
+  rag_dense_disabled: "语义向量检索已关闭",
   research_unavailable: "独立搜索不可用",
   classifier_unavailable: "LoRA 分类服务不可用",
   adjudicator_tool_unavailable: "规则工具不可用",
   web_research_unavailable: "普通网页研究不可用",
   authority_research_unavailable: "专业权威研究不可用",
+  timeline_research_unavailable: "实验性传播检索不可用",
   supplement_research_unavailable: "定向补充搜索不可用",
 };
 
 const branchLabels: Record<string, string> = {
-  rag: "历史谣言 RAG",
+  rag: "本地向量知识库 RAG",
   web: "普通网页研究",
   classifier: "LoRA 文本分类",
   authority: "专业权威研究",
+  timeline_research: "实验性传播检索",
   supplement: "定向补充搜索",
 };
 
@@ -100,7 +97,7 @@ const stageLabels: Record<string, string> = {
   conversation: "普通对话",
   fetch_original: "读取原网页",
   checkability: "判断可核验性",
-  rag: "检索历史谣言",
+  rag: "检索本地知识库",
   research: "搜索独立证据",
   classifier: "调用 LoRA 分类器",
   adjudicate: "执行规则裁决",
@@ -112,7 +109,7 @@ const stageLabels: Record<string, string> = {
   evidence_normalization: "校验证据",
   evidence_review: "审查证据缺口",
   supplementary_research: "定向补充搜索",
-  timeline: "构建时间线",
+  timeline: "整理证据序列",
   explain: "生成受约束解释",
 };
 
@@ -142,7 +139,7 @@ const workflowSteps = [
     ],
   },
   { id: "adjudicate", label: "规则裁决", stages: ["adjudicate"] },
-  { id: "timeline", label: "传播时间线", stages: ["timeline"] },
+  { id: "timeline", label: "证据整理", stages: ["timeline"] },
   { id: "report", label: "解释报告", stages: ["explain", "report"] },
 ];
 
@@ -282,7 +279,7 @@ export function RumorWorkflowStatus({ workflow }: { workflow: RumorWorkflow }) {
             <p className="text-muted-foreground mb-2 text-xs">
               以下分支在“并行取证”阶段同时运行，汇合后才进入规则裁决。
             </p>
-            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-5">
               {Object.entries(workflow.branch_status).map(([branch, state]) => (
                 <div
                   key={branch}
@@ -362,7 +359,7 @@ function EvidenceCard({
           </Badge>
         )}
         {excludedReason && <Badge variant="destructive">已排除</Badge>}
-        {timelineOnly && <Badge variant="secondary">仅传播记录</Badge>}
+        {timelineOnly && <Badge variant="secondary">补充材料</Badge>}
       </div>
 
       {publicUrl ? (
@@ -383,6 +380,12 @@ function EvidenceCard({
         {publicRumorLabel(item.temporal_relevance)}
       </p>
       <p className="mt-2 text-sm leading-6">{item.summary}</p>
+      {item.excerpt?.trim() && (
+        <blockquote className="border-rb-evidence/35 bg-rb-evidence/5 mt-3 border-l-2 px-3 py-2 text-xs leading-5">
+          <span className="text-muted-foreground font-medium">正文引文：</span>“
+          {item.excerpt.trim()}”
+        </blockquote>
+      )}
       {[item.source_grade_reason, item.authority_reason].some(Boolean) && (
         <p className="text-muted-foreground mt-2 text-xs leading-5">
           {[item.source_grade_reason, item.authority_reason]
@@ -393,6 +396,13 @@ function EvidenceCard({
       <p className="text-muted-foreground mt-1 text-xs">
         独立来源组：{item.independent_group ?? "未确认"}
         {excludedReason ? ` · 排除原因：${excludedReason}` : ""}
+      </p>
+      <p className="text-muted-foreground mt-1 text-xs">
+        正文状态：{publicRumorLabel(item.fetch_status)}
+        {item.content_type ? ` · ${item.content_type}` : ""}
+        {item.document_hash
+          ? ` · 文档指纹 ${item.document_hash.slice(0, 12)}`
+          : ""}
       </p>
       {(item.claim_ids?.length ?? 0) > 0 && (
         <p className="text-muted-foreground mt-1 text-xs">
@@ -423,7 +433,7 @@ function MetricCard({
   );
 }
 
-type EvidenceFilter = "all" | "accepted" | "excluded" | "timeline";
+type EvidenceFilter = "all" | "accepted" | "excluded";
 
 export function RumorReportCard({ report }: { report: RumorReport }) {
   const view = useMemo(() => buildRumorReportViewModel(report), [report]);
@@ -437,24 +447,17 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
   const sourceUrl = safePublicHttpUrl(
     report.original_page?.source_url ?? report.claim?.source_url,
   );
+  const isTimelineEvidence = (item: RumorEvidenceItem) =>
+    item.timeline_only === true || view.timelineIds.has(item.id);
   const visibleEvidence = view.allEvidence.filter((item) => {
     if (filter === "accepted") return view.acceptedIds.has(item.id);
     if (filter === "excluded") return view.excludedById.has(item.id);
-    if (filter === "timeline") {
-      return view.timelineIds.has(item.id) && !view.acceptedIds.has(item.id);
-    }
     return true;
   });
   const filterOptions: Array<[EvidenceFilter, string, number]> = [
     ["all", "全部", view.allEvidence.length],
     ["accepted", "用于裁决", view.acceptedEvidence.length],
     ["excluded", "被排除", view.excludedEvidence.length],
-    [
-      "timeline",
-      "传播记录",
-      view.timelineEvidence.filter((item) => !view.acceptedIds.has(item.id))
-        .length,
-    ],
   ];
 
   return (
@@ -473,6 +476,7 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
               <Badge variant="outline">
                 证据强度：{view.evidenceStrengthLabel}
               </Badge>
+              <Badge variant="outline">{view.decisionStatusLabel}</Badge>
             </div>
           </div>
 
@@ -575,7 +579,7 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
                       accepted={view.acceptedIds.has(item.id)}
                       excludedReason={view.excludedById.get(item.id)}
                       timelineOnly={
-                        view.timelineIds.has(item.id) &&
+                        isTimelineEvidence(item) &&
                         !view.acceptedIds.has(item.id)
                       }
                     />
@@ -663,7 +667,7 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
             {report.evidence_review && (
               <section aria-labelledby="evidence-review">
                 <h3 id="evidence-review" className="mb-2 text-sm font-semibold">
-                  证据审查与补检
+                  证据审查与搜索预算
                 </h3>
                 <div className="rounded-xl border p-4">
                   <p className="text-sm leading-6">
@@ -678,9 +682,7 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
                       </Badge>
                     ))}
                     <Badge variant="secondary">
-                      {report.evidence_review.supplement_needed
-                        ? "已申请一次定向补检"
-                        : "无需或不可继续补检"}
+                      两阶段检索已完成，不进行模型自由补检
                     </Badge>
                     {report.evidence_review.threshold_gap && (
                       <Badge className="bg-rb-warning text-white dark:text-slate-950">
@@ -692,56 +694,61 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
               </section>
             )}
 
-            <section aria-labelledby="timeline">
-              <h3 id="timeline" className="mb-2 text-sm font-semibold">
-                传播演化时间线
+            <section aria-labelledby="evidence-chronology">
+              <h3
+                id="evidence-chronology"
+                className="mb-2 text-sm font-semibold"
+              >
+                证据发布时间序列
               </h3>
-              {view.timelineEvents.length >= 3 ? (
-                <>
-                  <ol className="border-rb-evidence/25 ml-2 space-y-4 border-l pl-5 text-sm">
-                    {view.timelineEvents.map((item) => {
-                      const publicUrl = safePublicHttpUrl(item.url);
-                      return (
-                        <li key={`timeline-${item.id}`} className="relative">
-                          <span className="bg-rb-evidence ring-background absolute top-1 -left-[1.47rem] size-2.5 rounded-full ring-4" />
-                          <p className="font-semibold">{item.date}</p>
-                          <p className="text-muted-foreground text-xs">
-                            {item.publisher} ·{" "}
-                            {eventTypeLabels[item.event_type] ?? "传播节点"}
-                          </p>
-                          {publicUrl ? (
-                            <a
-                              className="hover:text-rb-evidence mt-1 inline-flex items-center gap-1 underline underline-offset-4"
-                              href={publicUrl}
-                              rel="noreferrer"
-                              target="_blank"
-                            >
-                              {item.title}
-                              <ExternalLinkIcon className="size-3" />
-                            </a>
-                          ) : (
-                            <p className="mt-1 font-medium">{item.title}</p>
-                          )}
-                          <p className="mt-1 leading-6">{item.claim_variant}</p>
-                          <Badge className="mt-2" variant="outline">
-                            {item.used_for_decision
-                              ? "用于裁决"
-                              : "仅作传播记录"}
+              <p className="text-muted-foreground mb-4 text-xs leading-5">
+                这里只按本轮实际取得材料的发布日期排序，用于比较证据新旧；不推断首发、转载关系或传播路径。
+              </p>
+              {view.evidenceChronology.length > 0 ? (
+                <ol className="border-rb-evidence/25 ml-2 space-y-4 border-l pl-5 text-sm">
+                  {view.evidenceChronology.map((item) => {
+                    const publicUrl = safePublicHttpUrl(item.url);
+                    const accepted = view.acceptedIds.has(item.id);
+                    const excluded = view.excludedById.get(item.id);
+                    return (
+                      <li key={`evidence-date-${item.id}`} className="relative">
+                        <span className="bg-rb-evidence ring-background absolute top-1 -left-[1.47rem] size-2.5 rounded-full ring-4" />
+                        <p className="font-semibold">{item.published_at}</p>
+                        <p className="text-muted-foreground text-xs">
+                          {item.publisher} · {stanceLabels[item.stance]} ·{" "}
+                          {item.verified_source_level ?? item.source_level}
+                          级来源
+                        </p>
+                        {publicUrl ? (
+                          <a
+                            className="hover:text-rb-evidence mt-1 inline-flex items-center gap-1 underline underline-offset-4"
+                            href={publicUrl}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            {item.title}
+                            <ExternalLinkIcon className="size-3" />
+                          </a>
+                        ) : (
+                          <p className="mt-1 font-medium">{item.title}</p>
+                        )}
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          <Badge variant={accepted ? "default" : "outline"}>
+                            {accepted ? "用于裁决" : "未用于裁决"}
                           </Badge>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                  <p className="text-muted-foreground mt-3 text-xs">
-                    {report.timeline?.note}
-                  </p>
-                </>
+                          {excluded && (
+                            <Badge variant="secondary">{excluded}</Badge>
+                          )}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ol>
               ) : (
                 <div className="bg-muted/30 rounded-xl border border-dashed p-4 text-sm">
-                  <p className="font-medium">时间线证据不足</p>
+                  <p className="font-medium">没有可排序的发布日期</p>
                   <p className="text-muted-foreground mt-1 text-xs">
-                    {report.timeline?.note ??
-                      "少于三个可追溯日期节点，本轮不生成传播时间线。"}
+                    证据仍保留在上方列表；系统不会猜测或补写发布时间。
                   </p>
                 </div>
               )}
@@ -758,29 +765,107 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
                 <section>
                   <div className="mb-2 flex items-center gap-2">
                     <DatabaseIcon className="text-rb-signal size-4" />
-                    <h4 className="text-sm font-semibold">历史谣言 RAG</h4>
+                    <h4 className="text-sm font-semibold">
+                      本地向量知识库 RAG
+                    </h4>
                     <Badge variant="outline">
                       {report.rag?.matches?.length ?? 0} 条命中
                     </Badge>
                   </div>
                   <p className="text-muted-foreground text-xs">
-                    相似历史记录只提供核验线索，不参与当前主张的证据门槛。
+                    检索相关度不是事实置信度；历史知识只提供核验线索，不参与当前主张的证据门槛。
                   </p>
+                  {report.rag && (
+                    <div className="text-muted-foreground mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs">
+                      <span>
+                        模式：
+                        {report.rag.retrieval_mode === "hybrid"
+                          ? "语义＋关键词混合检索"
+                          : report.rag.retrieval_mode === "sparse_fallback"
+                            ? "TF-IDF降级检索"
+                            : "本地检索"}
+                      </span>
+                      {report.rag.document_count != null && (
+                        <span>文档：{report.rag.document_count}</span>
+                      )}
+                      {report.rag.chunk_count != null &&
+                        report.rag.chunk_count > 0 && (
+                          <span>片段：{report.rag.chunk_count}</span>
+                        )}
+                    </div>
+                  )}
                   {(report.rag?.matches?.length ?? 0) > 0 && (
                     <ul className="mt-3 grid gap-2 text-sm">
                       {report.rag?.matches.map((match) => (
                         <li
-                          key={match.record_id}
+                          key={
+                            [
+                              match.chunk_id,
+                              match.document_id,
+                              match.record_id,
+                            ].find(Boolean) ?? match.record_id
+                          }
                           className="rounded-lg border p-3"
                         >
                           <p className="font-medium">{match.canonical_claim}</p>
                           <p className="text-muted-foreground mt-1 text-xs">
-                            相似度 {(match.similarity * 100).toFixed(1)}% ·
-                            历史结论 {match.historical_verdict}
+                            {match.retrieval_sources?.includes("dense") &&
+                            match.retrieval_sources?.includes("sparse")
+                              ? "语义＋关键词命中"
+                              : match.retrieval_sources?.includes("dense")
+                                ? "语义命中"
+                                : "关键词命中"}
+                            {match.claim_ids?.length
+                              ? ` · 关联 ${match.claim_ids.join("、")}`
+                              : ""}
+                            {` · 历史结论 ${match.historical_verdict}`}
                           </p>
+                          {match.excerpt && (
+                            <p className="mt-2 line-clamp-3 text-xs leading-5">
+                              {match.excerpt}
+                            </p>
+                          )}
+                          {(Boolean(match.publisher) ||
+                            Boolean(match.reviewed_at)) && (
+                            <p className="text-muted-foreground mt-2 text-xs">
+                              {match.publisher?.trim()
+                                ? match.publisher
+                                : "未知发布主体"}
+                              {match.published_at
+                                ? ` · 发布 ${match.published_at}`
+                                : ""}
+                              {match.reviewed_at
+                                ? ` · 复核 ${match.reviewed_at}`
+                                : ""}
+                            </p>
+                          )}
+                          {match.source_url?.startsWith("http://") ||
+                          match.source_url?.startsWith("https://") ? (
+                            <a
+                              href={match.source_url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="text-rb-evidence mt-2 block text-xs break-all underline-offset-4 hover:underline"
+                            >
+                              查看历史知识原始来源
+                            </a>
+                          ) : null}
+                          {match.temporal_warning && (
+                            <p className="text-rb-warning mt-2 text-xs">
+                              时效提醒：{match.temporal_warning}
+                            </p>
+                          )}
                         </li>
                       ))}
                     </ul>
+                  )}
+                  {(report.rag?.degradation_codes?.length ?? 0) > 0 && (
+                    <p className="text-rb-warning mt-3 text-xs">
+                      向量检索未完全可用，系统已安全降级：
+                      {report.rag?.degradation_codes
+                        ?.map((code) => degradationLabels[code] ?? code)
+                        .join("、")}
+                    </p>
                   )}
                 </section>
 
@@ -884,6 +969,13 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
                 <div className="grid gap-2 sm:grid-cols-2">
                   <span>报告版本：{report.schema_version}</span>
                   <span>
+                    主张时态：{publicRumorLabel(report.claim?.temporality)}
+                  </span>
+                  <span>
+                    时态依据：{report.claim?.temporality_basis ?? "未记录"}
+                  </span>
+                  <span>判定状态：{view.decisionStatusLabel}</span>
+                  <span>
                     LoRA 模型：{report.classifier_signal?.model_id ?? "未配置"}
                   </span>
                   <span>
@@ -903,6 +995,35 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
                     ms
                   </span>
                 </div>
+
+                {report.research_plan_summary && (
+                  <div>
+                    <p className="mb-2 font-medium">确定性研究计划</p>
+                    <div className="text-muted-foreground grid gap-2 text-xs">
+                      <p>
+                        权威目标：
+                        {report.research_plan_summary.authority_targets?.length
+                          ? report.research_plan_summary.authority_targets
+                              .map(
+                                (target) =>
+                                  `${target.organization}（${target.domains.join("、")}）`,
+                              )
+                              .join("；")
+                          : "未匹配到受控机构"}
+                      </p>
+                      <p className="break-all">
+                        发现查询：
+                        {report.research_plan_summary.queries?.discovery ??
+                          "未记录"}
+                      </p>
+                      <p className="break-all">
+                        权威查询：
+                        {report.research_plan_summary.queries?.authority ??
+                          "未生成"}
+                      </p>
+                    </div>
+                  </div>
+                )}
 
                 {report.workflow_trace?.length ? (
                   <div>

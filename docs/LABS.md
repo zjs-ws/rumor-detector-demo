@@ -33,7 +33,7 @@ V2 阶段门控实验见 [WORKFLOW_V2_IMPLEMENTATION.md](WORKFLOW_V2_IMPLEMENTAT
 uv run pytest tests/test_rumor_model_tool.py tests/test_rumor_rag.py tests/test_rumor_evidence_decision.py -v
 ```
 
-验收：能解释严格 JSON、`Unknown` 不再被 `no` 子串误判、RAG Top-3、以及 A/B 门槛。
+验收：能解释严格 JSON、`Unknown` 不再被 `no` 子串误判、混合 RAG Top-K、以及 A/B 门槛。
 
 ## 实验 4：V3 并行与子 Agent 预算
 
@@ -90,4 +90,4 @@ PYTHONPATH=packages/harness uv run python scripts/evaluate_rumorbuster.py
 
 ## 90 秒介绍
 
-我们没有把大模型当作最终裁判。LangGraph 提供状态图、并行汇合和检查点，DeerFlow 提供模型、工具和受限子 Agent 执行基础；RumorBuster 在其上实现显式事实核验 StateGraph。输入经过原网页读取、主张拆分和可核验性后，并行运行 30 条知识库的 TF-IDF RAG、普通网页研究、可选微调分类器，以及专业场景的权威研究。分支失败可以独立降级。汇合后，代码校验 URL、来源职权、时效和独立性，无工具的 critic 只能指出缺口，最多申请一次补检。最终由固定 A/B 门槛和子主张规则裁决；大模型只负责提取与解释，终局节点删除未观察链接并重新绑定规则结论。前端展示分支耗时、证据、冲突、排除原因和传播时间线。V2 串行门控图仍保留作为回退和架构演进对照。
+我们没有把大模型当作最终裁判。LangGraph 提供状态图、并行汇合和检查点，DeerFlow 提供模型、工具和受限子 Agent 执行基础；RumorBuster 在其上实现显式事实核验 StateGraph。输入经过原网页读取、主张拆分和可核验性后，并行运行本地 HuggingFace/Chroma 与 TF-IDF 混合 RAG、普通网页研究、可选微调分类器，以及专业场景的权威研究。分支失败可以独立降级。汇合后，代码校验 URL、来源职权、时效和独立性，无工具的 critic 只能指出缺口，最多申请一次补检。最终由固定 A/B 门槛和子主张规则裁决；大模型只负责提取与解释，终局节点删除未观察链接并重新绑定规则结论。前端展示分支耗时、证据、冲突、排除原因和传播时间线。V2 串行门控图仍保留作为回退和架构演进对照。

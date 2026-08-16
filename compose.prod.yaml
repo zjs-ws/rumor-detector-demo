@@ -18,6 +18,12 @@ x-backend: &backend
     DEER_FLOW_HOME: /data
     LANGSMITH_TRACING: "false"
     LANGCHAIN_TRACING_V2: "false"
+    HF_HOME: /data/huggingface
+    RUMOR_RAG_ENABLED: ${RUMOR_RAG_ENABLED:-true}
+    RUMOR_RAG_EMBEDDING_MODEL: ${RUMOR_RAG_EMBEDDING_MODEL:-GanymedeNil/text2vec-large-chinese}
+    RUMOR_RAG_DEVICE: ${RUMOR_RAG_DEVICE:-cpu}
+    RUMOR_RAG_PERSIST_DIR: ${RUMOR_RAG_PERSIST_DIR:-/data/rumorbuster/rag}
+    RUMOR_RAG_TIMEOUT_SECONDS: ${RUMOR_RAG_TIMEOUT_SECONDS:-20}
   volumes:
     - ./config.yaml:/app/config.yaml:ro
     - ./deploy/langgraph.env:/app/.env:ro
@@ -26,6 +32,16 @@ x-backend: &backend
     - "host.docker.internal:host-gateway"
 
 services:
+  rag-indexer:
+    <<: *backend
+    profiles: ["maintenance"]
+    restart: "no"
+    command:
+      - uv
+      - run
+      - python
+      - scripts/build_rag_index.py
+
   langgraph:
     <<: *backend
     command:

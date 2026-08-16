@@ -60,6 +60,7 @@ export interface RumorReportViewModel {
   }>;
   timelineEvidence: RumorEvidenceItem[];
   timelineEvents: RumorTimelineEvent[];
+  evidenceChronology: RumorEvidenceItem[];
   branchCards: RumorBranchView[];
   subclaimRows: RumorSubclaimView[];
   limitations: string[];
@@ -68,6 +69,7 @@ export interface RumorReportViewModel {
   excludedById: Map<string, string>;
   timelineIds: Set<string>;
   materialSubclaimCount: number;
+  decisionStatusLabel: string;
 }
 
 const publicLabels: Record<string, string> = {
@@ -105,6 +107,15 @@ const publicLabels: Record<string, string> = {
   strong: "强",
   weak: "弱",
   mixed: "混合标签",
+  decided: "已达到证据门槛",
+  no_relevant_sources: "未找到相关来源",
+  sources_found_but_not_fetched: "找到候选但正文未获取",
+  sources_failed_validation: "候选证据未通过校验",
+  threshold_not_met: "有效证据未达到门槛",
+  conflicting_evidence: "有效证据相互冲突",
+  fetched: "正文已获取并校验",
+  not_fetched: "正文未获取",
+  failed: "正文抓取失败",
 };
 
 const domainLabels: Record<string, string> = {
@@ -118,10 +129,11 @@ const domainLabels: Record<string, string> = {
 };
 
 const branchLabels: Record<string, string> = {
-  rag: "历史谣言 RAG",
+  rag: "本地向量知识库 RAG",
   web: "普通网页研究",
   classifier: "LoRA 文本分类",
   authority: "专业权威研究",
+  timeline_research: "传播脉络研究",
   supplement: "定向补充搜索",
 };
 
@@ -215,6 +227,18 @@ export function buildRumorReportViewModel(
   const timelineIds = new Set(rawTimeline.map((item) => item.evidence_id));
   const acceptedEvidence = evidence.filter((item) => acceptedIds.has(item.id));
   const timelineEvidence = evidence.filter((item) => timelineIds.has(item.id));
+  const evidenceChronology = evidence
+    .filter((item) => /^\d{4}-\d{2}-\d{2}$/.test(item.published_at ?? ""))
+    .sort((left, right) => {
+      const byDate = String(left.published_at).localeCompare(
+        String(right.published_at),
+      );
+      if (byDate !== 0) return byDate;
+      if (acceptedIds.has(left.id) !== acceptedIds.has(right.id)) {
+        return acceptedIds.has(left.id) ? -1 : 1;
+      }
+      return left.title.localeCompare(right.title, "zh-CN");
+    });
   const verdict = normalizeRumorVerdict(report.decision?.verdict);
   const claimText = new Map(
     (report.claim?.subclaims ?? []).map((item) => [item.id, item.text]),
@@ -253,6 +277,7 @@ export function buildRumorReportViewModel(
     })),
     timelineEvidence,
     timelineEvents: rawTimeline,
+    evidenceChronology,
     branchCards: Object.entries(report.research_branches ?? {}).map(
       ([id, branch]) => ({
         id,
@@ -296,5 +321,6 @@ export function buildRumorReportViewModel(
     materialSubclaimCount: (report.claim?.subclaims ?? []).filter(
       (item) => item.material,
     ).length,
+    decisionStatusLabel: publicRumorLabel(report.decision?.decision_status),
   };
 }

@@ -20,11 +20,19 @@ export interface RumorEvidenceItem {
   temporal_relevance: string;
   current_validity_confirmed?: boolean;
   fetched_at?: string | null;
+  excerpt?: string;
+  document_hash?: string;
+  fetch_status?: string;
+  fetch_attempts?: Array<Record<string, unknown>>;
+  content_type?: string;
+  final_url?: string | null;
   extraction_status?: string;
   content_fingerprint?: string;
   claim_ids?: string[];
   claim_variant?: string;
   change_summary?: string;
+  timeline_only?: boolean;
+  timeline_event_type?: RumorTimelineEvent["event_type"] | null;
   provenance?: "original_page" | "web" | "knowledge_base";
   summary: string;
 }
@@ -60,6 +68,7 @@ export interface RumorReport {
     normalized_claim: string;
     subclaims?: Array<{ id: string; text: string; material: boolean }>;
     temporality?: string;
+    temporality_basis?: string;
     event_date?: string | null;
     source_url?: string | null;
     domain?:
@@ -94,10 +103,29 @@ export interface RumorReport {
   } | null;
   rag?: {
     status: string;
+    authoritative?: false;
+    retrieval_mode?: "hybrid" | "sparse" | "sparse_fallback" | string;
+    embedding_model?: string;
+    index_version?: string;
+    document_count?: number;
+    chunk_count?: number;
+    degradation_codes?: string[];
     matches: Array<{
       record_id: string;
+      document_id?: string;
+      chunk_id?: string;
+      claim_ids?: string[];
       canonical_claim: string;
       similarity: number;
+      dense_similarity?: number | null;
+      sparse_similarity?: number | null;
+      fusion_score?: number | null;
+      retrieval_sources?: string[];
+      excerpt?: string;
+      publisher?: string;
+      source_url?: string;
+      published_at?: string | null;
+      reviewed_at?: string | null;
       historical_verdict: string;
       temporal_warning?: string | null;
     }>;
@@ -129,6 +157,14 @@ export interface RumorReport {
   decision: {
     verdict: string;
     strength: string;
+    decision_status?:
+      | "decided"
+      | "no_relevant_sources"
+      | "sources_found_but_not_fetched"
+      | "sources_failed_validation"
+      | "threshold_not_met"
+      | "conflicting_evidence"
+      | string;
     accepted_evidence_ids: string[];
     excluded_evidence: Array<{
       evidence_id: string;
@@ -144,6 +180,25 @@ export interface RumorReport {
   domain_route?: {
     domain: string;
     reason: string;
+  } | null;
+  research_plan_summary?: {
+    temporality?: string;
+    temporality_basis?: string;
+    entities?: Array<{
+      canonical_name: string;
+      aliases?: string[];
+      evidence_terms?: string[];
+      role?: string;
+    }>;
+    authority_targets?: Array<{
+      organization: string;
+      domains: string[];
+      scope?: string;
+    }>;
+    queries?: {
+      discovery?: string;
+      authority?: string;
+    };
   } | null;
   research_branches?: Record<
     string,
@@ -179,6 +234,9 @@ export interface RumorReport {
     timeline_status: "ready" | "insufficient";
     events: RumorTimelineEvent[];
     note: string;
+    candidate_count?: number;
+    dated_count?: number;
+    traceable_count?: number;
   } | null;
   limitations?: string[];
   workflow_trace?: Array<{

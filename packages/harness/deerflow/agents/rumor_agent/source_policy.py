@@ -28,7 +28,7 @@ _FALLBACK_REGISTRY = {
     "professional_hosts": ["reuters.com", "apnews.com", "bbc.com"],
     "personal_host_keywords": ["blog", "weibo", "zhihu", "douyin", "twitter", "x.com"],
 }
-_CURRENT_SENSITIVE = re.compile(r"(?:现行|目前|现在|最新|政策|法规|法律|指南|治疗|用药|药物|疫苗)")
+_CURRENT_SENSITIVE = re.compile(r"(?:现行|目前|现在|最新|当前|截至(?:今日|今天|目前|\d{4}年))")
 _TEXT_NORMALIZER = re.compile(r"[^\w\u4e00-\u9fff]+")
 
 
@@ -105,13 +105,16 @@ def content_similarity(left: EvidenceItem, right: EvidenceItem) -> float:
 def _official_scope(host: str, claim_context: ClaimContext | None) -> tuple[bool, str]:
     registry = source_registry()
     claim = claim_context.normalized_claim.lower() if claim_context else ""
+    matched_official_domain = False
     for entry in registry.get("official_sources", []):
         domains = {str(value).lower() for value in entry.get("domains", [])}
         if not _matches(host, domains):
             continue
+        matched_official_domain = True
         keywords = [str(value).lower() for value in entry.get("scope_keywords", [])]
         if claim and any(keyword in claim for keyword in keywords):
             return True, "官方来源注册表中的职权关键词与主张匹配"
+    if matched_official_domain:
         return False, "域名属于官方来源，但主张未命中该机构的受控职权范围"
     if _matches(host, set(registry.get("knowledge_base_hosts", []))):
         return False, "域名出现在已复核知识库来源中，但当前主张仍需单独验证职权范围"
@@ -178,21 +181,25 @@ def normalized_temporal_relevance(
         return TemporalRelevance.UNKNOWN, "invalid_date"
     if published and published > today:
         return TemporalRelevance.UNKNOWN, "future_date"
-    if not published:
-        if item.temporal_relevance == TemporalRelevance.TIMELESS and item.current_validity_confirmed:
-            return TemporalRelevance.TIMELESS, None
-        return TemporalRelevance.UNKNOWN, "time_unknown"
 
     temporality = claim_context.temporality if claim_context else ClaimTemporality.UNKNOWN
     claim_text = claim_context.normalized_claim if claim_context else ""
     if temporality == ClaimTemporality.EVENT_BOUND:
+        # Publication age is not evidence staleness for a completed historical
+        # event.  Official archives often expose no page publication date.
         return TemporalRelevance.EVENT_MATCH, None
     if temporality == ClaimTemporality.TIMELESS and not _CURRENT_SENSITIVE.search(claim_text):
         return TemporalRelevance.TIMELESS, None
     if temporality == ClaimTemporality.CURRENT_STATUS or _CURRENT_SENSITIVE.search(claim_text):
+        if not published:
+            return TemporalRelevance.UNKNOWN, "time_unknown"
         if (today - published).days > 365 and not current_confirmation_verified:
             return TemporalRelevance.STALE, "stale_current_status"
         return TemporalRelevance.CURRENT, None
+    if not published:
+        if item.temporal_relevance == TemporalRelevance.TIMELESS and item.current_validity_confirmed:
+            return TemporalRelevance.TIMELESS, None
+        return TemporalRelevance.UNKNOWN, "time_unknown"
     return item.temporal_relevance, None
 
 

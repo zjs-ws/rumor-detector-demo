@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -121,6 +122,7 @@ class ClaimContext(BaseModel):
     normalized_claim: str
     subclaims: list[Subclaim] = Field(default_factory=list)
     temporality: ClaimTemporality = ClaimTemporality.UNKNOWN
+    temporality_basis: str = "unknown"
     event_date: str | None = None
     source_url: str | None = None
     domain: ClaimDomain = ClaimDomain.UNKNOWN
@@ -176,6 +178,19 @@ class RagMatch(BaseModel):
     authoritative_sources: list[str] = Field(default_factory=list)
     event_date: str | None = None
     temporal_warning: str | None = None
+    document_id: str = ""
+    chunk_id: str = ""
+    claim_ids: list[str] = Field(default_factory=list)
+    excerpt: str = ""
+    publisher: str = ""
+    source_url: str = ""
+    published_at: str | None = None
+    reviewed_at: str | None = None
+    dense_similarity: float | None = Field(default=None, ge=0, le=1)
+    sparse_similarity: float | None = Field(default=None, ge=0, le=1)
+    fusion_score: float | None = Field(default=None, ge=0)
+    retrieval_sources: list[str] = Field(default_factory=list)
+    category: str = ""
 
 
 class EvidenceItem(BaseModel):
@@ -199,10 +214,18 @@ class EvidenceItem(BaseModel):
     temporal_relevance: TemporalRelevance = TemporalRelevance.UNKNOWN
     current_validity_confirmed: bool = False
     fetched_at: str | None = None
+    excerpt: str = ""
+    document_hash: str = ""
+    fetch_status: str = "unknown"
+    fetch_attempts: list[dict[str, Any]] = Field(default_factory=list)
+    content_type: str = ""
+    final_url: str | None = None
     extraction_status: str = "ok"
     claim_ids: list[str] = Field(default_factory=list)
     claim_variant: str = ""
     change_summary: str = ""
+    timeline_only: bool = False
+    timeline_event_type: TimelineEventType | None = None
     summary: str
     provenance: EvidenceProvenance = EvidenceProvenance.WEB
 
@@ -216,6 +239,7 @@ class ExcludedEvidence(BaseModel):
 class EvidenceDecision(BaseModel):
     verdict: str
     strength: str
+    decision_status: str = "threshold_not_met"
     accepted_evidence_ids: list[str] = Field(default_factory=list)
     excluded_evidence: list[ExcludedEvidence] = Field(default_factory=list)
     reason_codes: list[str] = Field(default_factory=list)
@@ -227,11 +251,20 @@ class EvidenceDecision(BaseModel):
 
 class KnowledgeRetrievalResult(BaseModel):
     status: str
-    query: str
+    # Defaults keep legacy/degraded checkpoints readable. Successful retrieval
+    # paths still populate both fields explicitly.
+    query: str = ""
     matches: list[RagMatch] = Field(default_factory=list)
-    threshold: float
+    threshold: float = 0.0
     authoritative: bool = False
     note: str = "历史记录仅用于召回相似主张，不能直接决定当前真假。"
+    retrieval_mode: str = "sparse"
+    embedding_model: str = ""
+    index_version: str = ""
+    document_count: int = 0
+    chunk_count: int = 0
+    queries: list[dict[str, Any]] = Field(default_factory=list)
+    degradation_codes: list[str] = Field(default_factory=list)
 
 
 class ClaimAssessment(BaseModel):
@@ -267,6 +300,9 @@ class TimelineResult(BaseModel):
     timeline_status: TimelineStatus = TimelineStatus.INSUFFICIENT
     events: list[TimelineEvent] = Field(default_factory=list)
     note: str = "时间线仅代表本轮公开可检索记录，不代表绝对传播源头。"
+    candidate_count: int = 0
+    dated_count: int = 0
+    traceable_count: int = 0
 
 
 __all__ = [

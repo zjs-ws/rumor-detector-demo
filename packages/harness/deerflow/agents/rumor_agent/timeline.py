@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from .rag import is_high_confidence_rag_match
 from .schemas import (
     EvidenceDecision,
     EvidenceItem,
@@ -38,6 +39,8 @@ def _valid_fetch_timestamp(value: str | None) -> bool:
 
 
 def _event_type(item: EvidenceItem) -> TimelineEventType:
+    if item.timeline_event_type is not None:
+        return item.timeline_event_type
     if item.provenance == EvidenceProvenance.ORIGINAL_PAGE:
         return TimelineEventType.SPREAD
     if item.change_summary:
@@ -54,24 +57,30 @@ def build_timeline(
     evidence: list[EvidenceItem | dict],
     decision: EvidenceDecision | dict,
     rag_result: KnowledgeRetrievalResult | dict | None = None,
+    timeline_research_status: str | None = None,
 ) -> TimelineResult:
     """Create 3-8 dated traceable events or an explicit insufficient result."""
     parsed_decision = decision if isinstance(decision, EvidenceDecision) else EvidenceDecision.model_validate(decision)
-    if parsed_decision.strength == "insufficient":
-        return TimelineResult(note="规则裁决证据不足，因此不生成传播时间线。")
 
     items: list[EvidenceItem] = []
+    candidate_count = 0
+    dated_count = 0
+    dedicated_event_count = 0
     for raw in evidence:
         try:
             item = raw if isinstance(raw, EvidenceItem) else EvidenceItem.model_validate(raw)
         except Exception:
             continue
+        candidate_count += 1
         if item.directness.value == "snippet_only" or item.extraction_status != "ok":
             continue
         if item.provenance == EvidenceProvenance.WEB and not _valid_fetch_timestamp(item.fetched_at):
             continue
         if _valid_date(item.published_at):
+            dated_count += 1
             items.append(item)
+            if item.timeline_only:
+                dedicated_event_count += 1
 
     accepted = set(parsed_decision.accepted_evidence_ids)
     events: list[TimelineEvent] = []
@@ -107,9 +116,13 @@ def build_timeline(
             parsed_rag = None
         if parsed_rag:
             for match in parsed_rag.matches:
+                if not is_high_confidence_rag_match(match):
+                    continue
+                candidate_count += 1
                 event_date = _valid_date(match.event_date)
                 if not event_date or not match.authoritative_sources:
                     continue
+                dated_count += 1
                 url = match.authoritative_sources[0]
                 group = (event_date, registrable_group(url))
                 if group in seen_groups:
@@ -133,12 +146,53 @@ def build_timeline(
 
     events.sort(key=lambda event: event.date)
     events = events[:8]
-    if len(events) < 3:
-        return TimelineResult(note="少于三个带日期且可追溯的独立事件，不生成传播时间线。")
+    events = [
+        event.model_copy(update={"id": f"timeline-{index}"})
+        for index, event in enumerate(events, start=1)
+    ]
+    traceable_count = len(events)
+    if timeline_research_status in {"unavailable", "skipped"}:
+        return TimelineResult(
+            note=(
+                "传播脉络专用检索未成功，本轮不使用普通取证或历史RAG拼接时间线。"
+                f"已发现 {candidate_count} 条候选材料、{dated_count} 条有效日期记录。"
+            ),
+            candidate_count=candidate_count,
+            dated_count=dated_count,
+            traceable_count=traceable_count,
+        )
+    if timeline_research_status == "completed" and dedicated_event_count == 0:
+        return TimelineResult(
+            note=(
+                "传播脉络专用检索没有形成可追溯节点，本轮不使用普通证据或历史RAG凑足时间线。"
+                f"已发现 {candidate_count} 条候选材料、{dated_count} 条有效日期记录。"
+            ),
+            candidate_count=candidate_count,
+            dated_count=dated_count,
+            traceable_count=traceable_count,
+        )
+    if traceable_count < 3:
+        return TimelineResult(
+            note=(
+                f"本轮发现 {candidate_count} 条候选材料，其中 {dated_count} 条具有可验证的有效发布日期，"
+                f"去重后仅 {traceable_count} 个可追溯节点；少于三个，因此不生成传播时间线。"
+            ),
+            candidate_count=candidate_count,
+            dated_count=dated_count,
+            traceable_count=traceable_count,
+        )
 
     first = events[0]
     events[0] = first.model_copy(update={"event_type": TimelineEventType.EARLIEST_FOUND})
-    return TimelineResult(timeline_status=TimelineStatus.READY, events=events)
+    decision_note = "当前真假裁决仍为证据不足；时间线只描述公开页面的传播记录。" if parsed_decision.strength == "insufficient" else "真假结论仍由独立证据规则生成。"
+    return TimelineResult(
+        timeline_status=TimelineStatus.READY,
+        events=events,
+        note=f"最早节点仅表示本轮最早检索记录，不代表绝对首发。{decision_note}",
+        candidate_count=candidate_count,
+        dated_count=dated_count,
+        traceable_count=traceable_count,
+    )
 
 
 __all__ = ["build_timeline"]

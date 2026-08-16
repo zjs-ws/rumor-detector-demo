@@ -1,0 +1,35 @@
+[
+  {"id":"history-tuskegee","title":"塔斯基吉梅毒研究","category":"historical_true","claim":"美国公共卫生机构曾在1932年至1972年的塔斯基吉梅毒研究中，让部分患病者长期得不到有效治疗以观察疾病进展。","expected":{"verdict":"非谣言","authority_domains":["cdc.gov","hhs.gov","archives.gov"]},"authoritatively_resolvable":true},
+  {"id":"history-mkultra","title":"CIA MKULTRA项目","category":"historical_true","claim":"CIA曾通过MKULTRA项目在不知情者身上进行致幻药物和行为控制实验。","expected":{"verdict":"非谣言","authority_domains":["cia.gov","senate.gov","archives.gov"]},"authoritatively_resolvable":true},
+  {"id":"history-smallpox","title":"天花被宣布根除","category":"historical_true","claim":"世界卫生大会在1980年正式宣布天花已在全球范围内被根除。","expected":{"verdict":"非谣言","authority_domains":["who.int"]},"authoritatively_resolvable":true},
+  {"id":"history-apollo11","title":"阿波罗11号登月","category":"historical_true","claim":"阿波罗11号宇航员在1969年首次载人登月。","expected":{"verdict":"非谣言","authority_domains":["nasa.gov","archives.gov"]},"authoritatively_resolvable":true},
+  {"id":"history-watergate","title":"水门事件辞职","category":"historical_true","claim":"美国总统尼克松在水门事件调查期间于1974年辞职。","expected":{"verdict":"非谣言","authority_domains":["archives.gov","senate.gov"]},"authoritatively_resolvable":true},
+  {"id":"history-chernobyl","title":"切尔诺贝利事故","category":"historical_true","claim":"切尔诺贝利核电站4号反应堆在1986年发生爆炸事故。","expected":{"verdict":"非谣言","authority_domains":["iaea.org","un.org"]},"authoritatively_resolvable":true},
+  {"id":"history-penicillin","title":"青霉素发现","category":"historical_true","claim":"亚历山大·弗莱明在1928年观察到青霉菌的抑菌作用。","expected":{"verdict":"非谣言","authority_domains":["nobelprize.org"]},"authoritatively_resolvable":true},
+  {"id":"history-hiv-name","title":"HIV病原确认","category":"historical_true","claim":"科学界在20世纪80年代确认HIV是导致艾滋病的病毒。","expected":{"verdict":"非谣言","authority_domains":["nih.gov","who.int"]},"authoritatively_resolvable":true},
+  {"id":"history-ozone-protocol","title":"蒙特利尔议定书","category":"historical_true","claim":"1987年签署的蒙特利尔议定书旨在逐步淘汰消耗臭氧层的物质。","expected":{"verdict":"非谣言","authority_domains":["unep.org","un.org"]},"authoritatively_resolvable":true},
+  {"id":"history-smoking-cancer","title":"吸烟致癌官方结论","category":"historical_true","claim":"美国卫生总监在1964年的报告中认定吸烟会导致肺癌等严重健康危害。","expected":{"verdict":"非谣言","authority_domains":["hhs.gov","cdc.gov"]},"authoritatively_resolvable":true},
+
+  {"id":"false-nasa-missing-day","title":"NASA丢失一天","category":"false_rumor","claim":"NASA的计算机计算出历史上凭空少了一天，证明《圣经》中约书亚使太阳停住的故事真实发生。","expected":{"verdict":"谣言","authority_domains":["nasa.gov"]},"authoritatively_resolvable":true},
+  {"id":"false-alcohol-covid","title":"高度酒杀死体内新冠病毒","category":"false_rumor","claim":"喝高度白酒可以杀死人体内的新冠病毒。","expected":{"verdict":"谣言","authority_domains":["who.int","cdc.gov","nhc.gov.cn"]},"authoritatively_resolvable":true},
+  {"id":"false-5g-covid","title":"5G传播新冠病毒","category":"false_rumor","claim":"5G移动通信网络会传播新冠病毒。","expected":{"verdict":"谣言","authority_domains":["who.int"]},"authoritatively_resolvable":true},
+  {"id":"false-vaccine-microchip","title":"疫苗植入微芯片","category":"false_rumor","claim":"新冠疫苗通过针头给接种者植入可追踪微芯片。","expected":{"verdict":"谣言","authority_domains":["cdc.gov","who.int"]},"authoritatively_resolvable":true},
+  {"id":"false-gum-seven-years","title":"口香糖停留七年","category":"false_rumor","claim":"吞下的口香糖会在人的胃里停留七年。","expected":{"verdict":"谣言","authority_domains":["mayoclinic.org","nih.gov"]},"authoritatively_resolvable":true},
+  {"id":"false-great-wall-moon","title":"月球肉眼看长城","category":"false_rumor","claim":"宇航员可以从月球上用肉眼清楚看到中国长城。","expected":{"verdict":"谣言","authority_domains":["nasa.gov"]},"authoritatively_resolvable":true},
+  {"id":"false-blood-blue","title":"静脉血是蓝色","category":"false_rumor","claim":"人体静脉中的血液在接触空气以前是蓝色的。","expected":{"verdict":"谣言","authority_domains":["nih.gov"]},"authoritatively_resolvable":true},
+  {"id":"false-bats-blind","title":"蝙蝠完全失明","category":"false_rumor","claim":"所有蝙蝠都是完全看不见东西的。","expected":{"verdict":"谣言","authority_domains":["si.edu","usgs.gov"]},"authoritatively_resolvable":true},
+  {"id":"false-lightning-never-twice","title":"闪电不落同一处","category":"false_rumor","claim":"闪电绝不会两次击中同一个地方。","expected":{"verdict":"谣言","authority_domains":["weather.gov","noaa.gov"]},"authoritatively_resolvable":true},
+  {"id":"false-antibiotic-virus","title":"抗生素治疗病毒感染","category":"false_rumor","claim":"抗生素可以直接杀死流感等病毒并治愈病毒感染。","expected":{"verdict":"谣言","authority_domains":["cdc.gov","who.int"]},"authoritatively_resolvable":true},
+
+  {"id":"current-who-smallpox","title":"当前仅天花被人类根除","category":"current_claim","claim":"截至2026年8月，天花仍是唯一被人类在全球根除的人类传染病。","expected":{"verdict":"非谣言","authority_domains":["who.int"]},"authoritatively_resolvable":true},
+  {"id":"current-china-legal-age","title":"中国法定成年年龄","category":"current_claim","claim":"截至2026年8月，中国民法典规定十八周岁以上的自然人为成年人。","expected":{"verdict":"非谣言","authority_domains":["npc.gov.cn","gov.cn"]},"authoritatively_resolvable":true},
+  {"id":"current-who-antibiotics","title":"抗生素不能治疗病毒","category":"current_claim","claim":"截至2026年8月，世界卫生组织仍明确说明抗生素不能治疗病毒感染。","expected":{"verdict":"非谣言","authority_domains":["who.int"]},"authoritatively_resolvable":true},
+  {"id":"current-china-central-bank","title":"中国中央银行","category":"current_claim","claim":"截至2026年8月，中国人民银行是中华人民共和国的中央银行。","expected":{"verdict":"非谣言","authority_domains":["pbc.gov.cn","gov.cn"]},"authoritatively_resolvable":true},
+  {"id":"current-nasa-climate","title":"NASA当前承认气候变暖证据","category":"current_claim","claim":"截至2026年8月，NASA官网仍认为存在明确证据表明地球气候正在变暖。","expected":{"verdict":"非谣言","authority_domains":["nasa.gov"]},"authoritatively_resolvable":true},
+
+  {"id":"insufficient-anonymous-lab","title":"匿名实验室传闻","category":"insufficient","claim":"某匿名实验室已经发现一种能治愈所有癌症的方法，但被全球机构共同隐藏。","expected":{"verdict":"证据不足","authority_domains":[]},"authoritatively_resolvable":false},
+  {"id":"insufficient-unnamed-city","title":"未指明城市政策","category":"insufficient","claim":"听说某个城市下个月会永久禁止所有私家车上路。","expected":{"verdict":"证据不足","authority_domains":[]},"authoritatively_resolvable":false},
+  {"id":"insufficient-private-person","title":"私人行踪","category":"insufficient","claim":"某位没有公开身份的普通人昨天秘密去了国外。","expected":{"verdict":"证据不足","authority_domains":[]},"authoritatively_resolvable":false},
+  {"id":"insufficient-vague-company","title":"未指明公司数据","category":"insufficient","claim":"有一家大型公司上周隐瞒了数十亿元亏损。","expected":{"verdict":"证据不足","authority_domains":[]},"authoritatively_resolvable":false},
+  {"id":"insufficient-unidentified-video","title":"无来源视频主张","category":"insufficient","claim":"网上一段没有时间、地点和来源的视频证明某地发生了严重事故。","expected":{"verdict":"证据不足","authority_domains":[]},"authoritatively_resolvable":false}
+]

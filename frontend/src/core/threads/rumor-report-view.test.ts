@@ -18,6 +18,7 @@ function report(overrides: Partial<RumorReport> = {}): RumorReport {
     decision: {
       verdict: "证据不足",
       strength: "insufficient",
+      decision_status: "threshold_not_met",
       accepted_evidence_ids: [],
       excluded_evidence: [],
       classifier_consistency: "not_comparable",
@@ -59,6 +60,24 @@ void test("never maps mixed or invalid classifier values to non-rumor", () => {
   assert.notEqual(view.subclaimRows[1]?.modelLabel, "非谣言风险");
 });
 
+void test("explains why an insufficient decision was returned", () => {
+  const view = buildRumorReportViewModel(
+    report({
+      decision: {
+        verdict: "证据不足",
+        strength: "insufficient",
+        decision_status: "sources_found_but_not_fetched",
+        accepted_evidence_ids: [],
+        excluded_evidence: [],
+        classifier_consistency: "not_comparable",
+        explanation: "找到了候选，但没有取得正文",
+      },
+    }),
+  );
+
+  assert.equal(view.decisionStatusLabel, "找到候选但正文未获取");
+});
+
 void test("hides timelines with fewer than three traceable events", () => {
   const view = buildRumorReportViewModel(
     report({
@@ -85,6 +104,53 @@ void test("hides timelines with fewer than three traceable events", () => {
   );
 
   assert.deepEqual(view.timelineEvents, []);
+});
+
+void test("builds an honest evidence publication sequence without inferring propagation", () => {
+  const evidence = [
+    {
+      id: "newer",
+      title: "较新材料",
+      url: "https://example.com/newer",
+      publisher: "机构乙",
+      published_at: "2026-08-12",
+      stance: "support" as const,
+      source_level: "B" as const,
+      directness: "direct" as const,
+      temporal_relevance: "current",
+      summary: "较新材料",
+    },
+    {
+      id: "older",
+      title: "较早材料",
+      url: "https://example.com/older",
+      publisher: "机构甲",
+      published_at: "2024-01-02",
+      stance: "refute" as const,
+      source_level: "A" as const,
+      directness: "direct" as const,
+      temporal_relevance: "historical_match",
+      summary: "较早材料",
+    },
+    {
+      id: "unknown-date",
+      title: "无日期材料",
+      url: "https://example.com/unknown",
+      publisher: "机构丙",
+      published_at: null,
+      stance: "context" as const,
+      source_level: "C" as const,
+      directness: "indirect" as const,
+      temporal_relevance: "unknown",
+      summary: "无日期材料",
+    },
+  ];
+  const view = buildRumorReportViewModel(report({ evidence }));
+
+  assert.deepEqual(
+    view.evidenceChronology.map((item) => item.id),
+    ["older", "newer"],
+  );
 });
 
 void test("normalizes non-factual boundary reports without exposing an unknown verdict", () => {

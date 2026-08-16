@@ -2,7 +2,7 @@
 
 ## 项目口径
 
-> RumorBuster 使用 LangGraph 的状态图与检查点能力，基于 DeerFlow 的模型、工具和受限子 Agent 基础设施进行领域化二次开发。团队实现了谣言核验 StateGraph、轻量 RAG、专业路由、证据规则、传播时间线、结构化报告、API、前端和评测。
+> RumorBuster 使用 LangGraph 的状态图与检查点能力，基于 DeerFlow 的模型、工具和受限子 Agent 基础设施进行领域化二次开发。团队实现了谣言核验 StateGraph、本地向量与关键词混合 RAG、专业路由、证据规则、传播时间线、结构化报告、API、前端和评测。
 
 不能回答“整个 Agent 框架都是我们从零实现的”，也不能只说“套了 DeerFlow”。准确说法是：框架层复用，谣言核验的节点、状态、并行策略、证据门槛、界面与评测由项目完成。
 
@@ -24,7 +24,7 @@ flowchart TB
   subgraph L3["RumorBuster：团队领域开发"]
     WF["V3 显式核验 StateGraph"]
     CR["主张拆分、可核验性与专业路由"]
-    R["中文 n-gram TF-IDF RAG"]
+    R["HuggingFace + Chroma + TF-IDF 混合 RAG"]
     EV["结构化证据与确定性裁决"]
     RV["证据审查、补检和终局校验"]
     TL["传播时间线"]
@@ -45,12 +45,12 @@ flowchart TB
 | Sandbox | DeerFlow | V3 核心路径不调用 | 未作为真假算法；只保留文件隔离能力 | 不影响规则裁决，失去安全归档基础 |
 | 通用中间件 | DeerFlow | V2 使用错误、限额、防循环与 EvidencePolicy | V2 阶段门控与终局规则 | V2 更易乱序、循环或编造引用 |
 | 微调模型 | 外部可选服务 | 并行辅助分类 | 严格 JSON、12 秒超时、冲突展示 | 少一个风险信号，不改变 verdict |
-| 轻量 RAG | 团队实现 | 30 条已复核记录 Top-3 | 字符 2—4 gram TF-IDF、阈值和证据隔离 | 失去旧谣言变体召回，仍可网页核验 |
+| 本地混合 RAG | 团队实现 | 复核文档加载、中文分块、Top-K 历史知识 | HuggingFace Embedding、Chroma、字符 2—4 gram TF-IDF、RRF和证据隔离 | 稠密索引失败时退回TF-IDF；两者均失败仍可网页核验 |
 | 专业路由 | 无 | 医学、法律、金融、政策、科学等启用权威研究 | 结构化领域 + 关键词兜底、受控域名 | 高风险主张可能漏查主管机构 |
 | 证据审查 | DeerFlow 子 Agent 执行器 | critic 无工具，只查覆盖缺口 | 代码限制其不能新增事实，补检最多一次 | 关键子主张缺口更难被发现 |
 | 来源与时间策略 | 无 | 校验研究候选 | 等级向下校正、365 天规则、同源合并、URL 白名单 | 普通网页可能被错误提升为权威证据 |
 | 证据裁决 | 无 | 最终结论唯一来源 | A/B/C/D、职权、直接性、独立性、时效和子主张规则 | 退回大模型自由综合，不可复现 |
-| 传播时间线 | 无 | 复用已抓取证据 | 至少三日期节点、去重、用途标记 | 只保留证据列表 |
+| 传播时间线 | 无 | 独立传播检索 + 已抓取事实证据 + 已复核 RAG 来源 | 受限搜索、日期/正文校验、同源去重、用途隔离、至少三节点 | 退化为普通证据列表，无法展示传播演化 |
 | 最终校验 | V2 借用中间件生命周期 | V3 用 `finalize` 节点，V2 用 EvidencePolicy | 删除未观察 URL、绑定规则 verdict、模板降级 | 模型可能覆盖结论或编链接 |
 | Web/API | Next.js、FastAPI、LangGraph SDK | 同源流式网页与 `/api/v1/checks` | v3 分支卡片、证据筛选、导出和兼容 | 只剩底层图，不能面向用户交付 |
 
@@ -63,6 +63,7 @@ sequenceDiagram
   participant G as V3 StateGraph
   participant R as 本地 RAG
   participant W as web-researcher
+  participant T as 传播脉络研究
   participant A as authority-researcher
   participant M as rumor_check
   participant C as evidence-critic
@@ -73,6 +74,7 @@ sequenceDiagram
   par 可核验后的并行分支
     G->>R: Top-3 历史召回
     G->>W: 普通网页研究（1 搜索 + 最多 4 抓取）
+    G->>T: 确定性传播节点研究（1 搜索 + 最多 5 并发抓取）
     opt 专业领域
       G->>A: 权威研究（1 搜索 + 最多 2 抓取）
     end
@@ -82,6 +84,7 @@ sequenceDiagram
   end
   R-->>G: 历史相似记录
   W-->>G: 候选证据 + 实际 ToolMessage
+  T-->>G: 仅用于时间线的日期节点
   A-->>G: 权威候选 + 实际 ToolMessage
   M-->>G: 非权威标签
   G->>G: fan-in、Schema/URL/来源/时效/独立性校正

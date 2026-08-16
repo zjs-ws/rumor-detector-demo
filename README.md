@@ -40,7 +40,7 @@
 - URL-only 输入会先读取原网页再提取主张；结构化提取不兼容时回退到严格 JSON，仍无法提取则要求补充主张，不搜索“网页主要内容”等操作指令
 - 运行时校验最终引用：移除本轮工具未返回的链接；未引用独立外部来源时，自动降级为“存疑（证据不足）/低证据强度”
 - 可核验性预分流，避免对观点、隐私和未来随机事件伪造真假结论
-- 30 条已复核谣言记录和中文字符 n-gram TF-IDF Top-3 检索
+- 30 条已复核种子记录，以及符合课程链路的 Document 加载、中文分块、HuggingFace Embedding、Chroma 持久化和 TF-IDF 混合检索；历史知识仍不参与当前证据门槛
 - 结构化证据、A/B/C/D 来源分级、独立性/直接性/时效性校验与确定性裁决
 - 受控官方来源职权表包含 WHO、政府/监管机构及气候领域 NASA/IPCC；官方域名仍必须与当前主张职权匹配才可升为 A 级
 - V3 显式 LangGraph `StateGraph`：通过 `Send` 并行运行本地 RAG、普通网页研究、可选分类器和专业权威研究，以 reducer 汇合后再审查与裁决
@@ -51,11 +51,14 @@
 - `rumorbuster-report-v3`、并行分支状态、来源等级校正、子主张裁决和安全降级报告，并兼容读取 v1/v2
 - 受限 `evidence-critic` 检查子主张覆盖与确定性裁决门槛，不能新增证据、URL、等级或 verdict；覆盖但门槛不足时也可申请唯一一次补检
 - `web_fetch` 在结构化工具结果中记录抓取时间，V3 只按成功抓取的 URL 由代码回填 `fetched_at`；搜索摘要或模型自报时间不能冒充正文抓取
-- 至少三个可追溯事件时生成传播演化时间线，否则明确显示时间线证据不足
+- 历史事件、当前状态与未来表达由代码按确定性优先级校正；“药物、治疗、疫苗”等领域词只影响专业路由，不再误触发当前状态时效规则
+- CIA/MKULTRA、塔斯基吉研究与 NASA 等已登记实体生成受控权威域名查询；模型可以建议查询词，但不能指定或提升官方来源
+- 直接网页证据必须同时具有成功抓取状态、正文哈希和可在抓取内容中反查的连续原文引文，否则不能进入“一条 A / 两条独立 B”的裁决门槛
+- 按本轮实际证据的发布日期生成“证据发布时间序列”，用于比较材料新旧，不宣称识别首发、转载关系或传播路径
 - 结构化证据卡片、排除原因、Markdown/JSON 下载和打印
 - Chrome 浏览器划词核验入口
 - “证据实验室”亮暗双主题界面：首屏突出规则结论、证据强度与可追溯来源，技术审计默认折叠
-- V3 七阶段执行进度和 RAG、普通网页、权威来源、LoRA 四个并行分支状态
+- V3 七阶段执行进度和 RAG、普通网页、权威来源、LoRA 四类主要并行能力状态
 - 三个带真实运行日期的历史实测案例；存档结果与实时核验明确区分并复用同一报告组件
 - 浏览器扩展可在设置页修改 RumorBuster 地址，默认使用生产编排入口 `http://localhost:8080`
 - 正式 Markdown/JSON 导出不包含模型 reasoning、工具参数、系统提示词、密钥或服务地址
@@ -111,6 +114,16 @@
 4. 一键启动：
 
    `./scripts/quickstart.sh`
+
+   首次使用本地向量知识库前，单独构建 Chroma 索引。该命令会下载课件同栈的
+   `GanymedeNil/text2vec-large-chinese`，模型和索引均写入被忽略的 `runtime/`：
+
+   ```bash
+   docker compose -f compose.prod.yaml --profile maintenance run --rm rag-indexer
+   ```
+
+   若暂未构建索引，系统会自动退回现有 TF-IDF 检索，并在报告中显示
+   `rag_index_missing`，不会阻断网页取证和规则裁决。
 
 5. 确认服务和定向测试：
 
@@ -229,6 +242,9 @@ python3 scripts/check_production_ready.py
 - 真实模型 9 条双跑冒烟：`python3 scripts/run_classifier_smoke.py --base-url http://127.0.0.1:18000 --repeats 2`
 - 冻结早期预警集评测：`python3 scripts/evaluate_finetuned_classifier.py --base-url http://127.0.0.1:18000 --dataset early`
 - 冻结对抗集评测：`python3 scripts/evaluate_finetuned_classifier.py --base-url http://127.0.0.1:18000 --dataset adversarial`
+- 校验本地RAG语料：`docker compose -f compose.prod.yaml run --rm -T langgraph uv run python scripts/build_rag_index.py --validate-only`
+- 构建本地Chroma索引：`docker compose -f compose.prod.yaml --profile maintenance run --rm rag-indexer`
+- 对比RAG召回：`docker compose -f compose.prod.yaml run --rm -T langgraph uv run python scripts/evaluate_rag_retrieval.py --mode hybrid`
 - 前端纯函数测试：`corepack pnpm --dir frontend test`
 - 浏览器扩展测试：`node --test browser-extension/tests/*.mjs`
 - 前端质量检查：`corepack pnpm --dir frontend format && corepack pnpm --dir frontend lint && corepack pnpm --dir frontend typecheck && corepack pnpm --dir frontend build`
@@ -271,14 +287,18 @@ python3 scripts/check_production_ready.py
 - `scripts/quickstart.sh`：一键启动
 - `scripts/doctor.sh`：环境与安全检查
 - `scripts/evaluate_rumorbuster.py`：确定性回归、对比与消融评测
+- `scripts/build_rag_index.py`：校验复核语料，使用HuggingFace Embedding构建版本化Chroma索引
+- `scripts/evaluate_rag_retrieval.py`：输出TF-IDF或混合RAG的Recall@1/3、MRR和负例拒绝率
 - `scripts/evaluate_finetuned_classifier.py`：通过真实 `/v1/chat` 运行冻结的早期预警集与对抗集，不生成 Mock 指标
 - `scripts/run_classifier_smoke.py`：在 GPU 隧道建立后运行 9 条、每条两次的真实模型冒烟验收
 - `scripts/run_demo_cases.py`：独立线程运行固定案例，保存 V2/V3 报告、trace、分支耗时、抓取溯源和校验摘要
+- `scripts/evaluate_real_factchecks.py`：运行30条独立线程的真实联网验收，分别统计明确判定率、已判准确率、虚构 URL、正文引文和规则绑定；其结果不能由 Mock 代替
 - `docs/ARCHITECTURE_OWNERSHIP.md`：LangGraph/DeerFlow/RumorBuster 归属矩阵
 - `docs/DEFENSE_STUDY_GUIDE.md`：源码学习与答辩卡
 - `docs/LABS.md`：日志、Sandbox、线程状态和消融实验手册
 - `docs/WORKFLOW_V2_IMPLEMENTATION.md`：阶段门控、来源规则、时间线和答辩实验留痕
 - `docs/WORKFLOW_V3_IMPLEMENTATION.md`：显式 StateGraph、并行汇合、受限子 Agent、回退策略与学习留痕
+- `docs/RAG_IMPLEMENTATION.md`：课程标准向量 RAG 的 Loader、切片、Embedding、Chroma、混合召回、降级与答辩边界
 - `docs/PRODUCTION_DEPLOYMENT.md`：云主机部署、统一 API、备份恢复与故障处理
 - `docs/MODELSCOPE_CLASSIFIER_DEPLOYMENT.md`：短租 GPU、SSH 隧道、真实模型调用与验收
 - `docs/SOCIAL_CONTEXT_FUTURE.md`：未启用的评论质证扩展边界和 Fixture
@@ -288,14 +308,15 @@ python3 scripts/check_production_ready.py
 
 1. 默认只配置 DeepSeek 主模型。
 2. 微调分类模型服务不打包进 RumorBuster Compose；需在 GPU 主机独立启动并通过 SSH 隧道接入。没有真实 GPU 日志前不得把适配测试写成模型评测结果。
-3. 普通研究员预算为 55 秒、1 次搜索和最多 4 次正文抓取；医学、法律、金融、政策与科学等专业主张额外并行启用权威研究员，预算为 55 秒、1 次搜索和最多 2 次抓取。补检最多一次、35 秒。搜索摘要只作线索，不能凑正式证据门槛。
+3. 每个可核验主张最多运行一次普通发现检索（最多3次正文抓取）和一次受控权威检索（最多2次正文抓取）；没有匹配到注册机构时，权威分支不会自由选择域名。当前取消第三次模型自由补检。搜索摘要只作线索，不能凑正式证据门槛。实验性传播检索默认关闭（`RUMOR_TIMELINE_ENABLED=false`）；没有平台转发关系或可靠新闻档案数据时，不宣称具备传播溯源能力。
 4. 智能体已加入模型/工具调用上限，后续仍需补齐真实证据源后的复杂流程测试。
 5. 当前智能体服务使用本地开发模式和无鉴权配置。
 6. 注册登录尚未接入；浏览器扩展当前为本地加载版，默认连接 `http://localhost:8080`，可在扩展设置中更换为未来的云端地址。
 7. 每轮最多抓取用户提供的 1 个公开 HTTP(S) URL，正文最多保留 12,000 个字符。登录墙、强动态渲染或阻止爬取的网页可能无法读取；私网、localhost 与非 HTTP(S) 地址会被拒绝。
-8. 本地 RAG 是透明可解释的 TF-IDF 基线，不是语义向量大模型；命中历史记录不会直接决定当前主张。
+8. 本地 RAG 已具备课件要求的 Loader、中文 Chunk、HuggingFace Embedding、Chroma Retriever 与 Prompt 上下文注入；当前正式语料仍以30条人工复核种子记录为主，未构建索引时自动退回TF-IDF。无论哪种模式，命中历史知识都不会直接决定当前主张。
 9. Sandbox 中间件已装配，但不是事实裁决核心；LocalSandbox 不是容器级安全边界，公网环境应使用更强隔离 Provider。
 10. 评论质证只保留接口草案，当前没有评论爬取、评论分析或传播树能力。
+11. 2026-08-14 的真实测试曾暴露历史主张误判时态、权威查询不定向和无正文引文等问题；相关代码已进入修复分支，但只有 `evaluation/real_e2e_cases.json` 的30条真实联网验收达到门槛后，才对外使用“稳定谣言核验系统”的表述。
 
 ## 产品方向
 
@@ -303,4 +324,4 @@ python3 scripts/check_production_ready.py
 
 ## 开源基础与团队工作
 
-RumorBuster 采用 LangGraph 作为状态与 Agent 运行基础，并基于 DeerFlow 开源框架进行领域化二次开发。框架提供状态图、工具、子 Agent、中间件、Sandbox 和配置基础；团队实现事实核验工作流、轻量 RAG、微调服务适配、证据规则、终局校验、浏览器入口、结构化界面与评测材料。详见 [三层架构与归属矩阵](docs/ARCHITECTURE_OWNERSHIP.md)。
+RumorBuster 采用 LangGraph 作为状态与 Agent 运行基础，并基于 DeerFlow 开源框架进行领域化二次开发。框架提供状态图、工具、子 Agent、中间件、Sandbox 和配置基础；团队实现事实核验工作流、本地向量与关键词混合 RAG、微调服务适配、证据规则、终局校验、浏览器入口、结构化界面与评测材料。详见 [三层架构与归属矩阵](docs/ARCHITECTURE_OWNERSHIP.md)。

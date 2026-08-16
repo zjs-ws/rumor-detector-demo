@@ -38,6 +38,7 @@ export function formatRumorReportAsMarkdown(
     "",
     `- 输入主张：${view.normalizedClaim}`,
     `- 最终规则结论：**${view.verdictLabel}**`,
+    `- 判定状态：${view.decisionStatusLabel}`,
     `- 证据强度：${view.evidenceStrengthLabel}`,
     `- 可核验状态：${view.checkabilityLabel}`,
     `- 专业领域：${view.domainLabel}`,
@@ -88,6 +89,10 @@ export function formatRumorReportAsMarkdown(
         `- 独立来源组：${lineValue(evidence.independent_group)}`,
         `- 关联子主张：${evidence.claim_ids?.length ? evidence.claim_ids.join("、") : "未标注"}`,
         `- 摘要：${lineValue(evidence.summary)}`,
+        `- 正文引文：${lineValue(evidence.excerpt, "未取得可反查正文引文")}`,
+        `- 抓取状态：${lineValue(evidence.fetch_status, "未记录")}`,
+        `- 最终地址：${lineValue(evidence.final_url, "未记录")}`,
+        `- 文档哈希：${lineValue(evidence.document_hash, "未记录")}`,
         "",
       );
     }
@@ -106,24 +111,21 @@ export function formatRumorReportAsMarkdown(
     lines.push("");
   }
 
-  lines.push("## 传播时间线", "");
-  if (!view.timelineEvents.length) {
-    lines.push(
-      "- 可追溯日期节点少于三个，时间线证据不足，未生成传播演化节点。",
-      "",
-    );
+  lines.push("## 证据发布时间序列", "");
+  lines.push(
+    "> 仅按本轮实际取得材料的发布日期排序，用于比较证据新旧；不推断首发、转载关系或传播路径。",
+    "",
+  );
+  if (!view.evidenceChronology.length) {
+    lines.push("- 没有可验证的发布日期；系统未猜测或补写时间。", "");
   } else {
-    lines.push(
-      "> 最早节点仅表示“本轮最早检索记录”，不代表互联网中的绝对首发。",
-      "",
-    );
-    for (const event of view.timelineEvents) {
-      const url = safePublicHttpUrl(event.url);
+    for (const evidence of view.evidenceChronology) {
+      const url = safePublicHttpUrl(evidence.url);
       const title = url
-        ? `[${lineValue(event.title)}](${url})`
-        : lineValue(event.title);
+        ? `[${lineValue(evidence.title)}](${url})`
+        : lineValue(evidence.title);
       lines.push(
-        `- ${lineValue(event.date)} · ${lineValue(event.event_type)} · ${title} · ${event.used_for_decision ? "用于裁决" : "仅作传播记录"}`,
+        `- ${lineValue(evidence.published_at)} · ${title} · ${lineValue(evidence.publisher)} · ${lineValue(evidence.verified_source_level ?? evidence.source_level)}级 · ${view.acceptedIds.has(evidence.id) ? "用于裁决" : "未用于裁决"}`,
       );
     }
     lines.push("");
@@ -132,10 +134,26 @@ export function formatRumorReportAsMarkdown(
   lines.push("## RAG 与 LoRA 辅助信号", "");
   const ragMatches = report.rag?.matches ?? [];
   lines.push(
-    `- 历史谣言 RAG：${ragMatches.length ? `召回 ${ragMatches.length} 条历史相似记录` : "无命中或不可用"}。RAG 命中不等于当前主张为假。`,
+    `- 本地向量知识库 RAG：${ragMatches.length ? `召回 ${ragMatches.length} 条历史知识片段` : "无命中或不可用"}；模式为 ${report.rag?.retrieval_mode ?? "未知"}。检索相关度不是事实置信度，RAG 命中不等于当前主张为假。`,
     `- LoRA 分类：${lineValue(report.classifier_signal?.status, "不可用")}；聚合标签：${lineValue(report.classifier_signal?.aggregate_label ?? report.classifier_signal?.label, "未知")}。`,
     "",
   );
+
+  if (report.research_plan_summary) {
+    const plan = report.research_plan_summary;
+    lines.push(
+      "## 确定性研究计划",
+      "",
+      `- 主张时态：${lineValue(plan.temporality, "未知")}`,
+      `- 时态依据：${lineValue(plan.temporality_basis, "未记录")}`,
+      `- 权威目标：${plan.authority_targets?.length ? plan.authority_targets.map((item) => `${item.organization}（${item.domains.join("、")}）`).join("；") : "无已注册目标"}`,
+      `- 发现检索：${lineValue(plan.queries?.discovery, "未生成")}`,
+      `- 权威检索：${lineValue(plan.queries?.authority, "未生成")}`,
+      "",
+      "> 查询由代码根据实体注册表生成；搜索不到、页面未提及或只有搜索摘要，都不能直接证明主张为假。",
+      "",
+    );
+  }
 
   const degradationCodes = metadata.degradationCodes ?? [];
   lines.push("## 能力降级与限制", "");
@@ -152,7 +170,7 @@ export function formatRumorReportAsMarkdown(
   lines.push(
     "## 方法说明",
     "",
-    "RumorBuster 将历史相似记录、实时网页研究和可选 LoRA 文本分类并行收集，在汇合后校验 URL、来源等级、职权、时效和独立性，再由确定性规则完成裁决。文本风险、RAG 与模型标签都不是事实证据。",
+    "RumorBuster 先生成确定性研究计划，再并行执行历史相似记录检索、普通发现检索、受控权威检索和可选 LoRA 文本分类。汇合后系统校验正文引文、URL、来源等级、职权、时效和独立性，再由确定性规则完成裁决。文本风险、RAG、搜索摘要与模型标签都不是事实证据。",
     "",
     `*导出时间：${metadata.exportedAt ?? new Date().toISOString()}*`,
   );

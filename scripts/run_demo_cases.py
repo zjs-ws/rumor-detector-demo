@@ -21,7 +21,15 @@ from typing import Any
 from urllib.parse import unquote, urlsplit, urlunsplit
 
 _PLAIN_URL_PATTERN = re.compile(r"https?://[^\s\"'<>\\)\]]+")
-_SUPPORTED_CATEGORIES = {"boundary", "professional", "url"}
+_SUPPORTED_CATEGORIES = {
+    "boundary",
+    "professional",
+    "url",
+    "historical_true",
+    "false_rumor",
+    "current_claim",
+    "insufficient",
+}
 _SUPPORTED_SCHEMAS = {"rumorbuster-report-v2", "rumorbuster-report-v3"}
 _TERMINAL_STAGES = {"report", "needs_input", "conversation"}
 _ATTEMPTED_STATUSES = {"completed", "unavailable"}

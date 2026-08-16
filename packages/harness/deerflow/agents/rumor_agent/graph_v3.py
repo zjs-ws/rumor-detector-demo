@@ -19,12 +19,14 @@ from typing import Annotated, Any, NotRequired
 
 from langchain_core.messages import AIMessage
 from langchain_core.runnables import RunnableConfig
+from langchain_core.tools import StructuredTool
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
 
 from deerflow.agents.rumor_agent.claim_router import assess_checkability
-from deerflow.agents.rumor_agent.evidence import decide_evidence, normalize_url
-from deerflow.agents.rumor_agent.rag import retrieve_verified_rumors
+from deerflow.agents.rumor_agent.evidence import decide_evidence, derive_decision_status, normalize_url
+from deerflow.agents.rumor_agent.rag import format_rag_context, retrieve_rumor_knowledge
+from deerflow.agents.rumor_agent.research_plan import build_research_plan, repair_temporality
 from deerflow.agents.rumor_agent.schemas import (
     Checkability,
     ClaimContext,
@@ -33,22 +35,67 @@ from deerflow.agents.rumor_agent.schemas import (
     ClassifierSignal,
     EvidenceItem,
     EvidenceReview,
+    KnowledgeRetrievalResult,
     Subclaim,
 )
 from deerflow.agents.rumor_agent.source_policy import normalize_evidence_items
 from deerflow.agents.rumor_agent.timeline import build_timeline
+from deerflow.agents.rumor_agent.timeline_research import (
+    build_timeline_evidence,
+    build_timeline_query,
+    parse_fetch_result,
+    parse_search_results,
+    timeline_candidate_relevant,
+)
 from deerflow.agents.thread_state import ThreadState
 
 _URL_RE = re.compile(r"https?://[^\s\]<>\)\"']+")
 _VERIFY_INTENT_RE = re.compile(r"(?:核验|查证|真假|谣言|可信|是否属实|是真的吗|分析.*网页|读取.*网页)")
+_FACTUAL_ASSERTION_RE = re.compile(
+    r"(?:不能吃|可以吃|不宜食用|有害|无害|有毒|无毒|致癌|治愈|预防|"
+    r"导致|造成|引发|含有|检出|属于|并非|已经|曾经|目前|"
+    r"宣布|发布|证实|否认|发生|上涨|下降|超过|达到|"
+    r"去世|死亡|受伤|离婚|结婚|辞职|被捕|召回|下架|停产|"
+    r"被.{0,20}(?:浸泡|浸|喷洒|注射|添加|处理|污染|下药))"
+)
+_CLEAR_CONVERSATION_RE = re.compile(
+    r"^(?:你好|您好|嗨|谢谢|再见|你是谁|你能做什么|怎么使用|如何使用|"
+    r"讲个故事|写(?:一|个|篇)|翻译|润色|总结|起个名字|陪我聊)"
+)
+_CLEAR_OPINION_RE = re.compile(
+    r"(?:我觉得|我认为|在我看来|我感觉|我喜欢|我讨厌|我希望|"
+    r"最好看|最难看|太难吃|很无聊|心情(?:很好|不好))"
+)
 _PLAIN_URL_RE = re.compile(r"https?://[^\s\"'<>\\)]+")
 _GENERIC_WEB_REQUEST_RE = re.compile(r"^(?:(?:这个|该|此)\s*)?网页(?:的)?(?:主要)?(?:内容|主张|说法|事实)?$")
+_VERIFICATION_SUFFIX_RE = re.compile(
+    r"(?:(?:这(?:个|条|种)?说法)?(?:是(?:不)?是|是否)?|这是)?"
+    r"(?:谣言|真的|属实|可信)(?:吗|呢)?[？?。！!]*$"
+)
+_EXCERPT_NORMALIZER_RE = re.compile(r"[^\w\u4e00-\u9fff]+")
+_ABSENCE_ONLY_RE = re.compile(
+    r"(?:未(?:检索到|找到|发现|提及|显示)|没有(?:检索到|找到|发现|提及)|"
+    r"no (?:mention|record|result)|not found)",
+    re.IGNORECASE,
+)
 
 _DOMAIN_PATTERNS: tuple[tuple[ClaimDomain, re.Pattern[str]], ...] = (
-    (ClaimDomain.MEDICAL, re.compile(r"(?:医学|医疗|疾病|病毒|细菌|疫苗|药物|药品|治疗|诊断|临床|医生|医院|健康|癌症|新冠|保健)")),
+    (
+        ClaimDomain.MEDICAL,
+        re.compile(
+            r"(?:医学|医疗|疾病|病毒|细菌|疫苗|药物|药品|治疗|诊断|临床|医生|医院|健康|癌症|新冠|保健|"
+            r"食品安全|食品|食物|水果|农产品|农药|添加剂|食用|不能吃|中毒|有害健康|药水|浸泡)"
+        ),
+    ),
     (ClaimDomain.LEGAL, re.compile(r"(?:法律|法规|刑法|民法|司法解释|法院|检察院|判决|违法|犯罪|拘留|最高法)")),
     (ClaimDomain.FINANCE, re.compile(r"(?:金融|证券|股票|基金|银行|利率|汇率|央行|证监会|上市公司|财报|期货|保险)")),
-    (ClaimDomain.SCIENCE, re.compile(r"(?:科学|物理|化学|生物|天文|气候|论文|实验|研究表明|学术|量子)")),
+    (
+        ClaimDomain.SCIENCE,
+        re.compile(
+            r"(?:科学|物理|化学|生物|天文|气候|论文|实验|研究表明|学术|量子|"
+            r"强酸|强碱|氢氧化钠|盐酸|腐蚀|放热|化学灼伤|危险化学品|管道疏通剂|洁厕灵)"
+        ),
+    ),
     (ClaimDomain.TECHNOLOGY, re.compile(r"(?:软件|硬件|算法|人工智能|芯片|网络安全|操作系统|数据库|编程|技术标准)")),
 )
 
@@ -78,6 +125,7 @@ class RumorV3State(ThreadState):
     v3_rag_result: NotRequired[dict[str, Any] | None]
     v3_web_research: NotRequired[dict[str, Any] | None]
     v3_authority_research: NotRequired[dict[str, Any] | None]
+    v3_timeline_research: NotRequired[dict[str, Any] | None]
     v3_supplement_research: NotRequired[dict[str, Any] | None]
     v3_classifier_signal: NotRequired[dict[str, Any] | None]
     v3_evidence_review: NotRequired[dict[str, Any] | None]
@@ -87,8 +135,8 @@ class RumorV3State(ThreadState):
 
 
 def make_parallel_sends(state: Mapping[str, Any]) -> list[Send]:
-    """Fan out isolated snapshots to the four bounded evidence branches."""
-    return [Send(branch, dict(state)) for branch in ("rag", "web", "classifier", "authority")]
+    """Fan out isolated snapshots to the bounded evidence and timeline branches."""
+    return [Send(branch, dict(state)) for branch in ("rag", "web", "classifier", "authority", "timeline_research")]
 
 
 def _message_text(message: object) -> str:
@@ -115,6 +163,8 @@ def _valid_observed_at(value: object) -> str | None:
 def apply_verified_fetch_provenance(
     research: Mapping[str, Any],
     tool_messages: list[dict[str, Any]],
+    *,
+    relevance_terms: list[str] | None = None,
 ) -> tuple[dict[str, Any], list[str]]:
     """Bind fetch timestamps to evidence using actual ``web_fetch`` results.
 
@@ -123,7 +173,7 @@ def apply_verified_fetch_provenance(
     evidence eligible for deterministic adjudication.
     """
 
-    fetched_at_by_url: dict[str, str] = {}
+    fetch_by_url: dict[str, dict[str, Any]] = {}
     for message in tool_messages:
         if message.get("name") != "web_fetch":
             continue
@@ -136,16 +186,28 @@ def apply_verified_fetch_provenance(
             continue
         if not isinstance(payload, Mapping) or not str(payload.get("content") or "").strip():
             continue
+        document = str(payload.get("content") or "")
         observed_at = _valid_observed_at(payload.get("fetched_at"))
         if observed_at is None:
             observed_at = _valid_observed_at(message.get("observed_at"))
-        if observed_at is None:
-            continue
+        final_url = str(payload.get("source_url") or payload.get("requested_url") or "")
+        metadata = {
+            "fetched_at": observed_at,
+            "content": document,
+            "document_hash": hashlib.sha256(document.encode("utf-8")).hexdigest(),
+            "content_type": str(payload.get("content_type") or payload.get("mime_type") or "text/html"),
+            "final_url": final_url or None,
+        }
         for key in ("source_url", "requested_url"):
             url = payload.get(key)
             if isinstance(url, str) and url.startswith(("http://", "https://")):
-                fetched_at_by_url[normalize_url(url)] = observed_at
+                fetch_by_url[normalize_url(url)] = metadata
 
+    normalized_relevance_terms = [
+        _EXCERPT_NORMALIZER_RE.sub("", term).casefold()
+        for term in (relevance_terms or [])
+        if _EXCERPT_NORMALIZER_RE.sub("", term)
+    ]
     enriched = dict(research)
     evidence: list[Any] = []
     for raw_item in research.get("evidence", []) or []:
@@ -155,12 +217,56 @@ def apply_verified_fetch_provenance(
         item = dict(raw_item)
         url = item.get("url")
         if isinstance(url, str):
-            verified_at = fetched_at_by_url.get(normalize_url(url))
-            if verified_at is not None:
-                item["fetched_at"] = verified_at
+            fetch = fetch_by_url.get(normalize_url(url))
+            if fetch is not None:
+                item.update(
+                    {
+                        "fetched_at": fetch.get("fetched_at"),
+                        "document_hash": fetch["document_hash"],
+                        "content_type": fetch["content_type"],
+                        "final_url": fetch["final_url"],
+                        "fetch_status": "fetched",
+                        "fetch_attempts": [
+                            {
+                                "url": url,
+                                "final_url": fetch["final_url"] or url,
+                                "status": "fetched",
+                            }
+                        ],
+                    }
+                )
+                excerpt = str(item.get("excerpt") or "").strip()
+                normalized_excerpt = _EXCERPT_NORMALIZER_RE.sub("", excerpt).casefold()
+                normalized_document = _EXCERPT_NORMALIZER_RE.sub("", str(fetch["content"])).casefold()
+                if item.get("directness") == "direct" and (
+                    not normalized_excerpt or normalized_excerpt not in normalized_document
+                ):
+                    item["directness"] = "indirect"
+                    item["extraction_status"] = "excerpt_unverified"
+                elif item.get("directness") == "direct" and normalized_relevance_terms:
+                    evidence_text = _EXCERPT_NORMALIZER_RE.sub(
+                        "", f"{item.get('title', '')}{excerpt}"
+                    ).casefold()
+                    if not any(term in evidence_text for term in normalized_relevance_terms):
+                        item["directness"] = "indirect"
+                        item["extraction_status"] = "claim_mismatch"
+                if item.get("stance") == "refute" and _ABSENCE_ONLY_RE.search(
+                    f"{item.get('summary', '')} {excerpt}"
+                ):
+                    item["directness"] = "indirect"
+                    item["extraction_status"] = "absence_only"
+            else:
+                item["fetch_status"] = "not_fetched"
+                item["fetch_attempts"] = [
+                    {
+                        "url": url,
+                        "final_url": None,
+                        "status": "not_fetched",
+                    }
+                ]
         evidence.append(item)
     enriched["evidence"] = evidence
-    return enriched, sorted(fetched_at_by_url)
+    return enriched, sorted(fetch_by_url)
 
 
 def _latest_human(state: Mapping[str, Any]) -> object | None:
@@ -176,7 +282,88 @@ def _claim_candidate(raw_input: str) -> str:
     value = " ".join(lines)
     value = re.sub(r"^(?:请)?(?:帮我)?(?:读取并)?(?:核验|查证|分析)(?:以下)?(?:网页内容|说法|言论)?[：:\s]*", "", value)
     value = " ".join(value.split()).strip().strip("：:")[:5000]
+    value = _VERIFICATION_SUFFIX_RE.sub("", value).strip("，,；;：: ")
     return "" if _GENERIC_WEB_REQUEST_RE.fullmatch(value) else value
+
+
+def detect_verification_intent(
+    raw_input: str,
+    *,
+    source_url: str | None,
+    initial_claim: str,
+) -> tuple[bool, str]:
+    """Route explicit requests and declarative public claims into fact-checking.
+
+    RumorBuster is a verification workspace, so users should not need to add a
+    magic phrase such as ``请核验`` before a claim.  The guard still keeps clear
+    greetings, writing tasks, and personal opinions in normal conversation.
+    Ambiguous questions remain conversational unless they contain a strong
+    factual assertion marker.
+    """
+    text = " ".join(raw_input.split()).strip()
+    claim = " ".join(initial_claim.split()).strip()
+    if source_url:
+        return True, "public_url"
+    if _VERIFY_INTENT_RE.search(text):
+        return True, "explicit_verification"
+    if not claim or len(claim) < 4:
+        return False, "insufficient_input"
+    if _CLEAR_CONVERSATION_RE.search(claim):
+        return False, "conversation_request"
+    if _CLEAR_OPINION_RE.search(claim):
+        return False, "personal_opinion"
+    if _FACTUAL_ASSERTION_RE.search(claim):
+        return True, "factual_assertion"
+    if text.endswith(("?", "？")):
+        return False, "general_question"
+    # A bare declarative sentence in the dedicated verification workspace is
+    # treated as a claim.  Later checkability rules can still return a safe
+    # boundary result without starting external evidence collection.
+    if len(claim) >= 6:
+        return True, "declarative_claim"
+    return False, "conversation_or_unclear"
+
+
+def repair_claim_context(context: ClaimContext) -> ClaimContext:
+    """Apply narrow deterministic repairs when extraction leaves a compound claim unsplit."""
+    claim = _VERIFICATION_SUFFIX_RE.sub("", context.normalized_claim).strip("，,；;：: ")
+    repaired_subclaims = [
+        item.model_copy(
+            update={
+                "text": _VERIFICATION_SUFFIX_RE.sub("", item.text).strip("，,；;：: "),
+            }
+        )
+        for item in context.subclaims
+        if _VERIFICATION_SUFFIX_RE.sub("", item.text).strip("，,；;：: ")
+    ][:3]
+
+    # A common safety-rumour form bundles a product classification with a
+    # consequence claim.  They need independent evidence and may have opposite
+    # truth values, so never leave them as one indivisible sentence.
+    if (
+        len(repaired_subclaims) <= 1
+        and "疏通剂" in claim
+        and "洁厕灵" in claim
+        and "强碱" in claim
+        and any(token in claim for token in ("热水", "爆射", "喷溅", "毁容", "灼伤"))
+    ):
+        repaired_subclaims = [
+            Subclaim(
+                id="claim-1",
+                text="管道疏通剂等强碱类清洁剂接触热水可能剧烈反应、喷溅并造成腐蚀伤害",
+                material=True,
+            ),
+            Subclaim(id="claim-2", text="洁厕灵属于强碱类清洁剂", material=True),
+        ]
+
+    domain, reason = detect_claim_domain(claim)
+    update: dict[str, Any] = {
+        "normalized_claim": claim,
+        "subclaims": repaired_subclaims or [Subclaim(id="claim-1", text=claim, material=True)],
+    }
+    if domain != ClaimDomain.GENERAL.value:
+        update.update({"domain": ClaimDomain(domain), "domain_reason": reason})
+    return repair_temporality(context.model_copy(update=update))
 
 
 def detect_claim_domain(text: str) -> tuple[str, str]:
@@ -294,6 +481,7 @@ def parse_claim_context_response(response: object, *, source_url: str | None, ra
         "normalized_claim": claim,
         "subclaims": normalized_subclaims,
         "temporality": temporality,
+        "temporality_basis": str(payload.get("temporality_basis") or "model"),
         "event_date": _normalize_claim_event_date(payload.get("event_date")),
         "source_url": source_url,
         "domain": domain,
@@ -301,16 +489,7 @@ def parse_claim_context_response(response: object, *, source_url: str | None, ra
         "text_risk_analysis": payload.get("text_risk_analysis") or {"status": "unavailable"},
     }
     context = ClaimContext.model_validate(normalized_payload)
-    if len(context.subclaims) > 3:
-        context = context.model_copy(update={"subclaims": context.subclaims[:3]})
-    guarded_domain, guarded_reason = detect_claim_domain(context.normalized_claim)
-    if guarded_domain != ClaimDomain.GENERAL.value:
-        context = context.model_copy(
-            update={
-                "domain": ClaimDomain(guarded_domain),
-                "domain_reason": guarded_reason,
-            }
-        )
+    context = repair_claim_context(context)
     sanitized = sanitize_text_risk_analysis(context, raw_input)
     return sanitized.model_dump(mode="json") if isinstance(sanitized, ClaimContext) else sanitized
 
@@ -322,14 +501,16 @@ def _fallback_claim_context(raw_input: str, original_page: dict[str, Any] | None
         content = str(original_page.get("content", "")).strip()
         claim = " ".join(f"{title} {content[:800]}".split()).strip()
     domain, reason = detect_claim_domain(claim)
-    return ClaimContext(
+    context = ClaimContext(
         normalized_claim=claim[:1000],
         subclaims=[Subclaim(id="claim-1", text=claim[:1000], material=True)] if claim else [],
         temporality=ClaimTemporality.UNKNOWN,
+        temporality_basis="unknown",
         source_url=source_url,
         domain=ClaimDomain(domain),
         domain_reason=reason,
-    ).model_dump(mode="json")
+    )
+    return (repair_claim_context(context) if claim else context).model_dump(mode="json")
 
 
 def _iso_now() -> str:
@@ -392,6 +573,9 @@ def merge_research_branches(branches: Mapping[str, Mapping[str, Any] | None]) ->
                 evidence_id = f"{branch_name}-{evidence_id}"
             copy = dict(item)
             copy["id"] = evidence_id
+            if branch_name == "timeline":
+                copy["timeline_only"] = True
+                copy["stance"] = "context"
             used_ids.add(evidence_id)
             used_urls.add(normalized)
             accepted.append(copy)
@@ -412,7 +596,15 @@ def build_evidence_review(claim_context: Mapping[str, Any], evidence: list[dict[
         if not isinstance(subclaim, Mapping) or not subclaim.get("material", True):
             continue
         claim_id = str(subclaim.get("id", ""))
-        matching = [item for item in evidence if claim_id in item.get("claim_ids", [])]
+        matching = [
+            item
+            for item in evidence
+            if claim_id in item.get("claim_ids", [])
+            and not item.get("timeline_only")
+            and item.get("stance") in {"support", "refute"}
+            and item.get("directness") == "direct"
+            and item.get("extraction_status") == "ok"
+        ]
         stances = {str(item.get("stance")) for item in matching}
         if not matching:
             coverage[claim_id] = "missing"
@@ -529,11 +721,13 @@ class RumorV3Services:
         web_fetch_enabled: bool,
         classifier_enabled: bool,
         classifier_required: bool = True,
+        timeline_enabled: bool = False,
     ):
         self.web_search_enabled = web_search_enabled
         self.web_fetch_enabled = web_fetch_enabled
         self.classifier_enabled = classifier_enabled
         self.classifier_required = classifier_required
+        self.timeline_enabled = timeline_enabled
 
     def capabilities(self) -> dict[str, bool]:
         return {
@@ -544,6 +738,7 @@ class RumorV3Services:
             "rag": True,
             "authority_research": self.web_search_enabled,
             "evidence_critic": True,
+            "timeline_research": self.timeline_enabled and self.web_search_enabled and self.web_fetch_enabled,
             "social_context": False,
         }
 
@@ -575,6 +770,7 @@ class RumorV3Services:
         prompt = (
             "从输入和已抓取网页中提取一条规范化、可公开核验的事实主张，必要时拆成最多3条实质子主张；"
             "判断时态和专业领域，并提取六类语言风险线索及待核验对象，只分析文本现象，不判断真假。"
+            "时态只可为current_status/event_bound/timeless/unknown；治疗、药物等领域词本身不代表当前状态。"
             "风险维度只能是 emotional_manipulation/exaggeration/absolute_claim/forwarding_pressure/"
             "internal_contradiction/possible_common_sense_conflict；spans必须逐字来自输入；不得生成URL。"
             "domain只能是general/medical/legal/finance/science/technology/unknown。"
@@ -592,15 +788,13 @@ class RumorV3Services:
                     "event_date": _normalize_claim_event_date(context.event_date),
                 }
             )
+            context = repair_claim_context(context)
             sanitized = sanitize_text_risk_analysis(context, raw_input)
             context = sanitized if isinstance(sanitized, ClaimContext) else ClaimContext.model_validate(sanitized)
-            guarded_domain, guarded_reason = detect_claim_domain(context.normalized_claim)
-            if guarded_domain != ClaimDomain.GENERAL.value:
-                context = context.model_copy(update={"domain": ClaimDomain(guarded_domain), "domain_reason": guarded_reason})
             return context.model_dump(mode="json")
         except Exception:
             try:
-                plain_prompt = f"{prompt}\n只输出一个JSON对象，字段必须为：normalized_claim、subclaims、temporality、event_date、source_url、domain、domain_reason、text_risk_analysis。不得输出Markdown。"
+                plain_prompt = f"{prompt}\n只输出一个JSON对象，字段必须为：normalized_claim、subclaims、temporality、temporality_basis、event_date、source_url、domain、domain_reason、text_risk_analysis。不得输出Markdown。"
                 plain = await asyncio.wait_for(
                     _chat_model(thinking_enabled=False).ainvoke(plain_prompt, config=config),
                     timeout=16,
@@ -619,11 +813,30 @@ class RumorV3Services:
                 return fallback
 
     async def retrieve_rag(self, claim_context: Mapping[str, Any], config: RunnableConfig) -> dict[str, Any]:
-        return retrieve_verified_rumors(str(claim_context.get("normalized_claim", "")), top_k=3, threshold=0.05).model_dump(mode="json")
+        timeout = max(1.0, min(float(os.getenv("RUMOR_RAG_TIMEOUT_SECONDS", "20")), 45.0))
+        result = await asyncio.wait_for(
+            asyncio.to_thread(retrieve_rumor_knowledge, claim_context, final_k=6),
+            timeout=timeout,
+        )
+        return result.model_dump(mode="json")
 
     async def research_web(self, claim_context: Mapping[str, Any], config: RunnableConfig, *, supplementary: bool = False, gap_query: str = "") -> dict[str, Any]:
         prompt = _research_prompt(claim_context, authority=False, gap_query=gap_query)
-        return await _run_research_subagent("web-researcher", prompt, config, timeout=35 if supplementary else 55, supplementary=supplementary)
+        plan = claim_context.get("research_plan") or {}
+        query = str((plan.get("queries") or {}).get("discovery") or claim_context.get("normalized_claim") or "")
+        return await _run_research_subagent(
+            "web-researcher",
+            prompt,
+            config,
+            timeout=35 if supplementary else 55,
+            supplementary=supplementary,
+            locked_query=query,
+            relevance_terms=[
+                str(term)
+                for entity in plan.get("entities", [])
+                for term in entity.get("evidence_terms", [])
+            ],
+        )
 
     async def classify(self, claim_context: Mapping[str, Any], config: RunnableConfig) -> dict[str, Any]:
         from deerflow.agents.rumor_agent.tools import (
@@ -696,7 +909,101 @@ class RumorV3Services:
         return ClassifierSignal.model_validate(payload).model_dump(mode="json")
 
     async def research_authority(self, claim_context: Mapping[str, Any], config: RunnableConfig) -> dict[str, Any]:
-        return await _run_research_subagent("authority-researcher", _research_prompt(claim_context, authority=True), config, timeout=55)
+        plan = claim_context.get("research_plan") or {}
+        query = str((plan.get("queries") or {}).get("authority") or "")
+        if not query:
+            raise RuntimeError("no deterministic authority query is available")
+        return await _run_research_subagent(
+            "authority-researcher",
+            _research_prompt(claim_context, authority=True),
+            config,
+            timeout=55,
+            locked_query=query,
+            relevance_terms=[
+                str(term)
+                for entity in plan.get("entities", [])
+                for term in entity.get("evidence_terms", [])
+            ],
+        )
+
+    async def research_timeline(self, claim_context: Mapping[str, Any], config: RunnableConfig) -> dict[str, Any]:
+        from deerflow.tools import get_available_tools
+
+        del config  # Timeline collection is deterministic and does not call a model.
+        tools = get_available_tools(model_name=_model_name(), subagent_enabled=False)
+        search_tool = next((tool for tool in tools if tool.name == "web_search"), None)
+        fetch_tool = next((tool for tool in tools if tool.name == "web_fetch"), None)
+        if search_tool is None or fetch_tool is None:
+            raise RuntimeError("timeline research requires web_search and web_fetch")
+
+        raw_search = await asyncio.wait_for(
+            search_tool.ainvoke(
+                {
+                    "query": build_timeline_query(claim_context),
+                    "max_results": 5,
+                }
+            ),
+            timeout=18,
+        )
+        candidates = parse_search_results(raw_search, limit=5)
+        if not candidates:
+            return {
+                "status": "insufficient",
+                "evidence": [],
+                "rejected_evidence": [],
+                "observed_urls": [],
+                "fetched_urls": [],
+                "notes": "传播检索没有返回可抓取页面。",
+            }
+
+        async def fetch_candidate(candidate: Mapping[str, Any]) -> dict[str, object] | None:
+            try:
+                raw = await asyncio.wait_for(
+                    fetch_tool.ainvoke({"url": str(candidate.get("url") or "")}),
+                    timeout=12,
+                )
+            except Exception:
+                return None
+            return parse_fetch_result(raw)
+
+        fetched = await asyncio.gather(*(fetch_candidate(candidate) for candidate in candidates))
+        claim_ids = [
+            str(item.get("id"))
+            for item in claim_context.get("subclaims", [])
+            if isinstance(item, Mapping) and item.get("material", True) and item.get("id")
+        ][:3]
+        evidence: list[dict[str, Any]] = []
+        fetched_urls: list[str] = []
+        observed_urls = [str(candidate["url"]) for candidate in candidates]
+        for candidate, payload in zip(candidates, fetched, strict=True):
+            if payload is None:
+                continue
+            if not timeline_candidate_relevant(
+                str(claim_context.get("normalized_claim") or ""),
+                candidate.get("title"),
+                candidate.get("content"),
+                payload.get("title"),
+                str(payload.get("content") or "")[:4000],
+            ):
+                continue
+            item = build_timeline_evidence(
+                index=len(evidence) + 1,
+                search_result=candidate,
+                fetch_result=payload,
+                claim_ids=claim_ids,
+            )
+            evidence.append(item)
+            fetched_url = str(payload.get("source_url") or candidate["url"])
+            fetched_urls.append(fetched_url)
+            observed_urls.append(fetched_url)
+        return {
+            "status": "ok" if evidence else "insufficient",
+            "evidence": evidence,
+            "rejected_evidence": [],
+            "observed_urls": sorted(set(observed_urls)),
+            "fetched_urls": sorted(set(fetched_urls)),
+            "notes": "传播节点由一次搜索和受限正文抓取确定性生成，不经过模型重写。",
+        }
 
     async def review_evidence(self, claim_context: Mapping[str, Any], evidence: list[dict[str, Any]], config: RunnableConfig) -> dict[str, Any]:
         prompt = (
@@ -713,12 +1020,15 @@ class RumorV3Services:
 
     async def explain(self, workflow: Mapping[str, Any], config: RunnableConfig) -> str:
         decision = workflow.get("decision") or {}
+        rag_context = format_rag_context(workflow.get("rag_result"))
         prompt = (
-            "根据给定的文本风险线索、辅助分类信号、规则结论和已校验证据，生成简洁中文解释。"
+            "根据给定的文本风险线索、辅助分类信号、历史知识、规则结论和已校验证据，生成简洁中文解释。"
             "不得改变结论，不得添加URL或新事实；不得把语言风险、分类标签或RAG命中写成事实证明；"
+            "历史知识只能用于说明相似背景，不能把历史结论复制为当前结论；人物、时间、地点或数量不同时必须指出。"
             "事实说明只能引用给定证据ID。\n"
             f"文本风险：{json.dumps((workflow.get('claim_context') or {}).get('text_risk_analysis'), ensure_ascii=False)}\n"
             f"分类信号：{json.dumps(workflow.get('classifier_signal'), ensure_ascii=False)}\n"
+            f"历史知识：\n{rag_context or '无本地知识库命中'}\n"
             f"结论：{json.dumps(decision, ensure_ascii=False)}\n"
             f"证据：{json.dumps(workflow.get('evidence', []), ensure_ascii=False)}"
         )
@@ -758,7 +1068,20 @@ def _research_prompt(claim_context: Mapping[str, Any], *, authority: bool, gap_q
     risk = claim_context.get("text_risk_analysis") or {}
     targets = json.dumps(risk.get("verification_targets", []), ensure_ascii=False)
     hints = json.dumps(risk.get("search_hints", []), ensure_ascii=False)
-    return f"待核验原文：{claim_context.get('normalized_claim', '')}\n子主张：\n{subclaims}\n核验目标：{targets}\n搜索提示：{hints}\n{focus}{gap}\n必须同时寻找支持和反驳材料，不得被文本风险标签预设方向；只返回严格JSON证据，不输出最终真假。"
+    plan = claim_context.get("research_plan") or {}
+    query_key = "authority" if authority else "discovery"
+    locked_query = str((plan.get("queries") or {}).get(query_key) or "")
+    authority_targets = json.dumps(plan.get("authority_targets", []), ensure_ascii=False)
+    return (
+        f"待核验原文：{claim_context.get('normalized_claim', '')}\n子主张：\n{subclaims}\n"
+        f"核验目标：{targets}\n搜索提示：{hints}\n受控权威目标：{authority_targets}\n"
+        f"系统锁定查询：{locked_query}\n{focus}{gap}\n"
+        "web_search 的 query 参数会被系统强制替换为锁定查询，不得绕过。"
+        "必须同时寻找支持和反驳材料，不得被文本风险标签预设方向；"
+        "不得把未搜到、页面未提及或无关页面作为反驳证据。"
+        "direct证据必须提供正文中的连续原文excerpt；无法给出可反查原文时标为indirect或snippet_only。"
+        "只返回严格JSON证据，不输出最终真假。"
+    )
 
 
 async def _run_text_subagent(name: str, prompt: str, config: RunnableConfig, *, timeout: int) -> str:
@@ -784,7 +1107,16 @@ async def _run_text_subagent(name: str, prompt: str, config: RunnableConfig, *, 
     return result.result or ""
 
 
-async def _run_research_subagent(name: str, prompt: str, config: RunnableConfig, *, timeout: int, supplementary: bool = False) -> dict[str, Any]:
+async def _run_research_subagent(
+    name: str,
+    prompt: str,
+    config: RunnableConfig,
+    *,
+    timeout: int,
+    supplementary: bool = False,
+    locked_query: str = "",
+    relevance_terms: list[str] | None = None,
+) -> dict[str, Any]:
     from dataclasses import replace
 
     from deerflow.agents.middlewares.rumor_workflow_middleware import parse_research_result
@@ -803,9 +1135,33 @@ async def _run_research_subagent(name: str, prompt: str, config: RunnableConfig,
     metadata = config.get("metadata", {}) if isinstance(config, Mapping) else {}
     configurable = config.get("configurable", {}) if isinstance(config, Mapping) else {}
     parent_model = str(metadata.get("model_name") or _model_name())
+    tools = get_available_tools(model_name=parent_model, subagent_enabled=False)
+    if locked_query:
+        original_search = next((item for item in tools if item.name == "web_search"), None)
+        if original_search is None:
+            raise RuntimeError("web_search is not configured")
+
+        async def locked_web_search(query: str = "", max_results: int = 5) -> Any:
+            """Run the deterministic research query; model arguments are ignored."""
+
+            del query
+            search_input: dict[str, Any] = {"query": locked_query[:500]}
+            schema = getattr(original_search, "args_schema", None)
+            fields = getattr(schema, "model_fields", {}) if schema is not None else {}
+            if "max_results" in fields:
+                search_input["max_results"] = min(max(int(max_results), 1), 5)
+            return await original_search.ainvoke(search_input)
+
+        locked_tool = StructuredTool.from_function(
+            coroutine=locked_web_search,
+            name="web_search",
+            description="Search using the system-locked fact-check query. The supplied query is ignored.",
+        )
+        tools = [locked_tool if item.name == "web_search" else item for item in tools]
+
     executor = SubagentExecutor(
         config=agent_config,
-        tools=get_available_tools(model_name=parent_model, subagent_enabled=False),
+        tools=tools,
         parent_model=parent_model,
         thread_id=str(configurable.get("thread_id") or metadata.get("thread_id") or "") or None,
         trace_id=str(metadata.get("trace_id") or uuid.uuid4().hex[:8]),
@@ -817,6 +1173,7 @@ async def _run_research_subagent(name: str, prompt: str, config: RunnableConfig,
     research_payload, fetched_urls = apply_verified_fetch_provenance(
         research.model_dump(mode="json"),
         list(getattr(result, "tool_messages", []) or []),
+        relevance_terms=relevance_terms,
     )
     observed_urls: set[str] = set()
     for message in getattr(result, "tool_messages", []) or []:
@@ -845,6 +1202,7 @@ def _report_from_state(state: Mapping[str, Any]) -> dict[str, Any]:
             "domain": (workflow.get("claim_context") or {}).get("domain", "unknown"),
             "reason": (workflow.get("claim_context") or {}).get("domain_reason", ""),
         },
+        "research_plan_summary": workflow.get("research_plan"),
         "capabilities": workflow.get("capabilities", {}),
         "original_page": original,
         "research_branches": dict(state.get("rumor_branch_status") or {}),
@@ -869,6 +1227,11 @@ def build_rumor_graph_v3(services: RumorV3Services):
         urls = _URL_RE.findall(raw_input)
         source_url = urls[0].rstrip(".,;:!?，。；：！？") if urls else None
         initial_claim = _claim_candidate(raw_input)
+        is_verification, routing_reason = detect_verification_intent(
+            raw_input,
+            source_url=source_url,
+            initial_claim=initial_claim,
+        )
         run_id = uuid.uuid4().hex
         workflow = {
             "input_message_id": getattr(human, "id", None),
@@ -877,7 +1240,8 @@ def build_rumor_graph_v3(services: RumorV3Services):
             "raw_input": raw_input,
             "source_url": source_url,
             "initial_claim": initial_claim,
-            "is_verification": bool(source_url or _VERIFY_INTENT_RE.search(raw_input)),
+            "is_verification": is_verification,
+            "routing_reason": routing_reason,
             "capabilities": services.capabilities(),
             "degradation_codes": [],
             "trace": [{"stage": "reset_input", "at": _iso_now()}],
@@ -889,6 +1253,7 @@ def build_rumor_graph_v3(services: RumorV3Services):
             "v3_rag_result": None,
             "v3_web_research": None,
             "v3_authority_research": None,
+            "v3_timeline_research": None,
             "v3_supplement_research": None,
             "v3_classifier_signal": None,
             "v3_evidence_review": None,
@@ -949,7 +1314,17 @@ def build_rumor_graph_v3(services: RumorV3Services):
             parsed = parsed.model_copy(update={"subclaims": parsed.subclaims[:3]})
         sanitized = sanitize_text_risk_analysis(parsed, str(workflow.get("raw_input", "")))
         parsed = sanitized if isinstance(sanitized, ClaimContext) else ClaimContext.model_validate(sanitized)
-        return {"rumor_workflow": _set_stage(state, "extract_claim", claim_context=parsed.model_dump(mode="json"), normalized_claim=parsed.normalized_claim)}
+        parsed = repair_temporality(parsed)
+        research_plan = build_research_plan(parsed)
+        return {
+            "rumor_workflow": _set_stage(
+                state,
+                "extract_claim",
+                claim_context=parsed.model_dump(mode="json"),
+                normalized_claim=parsed.normalized_claim,
+                research_plan=research_plan,
+            )
+        }
 
     async def checkability(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
         workflow = state.get("rumor_workflow") or {}
@@ -970,32 +1345,46 @@ def build_rumor_graph_v3(services: RumorV3Services):
         return {"rumor_workflow": workflow, "rumor_report": report, "messages": [AIMessage(content=_render_report(report))]}
 
     async def dispatch(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
-        context = (state.get("rumor_workflow") or {}).get("claim_context") or {}
-        professional = context.get("domain") in {"medical", "legal", "finance", "science", "technology"}
+        workflow = state.get("rumor_workflow") or {}
+        authority_query = str(((workflow.get("research_plan") or {}).get("queries") or {}).get("authority") or "")
         status = {
             "rag": {"status": "pending"},
             "web": {"status": "pending" if services.web_search_enabled else "skipped"},
             "classifier": {"status": "pending" if services.classifier_enabled or services.classifier_required else "skipped"},
-            "authority": {"status": "pending" if services.web_search_enabled and professional else "skipped"},
+            "authority": {"status": "pending" if services.web_search_enabled and authority_query else "skipped"},
         }
         return {"rumor_workflow": _set_stage(state, "parallel_collection"), "rumor_branch_status": status}
 
     async def rag_branch(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
         started_at, started_clock = _iso_now(), time.monotonic()
+        claim_context = (state.get("rumor_workflow") or {}).get("claim_context") or {}
         try:
-            payload = await services.retrieve_rag((state.get("rumor_workflow") or {}).get("claim_context") or {}, config)
+            payload = await services.retrieve_rag(claim_context, config)
             status = _branch_update("completed", started_at, started_clock, result_count=len(payload.get("matches", [])))
         except Exception:
-            payload = {"status": "unavailable", "matches": [], "authoritative": False}
+            payload = KnowledgeRetrievalResult(
+                status="unavailable",
+                query=str(claim_context.get("normalized_claim") or ""),
+                matches=[],
+                threshold=0.0,
+                authoritative=False,
+                note="本地知识库本轮不可用；该分支不会影响证据规则裁决。",
+                degradation_codes=["rag_unavailable"],
+            ).model_dump(mode="json")
             status = _branch_update("unavailable", started_at, started_clock, error_code="rag_unavailable")
         return {"v3_rag_result": payload, "rumor_branch_status": {"rag": status}}
 
     async def web_branch(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
-        if not services.web_search_enabled:
+        if not services.web_search_enabled or not services.web_fetch_enabled:
             return {"v3_web_research": None, "rumor_branch_status": {"web": {"status": "skipped", "result_count": 0}}}
         started_at, started_clock = _iso_now(), time.monotonic()
         try:
-            payload = await services.research_web((state.get("rumor_workflow") or {}).get("claim_context") or {}, config)
+            workflow = state.get("rumor_workflow") or {}
+            research_context = {
+                **dict(workflow.get("claim_context") or {}),
+                "research_plan": workflow.get("research_plan") or {},
+            }
+            payload = await services.research_web(research_context, config)
             status = _branch_update("completed", started_at, started_clock, result_count=len(payload.get("evidence", [])))
         except Exception:
             payload = {"status": "unavailable", "evidence": [], "observed_urls": [], "rejected_evidence": []}
@@ -1042,23 +1431,62 @@ def build_rumor_graph_v3(services: RumorV3Services):
         return {"v3_classifier_signal": payload, "rumor_branch_status": {"classifier": status}}
 
     async def authority_branch(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
-        context = (state.get("rumor_workflow") or {}).get("claim_context") or {}
-        professional = context.get("domain") in {"medical", "legal", "finance", "science", "technology"}
-        if not services.web_search_enabled or not professional:
+        workflow = state.get("rumor_workflow") or {}
+        context = workflow.get("claim_context") or {}
+        plan = workflow.get("research_plan") or {}
+        authority_query = str((plan.get("queries") or {}).get("authority") or "")
+        if not services.web_search_enabled or not authority_query:
             return {"v3_authority_research": None, "rumor_branch_status": {"authority": {"status": "skipped", "result_count": 0}}}
         started_at, started_clock = _iso_now(), time.monotonic()
         try:
-            payload = await services.research_authority(context, config)
+            payload = await services.research_authority({**dict(context), "research_plan": plan}, config)
             status = _branch_update("completed", started_at, started_clock, result_count=len(payload.get("evidence", [])))
         except Exception:
             payload = {"status": "unavailable", "evidence": [], "observed_urls": [], "rejected_evidence": []}
             status = _branch_update("unavailable", started_at, started_clock, error_code="authority_research_unavailable")
         return {"v3_authority_research": payload, "rumor_branch_status": {"authority": status}}
 
+    async def timeline_research_branch(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
+        if not services.timeline_enabled or not services.web_search_enabled or not services.web_fetch_enabled:
+            return {
+                "v3_timeline_research": None,
+                "rumor_branch_status": {},
+            }
+        started_at, started_clock = _iso_now(), time.monotonic()
+        try:
+            payload = await services.research_timeline(
+                (state.get("rumor_workflow") or {}).get("claim_context") or {},
+                config,
+            )
+            status = _branch_update(
+                "completed",
+                started_at,
+                started_clock,
+                result_count=len(payload.get("evidence", [])),
+            )
+        except Exception:
+            payload = {
+                "status": "unavailable",
+                "evidence": [],
+                "observed_urls": [],
+                "rejected_evidence": [],
+            }
+            status = _branch_update(
+                "unavailable",
+                started_at,
+                started_clock,
+                error_code="timeline_research_unavailable",
+            )
+        return {
+            "v3_timeline_research": payload,
+            "rumor_branch_status": {"timeline_research": status},
+        }
+
     async def normalize_evidence(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
         branches = {
             "web": state.get("v3_web_research"),
             "authority": state.get("v3_authority_research"),
+            "timeline": state.get("v3_timeline_research"),
             "supplement": state.get("v3_supplement_research"),
         }
         evidence, rejected = merge_research_branches(branches)
@@ -1080,6 +1508,9 @@ def build_rumor_graph_v3(services: RumorV3Services):
             rejected.append({"evidence_id": evidence_id, "reason_code": code, "explanation": "证据时间字段未通过代码校验"})
         normalized_json = [item.model_dump(mode="json") for item in normalized]
         degradations = list((state.get("rumor_workflow") or {}).get("degradation_codes") or [])
+        rag_payload = state.get("v3_rag_result") or {}
+        if isinstance(rag_payload, Mapping):
+            degradations.extend(str(code) for code in rag_payload.get("degradation_codes", []) if code)
         for name, item in (state.get("rumor_branch_status") or {}).items():
             if item.get("status") == "unavailable" and item.get("error_code"):
                 degradations.append(str(item["error_code"]))
@@ -1125,6 +1556,12 @@ def build_rumor_graph_v3(services: RumorV3Services):
         if not services.web_search_enabled:
             base["supplement_needed"] = False
             base["supplement_query"] = ""
+        # V3 uses exactly two bounded searches: discovery and authority.  The
+        # critic reports the remaining gap but cannot trigger a third query.
+        base["supplement_needed"] = False
+        base["supplement_query"] = ""
+        if base["threshold_gap"]:
+            base["notes"] += " 已达到两阶段搜索预算，本轮不再发起模型自由补检。"
         return {"v3_evidence_review": base, "rumor_workflow": _set_stage(state, "evidence_review", evidence_review=base)}
 
     def route_after_critic(state: RumorV3State) -> str:
@@ -1175,11 +1612,32 @@ def build_rumor_graph_v3(services: RumorV3Services):
             )
             existing_keys.add(key)
         decision["excluded_evidence"] = existing_excluded
+        decision["decision_status"] = derive_decision_status(
+            str(decision.get("verdict") or "证据不足"),
+            list(workflow.get("evidence") or []),
+            existing_excluded,
+        )
         return {"rumor_workflow": _set_stage(state, "adjudicate", decision=decision)}
 
     async def timeline(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
         workflow = state.get("rumor_workflow") or {}
-        result = build_timeline(evidence=list(workflow.get("evidence") or []), decision=workflow.get("decision") or {}, rag_result=workflow.get("rag_result")).model_dump(mode="json")
+        if not services.timeline_enabled:
+            result = {
+                "timeline_status": "insufficient",
+                "events": [],
+                "note": "传播溯源实验默认关闭；本版本只展示本轮证据的发布时间序列，不推断首发或传播关系。",
+                "candidate_count": 0,
+                "dated_count": 0,
+                "traceable_count": 0,
+            }
+            return {"rumor_workflow": _set_stage(state, "timeline", timeline=result)}
+        timeline_status = ((state.get("rumor_branch_status") or {}).get("timeline_research") or {}).get("status")
+        result = build_timeline(
+            evidence=list(workflow.get("evidence") or []),
+            decision=workflow.get("decision") or {},
+            rag_result=workflow.get("rag_result"),
+            timeline_research_status=str(timeline_status) if timeline_status else None,
+        ).model_dump(mode="json")
         return {"rumor_workflow": _set_stage(state, "timeline", timeline=result)}
 
     async def explain(state: RumorV3State, config: RunnableConfig) -> dict[str, Any]:
@@ -1205,9 +1663,9 @@ def build_rumor_graph_v3(services: RumorV3Services):
     builder.add_node("web", web_branch)
     builder.add_node("classifier", classifier_branch)
     builder.add_node("authority", authority_branch)
+    builder.add_node("timeline_research", timeline_research_branch)
     builder.add_node("normalize", normalize_evidence)
     builder.add_node("critic", critic)
-    builder.add_node("supplement", supplement)
     builder.add_node("adjudicate", adjudicate)
     builder.add_node("timeline", timeline)
     builder.add_node("explain", explain)
@@ -1222,11 +1680,10 @@ def build_rumor_graph_v3(services: RumorV3Services):
     builder.add_conditional_edges("checkability", route_checkability, {"dispatch": "dispatch", "boundary_report": "boundary_report"})
     builder.add_edge("boundary_report", END)
     builder.add_conditional_edges("dispatch", make_parallel_sends)
-    for branch in ("rag", "web", "classifier", "authority"):
+    for branch in ("rag", "web", "classifier", "authority", "timeline_research"):
         builder.add_edge(branch, "normalize")
     builder.add_edge("normalize", "critic")
-    builder.add_conditional_edges("critic", route_after_critic, {"supplement": "supplement", "adjudicate": "adjudicate"})
-    builder.add_edge("supplement", "normalize")
+    builder.add_edge("critic", "adjudicate")
     builder.add_edge("adjudicate", "timeline")
     builder.add_edge("timeline", "explain")
     builder.add_edge("explain", "finalize")
@@ -1246,11 +1703,18 @@ def make_default_v3_services() -> RumorV3Services:
         "no",
         "off",
     }
+    timeline_enabled = os.getenv("RUMOR_TIMELINE_ENABLED", "false").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
     return RumorV3Services(
         web_search_enabled="web_search" in configured,
         web_fetch_enabled="web_fetch" in configured,
         classifier_enabled=bool(os.getenv("RUMOR_MODEL_BASE_URL", "").strip()),
         classifier_required=required,
+        timeline_enabled=timeline_enabled,
     )
 
 

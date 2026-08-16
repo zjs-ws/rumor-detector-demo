@@ -121,6 +121,10 @@ def _valid_fetch_timestamp(value: str | None) -> bool:
     return True
 
 
+def _valid_document_hash(value: str | None) -> bool:
+    return bool(value and re.fullmatch(r"[0-9a-f]{64}", value.casefold()))
+
+
 def _eligible_reason(
     item: EvidenceItem,
     allowed_urls: set[str] | None,
@@ -128,12 +132,23 @@ def _eligible_reason(
     *,
     enforce_time: bool = True,
 ) -> tuple[str, str] | None:
+    if item.timeline_only:
+        return "timeline_only", "该材料只用于传播脉络展示，不参与真假裁决"
     if item.extraction_status != "ok":
         return "extraction_failed", "证据正文或结构化字段提取失败"
     if allowed_urls is not None and normalize_url(item.url) not in allowed_urls:
         return "url_not_observed", "URL未出现在本轮检索工具结果中"
-    if allowed_urls is not None and item.provenance == EvidenceProvenance.WEB and item.directness == Directness.DIRECT and not _valid_fetch_timestamp(item.fetched_at):
-        return "fetch_not_verified", "网页证据没有合法的正文抓取时间，不能按直接证据参与裁决"
+    if (
+        allowed_urls is not None
+        and item.provenance == EvidenceProvenance.WEB
+        and item.directness == Directness.DIRECT
+    ):
+        if not _valid_fetch_timestamp(item.fetched_at):
+            return "fetch_not_verified", "网页证据没有合法的正文抓取时间，不能按直接证据参与裁决"
+        if item.fetch_status != "fetched" or not _valid_document_hash(item.document_hash):
+            return "document_not_verified", "网页证据缺少成功抓取状态或可审计的正文哈希"
+        if not item.excerpt.strip():
+            return "excerpt_missing", "网页证据没有可在正文中反查的连续原文引文"
     if original_url and normalize_url(item.url) == normalize_url(original_url):
         return "original_page", "待核验原网页不能作为独立佐证"
     if item.provenance == EvidenceProvenance.KNOWLEDGE_BASE:
@@ -220,6 +235,49 @@ def _basic_outcome(
         [support_code, refute_code],
         f"支持方：{support_reason}；反驳方：{refute_reason}。",
     )
+
+
+def derive_decision_status(
+    verdict: str,
+    evidence: list[EvidenceItem | dict[str, Any]],
+    excluded: list[ExcludedEvidence | dict[str, Any]],
+) -> str:
+    """Explain whether abstention came from discovery, fetching, or policy."""
+
+    if verdict == "存疑":
+        return "conflicting_evidence"
+    if verdict != "证据不足":
+        return "decided"
+    fetch_states = {
+        str(item.fetch_status if isinstance(item, EvidenceItem) else item.get("fetch_status", ""))
+        for item in evidence
+    }
+    reason_codes = {
+        str(item.reason_code if isinstance(item, ExcludedEvidence) else item.get("reason_code", ""))
+        for item in excluded
+    }
+    if fetch_states & {"failed", "not_fetched"} or reason_codes & {
+        "fetch_not_verified",
+        "document_not_verified",
+    }:
+        return "sources_found_but_not_fetched"
+    if reason_codes & {
+        "invalid_schema",
+        "extraction_failed",
+        "excerpt_unverified",
+        "excerpt_missing",
+        "claim_mismatch",
+        "absence_only",
+        "url_not_observed",
+        "invalid_date",
+        "future_date",
+        "time_unknown",
+        "stale_current_status",
+    }:
+        return "sources_failed_validation"
+    if not evidence:
+        return "no_relevant_sources"
+    return "threshold_not_met"
 
 
 def decide_evidence(
@@ -350,6 +408,7 @@ def decide_evidence(
     return EvidenceDecision(
         verdict=verdict,
         strength=strength,
+        decision_status=derive_decision_status(verdict, parsed, excluded),
         accepted_evidence_ids=accepted_ids,
         excluded_evidence=excluded,
         reason_codes=reason_codes,

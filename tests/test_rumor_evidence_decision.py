@@ -27,6 +27,9 @@ def _evidence(
         "independent_group": group,
         "temporal_relevance": temporal_relevance,
         "fetched_at": "2026-08-12T00:00:00+08:00",
+        "excerpt": "直接说明待核验事项",
+        "document_hash": "a" * 64,
+        "fetch_status": "fetched",
         "summary": "直接说明待核验事项",
         "provenance": provenance,
     }
@@ -88,6 +91,24 @@ def test_runtime_web_evidence_requires_verified_fetch_timestamp():
     item["fetched_at"] = "2026-08-12T10:00:00+08:00"
     accepted_for_threshold = decide_evidence(evidence=[item], allowed_urls={item["url"]})
     assert all(excluded.reason_code != "fetch_not_verified" for excluded in accepted_for_threshold.excluded_evidence)
+
+
+def test_runtime_direct_web_evidence_requires_excerpt_and_document_hash():
+    item = _evidence(
+        "b-runtime-audit",
+        stance="support",
+        level="B",
+        url="https://media.example/audited-report",
+        group="media",
+    )
+    item["excerpt"] = ""
+    missing_excerpt = decide_evidence(evidence=[item], allowed_urls={item["url"]})
+    assert missing_excerpt.excluded_evidence[0].reason_code == "excerpt_missing"
+
+    item["excerpt"] = "正文引文"
+    item["document_hash"] = "invalid"
+    invalid_hash = decide_evidence(evidence=[item], allowed_urls={item["url"]})
+    assert invalid_hash.excluded_evidence[0].reason_code == "document_not_verified"
 
 
 def test_two_independent_direct_b_sources_are_required():

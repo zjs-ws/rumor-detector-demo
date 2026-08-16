@@ -6,6 +6,14 @@ from datetime import datetime
 from deerflow.community.jina_ai import tools
 
 
+def test_decode_web_content_repairs_mislabeled_chinese_encodings():
+    utf8 = "当心洁厕灵误用".encode()
+    gb18030 = "洁厕灵有消毒作用吗".encode("gb18030")
+
+    assert tools._decode_web_content(utf8, "latin-1") == "当心洁厕灵误用"
+    assert tools._decode_web_content(gb18030, "latin-1") == "洁厕灵有消毒作用吗"
+
+
 def test_web_fetch_returns_structured_source_metadata(monkeypatch):
     monkeypatch.setenv("JINA_API_KEY", "test-key")
     monkeypatch.setattr(
@@ -27,7 +35,7 @@ def test_web_fetch_returns_structured_source_metadata(monkeypatch):
         tools.JinaClient,
         "crawl",
         lambda _self, _url, return_format, timeout: (
-            "Title: 示例报道\n\nMarkdown Content:\n\n这是网页正文。"
+            "Title: 示例报道\nPublished Time: 2024-05-06\n\nMarkdown Content:\n\n这是网页正文。"
         ),
     )
 
@@ -37,7 +45,8 @@ def test_web_fetch_returns_structured_source_metadata(monkeypatch):
     assert payload["source_url"] == "https://example.com/news"
     assert payload["requested_url"] == "https://example.com/news"
     assert payload["title"] == "示例报道"
-    assert payload["content"] == "Title: 示例报道\n\nMarkdown Content:\n\n这是网页正文。"
+    assert payload["content"] == "Title: 示例报道\nPublished Time: 2024-05-06\n\nMarkdown Content:\n\n这是网页正文。"
+    assert payload["published_at"] == "2024-05-06"
     assert payload["truncated"] is False
     assert payload["content_chars"] == len(payload["content"])
     assert datetime.fromisoformat(payload["fetched_at"]).tzinfo is not None
@@ -65,7 +74,11 @@ def test_web_fetch_uses_bounded_local_fallback_without_jina_key(monkeypatch):
         is_redirect = False
         is_permanent_redirect = False
         headers = {"content-type": "text/html; charset=utf-8"}
-        encoding = "utf-8"
+        encoding = "ISO-8859-1"
+
+        @property
+        def apparent_encoding(self):
+            raise AssertionError("流式响应消费后不得再读取 apparent_encoding")
 
         def raise_for_status(self):
             return None

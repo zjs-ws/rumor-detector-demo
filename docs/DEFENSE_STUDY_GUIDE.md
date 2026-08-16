@@ -6,7 +6,7 @@
 
 - 用途：把业务阶段写成节点和条件边，以共享状态连接顺序、分支和汇合，省去自建调度与检查点协议。
 - 核心接口：`StateGraph`、`START/END`、条件边、多入口 fan-in、状态 reducer、`ThreadState`、`RunnableConfig.configurable.thread_id`。
-- V3 调用链：前端 `useStream` → LangGraph Server → `make_rumor_agent` → `build_rumor_graph_v3` → 重置/提取/路由 → 四个并行分支 → reducer 合并 `branch_status` → 证据审查/裁决/终局节点。
+- V3 调用链：前端 `useStream` → LangGraph Server → `make_rumor_agent` → `build_rumor_graph_v3` → 重置/提取/路由 → 五个并行能力分支 → reducer 合并 `branch_status` → 证据审查/裁决/时间线/终局节点。
 - V2 调用链：`make_rumor_agent_v2` → LangChain `create_agent` → AIMessage `tool_calls` → ToolNode → ToolMessage → 阶段门控中间件继续循环。
 - 配置与生命周期：`langgraph.json` 同时注册 `rumor_agent` 和 `rumor_agent_v2`；同一 `thread_id` 恢复 checkpoint，每条新输入另建 `run_id` 并清空本轮证据。
 - 本项目用法：扩展工作流状态、`branch_status`、`rumor_report` 和 trace；规则裁决节点必须位于 fan-in 之后。
@@ -20,7 +20,7 @@
 - 核心接口：`make_rumor_agent`、`make_rumor_agent_v2`、`RumorV3Services`、`create_chat_model`、`SubagentExecutor`。
 - 调用链：`langgraph.json` → `make_rumor_agent(config)` → `build_rumor_graph_v3()`；V2 工厂才继续走 `_select_main_agent_tools()` → `_build_middlewares()` → `create_agent()`。
 - 配置与生命周期：每次图工厂构造时读取模型、工具及环境变量；API Key 只来自环境变量。
-- 本项目用法：V3 节点通过服务边界调用 RAG、抓取、分类器和受限研究执行器；主图不把 `web_search` 暴露给解释模型。微调服务未配置时该分支标记 `skipped`。
+- 本项目用法：V3 节点通过服务边界调用本地混合 RAG、抓取、分类器和受限研究执行器；主图不把 `web_search` 暴露给解释模型。RAG 使用 HuggingFace 中文 Embedding、Chroma 和 TF-IDF/RRF，微调服务未配置时该分支标记 `skipped`。
 - 失败与改造：搜索/抓取/微调可独立关闭；RAG 和规则仍可离线工作，最终按证据不足降级。
 
 最小实验：依次移除 `web_search`、`web_fetch` 和 `RUMOR_MODEL_BASE_URL`，启动 V3 并保存 `branch_status`；再构造 V2 工厂，对比其工具白名单。

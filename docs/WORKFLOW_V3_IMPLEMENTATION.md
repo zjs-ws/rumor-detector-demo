@@ -1,5 +1,7 @@
 # RumorBuster V3 显式工作流实现与学习留痕
 
+> **2026-08-14 修订说明：** 本文保留 V3 演进历史，其中“传播检索”和“模型自由补检”的描述不再代表默认运行路径。当前传播研究默认关闭，第三次自由补检已取消；真实判定修复、两阶段检索和30条联网门槛以 [REAL_FACTCHECK_ACCEPTANCE.md](REAL_FACTCHECK_ACCEPTANCE.md) 为准。
+
 ## 当前实现状态
 
 V3 已注册为默认 `rumor_agent`，V2 串行门控工厂保留为 `rumor_agent_v2`。两者沿用相同的 LangGraph 线程、Gateway API 和前端流式协议，因此可以在不改变外部接口的情况下比较与回退。
@@ -17,15 +19,17 @@ flowchart TD
   H -- 否 --> Z["确定性边界报告"]
   H -- 是 --> J["并行取证"]
   subgraph P["fan-out / fan-in"]
-    J --> R["本地 TF-IDF RAG"]
+    J --> R["本地混合 RAG<br/>HuggingFace + Chroma + TF-IDF"]
     J --> W["web-researcher"]
     J --> M["LoRA 逐子主张分类"]
+    J --> TL["传播脉络研究<br/>确定性 search + fetch"]
     J --> Q{"专业领域？"}
     Q -- 是 --> AR["authority-researcher"]
   end
   R --> K["证据汇合"]
   W --> K
   M --> K
+  TL --> K
   AR --> K
   Q -- 否 --> K
   K --> L["Schema / URL / 来源 / 时效 / 独立性校正"]
@@ -42,7 +46,7 @@ flowchart TD
 
 ## 实际并行与顺序边界
 
-并行分支只有四类能力：本地 RAG、普通网页研究、可选分类器、专业领域的权威研究。`branch_status` 分别记录开始、结束、耗时、结果数和错误码；某一分支异常只产生降级码，不取消已成功分支。
+并行分支共有五类能力：本地混合 RAG、普通网页研究、可选分类器、专业领域的权威研究，以及独立的传播脉络研究。传播分支不运行模型 Agent 循环，而是由代码固定执行一次 `web_search`，并发抓取最多五个候选正文，再从网页元数据和正文开头提取发布日期；因此不会受到模型重复 `tool_call_id` 的影响。它使用单独的状态槽，只寻找本轮最早记录、扩散、变体、纠正与再传播页面。RAG 对最多三个实质子主张分别运行 Chroma 语义召回和 TF-IDF 关键词召回，以 RRF 汇合；索引未构建或模型不可用时退回 TF-IDF。`branch_status` 分别记录开始、结束、耗时、结果数和错误码；某一分支异常只产生降级码，不取消已成功分支。
 
 原网页抓取、主张提取、可核验性、证据汇合、证据审查、裁决、时间线、解释和终局校验仍按顺序执行。规则裁决必须位于 fan-in 之后，避免使用尚未汇合的局部证据。
 
@@ -54,7 +58,7 @@ flowchart TD
 | `authority-researcher` | `web_search ×1`、`web_fetch ×0..2`，55 秒 | 专业领域按受控权威域名取证 | 充当专业向量 RAG、使用 Sandbox、裁决真假 |
 | `evidence-critic` | 无工具，20 秒 | 检查覆盖、答非所问、冲突和转载；代码同步预判裁决门槛并决定是否补检 | 新增 URL、证据、等级或 verdict |
 
-补检不是第四个长期角色，而是普通研究能力的一次受限重用：最多一次、35 秒、一次搜索和最多两次抓取。
+传播脉络研究不是第四个 Agent 角色，而是确定性工具分支：一次搜索、最多五次并发正文抓取，搜索与抓取阶段合计预算约 30 秒。其结果由代码强制标为 `timeline_only=true` 和 `stance=context`，即使来源权威也不能进入真假裁决门槛。补检则是普通研究能力的一次受限重用：最多一次、35 秒、一次搜索和最多两次抓取。
 
 `knowledge-analyst`、`rag-analyst` 与 `evidence-archiver` 仅保留为 DeerFlow/旧原型参考，不进入 V3 真假裁决路径。当前设计是“多 Agent 分工取证”，不是“多 Agent 讨论投票”。
 
@@ -65,6 +69,7 @@ flowchart TD
 - `web_fetch` 的结构化结果由工具写入 UTC `fetched_at`；V3 仅对实际成功抓取且 URL 匹配的证据回填该时间。搜索结果或模型声明的抓取时间不进入可信边界。
 - 模型声明的来源等级只能被代码维持或下调，不能自行上调。
 - RAG、分类标签、长期记忆和传播记录都不能改变规则 verdict。
+- 时间线只接收具有有效发布日期且正文抓取可追溯的页面；同日期同来源会合并，至少三个去重节点才展示。裁决为“证据不足”时仍可展示传播脉络，但必须注明它只描述页面记录，不证明真假；首节点只能称“本轮最早检索记录”，不能称为绝对首发。
 - 多角度文本风险只保留能在原文中反查的片段，核验目标和搜索提示不得生成 URL，也不能进入 A/B 证据门槛。
 - LoRA 分类分支最多顺序处理三个实质子主张，通过 ModelScope `/v1/chat` 精确读取 `Yes/No/Unknown`；模型 ID、耗时、输入哈希和请求 ID进入脱敏审计，API Key 与地址不进入报告。
 - 规则裁决后按子主张计算 `consistent/conflict/uncertain/unavailable/not_comparable`；只有 `rumor/non_rumor` 能映射真假，非法标签不会默认当成“非谣言”。
@@ -76,7 +81,7 @@ flowchart TD
 | 项目 | V2 | V3 |
 |---|---|---|
 | 主流程 | `create_agent` 模型循环 + 阶段门控中间件 | 显式 `StateGraph` 节点和条件边 |
-| 取证方式 | 主要串行 | RAG、网页、分类器、权威研究并行 |
+| 取证方式 | 主要串行 | RAG、普通网页、传播脉络、分类器、权威研究并行 |
 | 专业路由 | 提示词提示 | 模型结构化结果 + 关键词规则兜底 |
 | 缺口检查 | 主模型自由综合 | 无工具 critic + 代码门槛，最多一次补检 |
 | 最终保护 | `RumorEvidencePolicyMiddleware` | `finalize` 节点确定性绑定 URL 与 verdict |
@@ -95,7 +100,8 @@ flowchart TD
 
 ## 已完成验证留痕（2026-08-12）
 
-- 本轮 V2/V3、`Send` 并行、证据规则、阶段门控、抓取时间溯源、URL-only 提取回退、critic 门槛补检、NASA/IPCC 职权配置、API、子 Agent、演示运行器与评测清单定向回归：99 项通过。
+- 2026-08-14 新增确定性传播脉络并行分支、网页发布日期提取、时间线专用证据隔离与不足计数后，RumorBuster 定向后端回归 107 项通过；前端 12 项纯函数测试、ESLint、TypeScript 和生产构建通过。
+- 本地生产网页以“喝高度白酒可以杀死体内的新冠病毒”为真实联网案例完成端到端复核：传播分支约 8.1 秒完成，页面显示 2022-01-19、2022-12-26、2023-01-05 三个可点击节点；普通/权威研究分支当次不可用且 verdict 为“证据不足”时，传播时间线仍独立展示并明确不代表绝对首发、不参与真假裁决。实时检索结果会随网络和搜索提供商变化，因此节点数量不是固定演示数据。
 - `make_rumor_agent` 与 `make_rumor_agent_v2` 均在真实容器依赖中编译为 `CompiledStateGraph`。
 - 前端变更通过 Prettier、ESLint 和 TypeScript `--noEmit`。
 - 生产 Next.js 构建成功，Compose 四个服务健康，Nginx 同源网页、Gateway 和 LangGraph 路由可访问。

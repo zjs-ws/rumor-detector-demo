@@ -16,7 +16,7 @@ from deerflow.agents.middlewares.rumor_workflow_middleware import (
 )
 from deerflow.agents.rumor_agent.evidence import decide_evidence
 from deerflow.agents.rumor_agent.schemas import ClaimContext, EvidenceItem
-from deerflow.agents.rumor_agent.source_policy import normalize_evidence_items
+from deerflow.agents.rumor_agent.source_policy import grade_source, normalize_evidence_items
 from deerflow.agents.rumor_agent.timeline import build_timeline
 
 
@@ -48,6 +48,9 @@ def _item(
         "temporal_relevance": "current",
         "current_validity_confirmed": True,
         "fetched_at": "2026-08-12T00:00:00+08:00",
+        "excerpt": summary or f"{evidence_id}的独立正文证据",
+        "document_hash": "b" * 64,
+        "fetch_status": "fetched",
         "extraction_status": "ok",
         "claim_ids": claim_ids or [],
         "summary": summary or f"{evidence_id}的独立正文证据",
@@ -384,6 +387,40 @@ def test_official_authority_scope_is_verified_from_registry_not_model_boolean():
     assert unrelated_normalized[0].authority_scope is False
 
 
+def test_cdc_tuskegee_archive_is_scope_matched_a_evidence():
+    item = EvidenceItem.model_validate(
+        _item(
+            "tuskegee-cdc",
+            url="https://www.cdc.gov/tuskegee/about/index.html",
+            level="C",
+            published_at=None,
+            claim_ids=["claim-1"],
+        )
+    )
+    context = ClaimContext.model_validate(
+        {
+            "normalized_claim": "美国公共卫生机构曾开展塔斯基吉梅毒研究",
+            "temporality": "event_bound",
+            "temporality_basis": "historical_marker",
+            "subclaims": [
+                {
+                    "id": "claim-1",
+                    "text": "美国公共卫生机构曾开展塔斯基吉梅毒研究",
+                }
+            ],
+            "domain": "medical",
+        }
+    )
+
+    grade = grade_source(item, context)
+    normalized, errors = normalize_evidence_items([item], context)
+
+    assert grade.verified.value == "A"
+    assert grade.authority_scope is True
+    assert normalized[0].temporal_relevance.value == "event_match"
+    assert errors == {}
+
+
 def test_old_current_evidence_needs_a_newer_direct_confirmation():
     old_date = (date.today() - timedelta(days=500)).isoformat()
     recent_date = (date.today() - timedelta(days=10)).isoformat()
@@ -422,6 +459,40 @@ def test_old_current_evidence_needs_a_newer_direct_confirmation():
     assert confirmed[0].temporal_relevance.value == "current"
     assert confirmed[0].current_validity_confirmed is True
     assert errors == {}
+
+
+def test_historical_evidence_is_not_expired_and_may_omit_page_date():
+    old = EvidenceItem.model_validate(
+        _item(
+            "cia-record",
+            url="https://www.cia.gov/readingroom/document/example",
+            level="A",
+            published_at="1977-09-21",
+            claim_ids=["claim-1"],
+        )
+    )
+    undated = EvidenceItem.model_validate(
+        _item(
+            "cdc-archive",
+            url="https://www.cdc.gov/tuskegee/about/index.html",
+            level="A",
+            published_at=None,
+            claim_ids=["claim-1"],
+        )
+    )
+    context = ClaimContext.model_validate(
+        {
+            "normalized_claim": "美国政府曾开展塔斯基吉未治疗梅毒研究",
+            "temporality": "event_bound",
+            "temporality_basis": "historical_marker",
+            "subclaims": [{"id": "claim-1", "text": "美国政府曾开展该研究"}],
+        }
+    )
+
+    normalized, errors = normalize_evidence_items([old, undated], context)
+
+    assert errors == {}
+    assert {item.temporal_relevance.value for item in normalized} == {"event_match"}
 
 
 def test_subclaims_produce_misleading_without_a_free_boolean():
@@ -478,6 +549,44 @@ def test_timeline_requires_three_traceable_dated_events():
         decision={"verdict": "非谣言", "strength": "medium", "explanation": "达到门槛"},
     )
     assert untraceable.timeline_status.value == "insufficient"
+
+
+def test_timeline_does_not_fabricate_ready_state_when_dedicated_research_failed():
+    evidence = [
+        _item("one", url="https://one.example/a", published_at="2026-07-01"),
+        _item("two", url="https://two.example/b", published_at="2026-07-02"),
+        _item("three", url="https://three.example/c", published_at="2026-07-03"),
+    ]
+    result = build_timeline(
+        evidence=evidence,
+        decision={"verdict": "证据不足", "strength": "insufficient", "explanation": "门槛不足"},
+        timeline_research_status="unavailable",
+    )
+
+    assert result.timeline_status.value == "insufficient"
+    assert result.events == []
+    assert "不使用普通取证或历史RAG拼接时间线" in result.note
+
+
+def test_timeline_only_material_never_changes_rule_verdict():
+    timeline_items = [
+        _item(
+            f"timeline-{index}",
+            url=f"https://timeline-{index}.example/article",
+            stance="refute",
+            level="A",
+        )
+        | {"timeline_only": True, "timeline_event_type": "spread"}
+        for index in range(1, 4)
+    ]
+
+    decision = decide_evidence(evidence=timeline_items)
+    timeline = build_timeline(evidence=timeline_items, decision=decision)
+
+    assert decision.verdict == "证据不足"
+    assert all(item.reason_code == "timeline_only" for item in decision.excluded_evidence)
+    assert timeline.timeline_status.value == "ready"
+    assert all(event.used_for_decision is False for event in timeline.events)
 
 
 def test_final_policy_generates_v2_report_when_model_omits_template():

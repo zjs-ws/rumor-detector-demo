@@ -17,12 +17,16 @@ from deerflow.agents.rumor_agent.graph_v3 import (
     apply_verified_fetch_provenance,
     build_evidence_review,
     build_rumor_graph_v3,
+    detect_verification_intent,
     detect_claim_domain,
     make_parallel_sends,
     merge_research_branches,
     parse_claim_context_response,
+    repair_claim_context,
     sanitize_text_risk_analysis,
 )
+from deerflow.agents.rumor_agent.research_plan import build_research_plan
+from deerflow.agents.rumor_agent.schemas import ClaimContext, KnowledgeRetrievalResult, Subclaim
 
 
 def _evidence(evidence_id: str, *, url: str, claim_ids: list[str] | None = None) -> dict:
@@ -43,19 +47,25 @@ def _evidence(evidence_id: str, *, url: str, claim_ids: list[str] | None = None)
         "extraction_status": "ok",
         "claim_ids": claim_ids or ["claim-1"],
         "summary": f"{evidence_id}正文证据",
+        "excerpt": f"{evidence_id}正文证据",
+        "document_hash": "a" * 64,
+        "fetch_status": "fetched",
+        "fetch_attempts": [{"url": url, "status": "fetched"}],
         "provenance": "web",
     }
 
 
 class FakeServices(RumorV3Services):
-    def __init__(self, *, professional: bool = False, fail_web: bool = False):
+    def __init__(self, *, professional: bool = False, fail_web: bool = False, fail_rag: bool = False):
         super().__init__(
             web_search_enabled=True,
             web_fetch_enabled=True,
             classifier_enabled=True,
+            timeline_enabled=True,
         )
         self.professional = professional
         self.fail_web = fail_web
+        self.fail_rag = fail_rag
         self.calls: list[tuple[str, float, float]] = []
 
     async def extract_claim(self, raw_input, original_page, source_url, config):
@@ -72,6 +82,8 @@ class FakeServices(RumorV3Services):
         }
 
     async def retrieve_rag(self, claim_context, config):
+        if self.fail_rag:
+            raise TimeoutError("rag timeout")
         return {"status": "no_match", "query": claim_context["normalized_claim"], "matches": [], "threshold": 0.05, "authoritative": False}
 
     async def research_web(self, claim_context, config, *, supplementary=False, gap_query=""):
@@ -102,6 +114,34 @@ class FakeServices(RumorV3Services):
             "authority_reason": "卫生领域",
         }
         return {"status": "ok", "evidence": [item], "rejected_evidence": [], "observed_urls": [item["url"]], "notes": ""}
+
+    async def research_timeline(self, claim_context, config):
+        started = asyncio.get_running_loop().time()
+        await asyncio.sleep(0.03)
+        finished = asyncio.get_running_loop().time()
+        self.calls.append(("timeline_research", started, finished))
+        items = []
+        for index, event_type in enumerate(("spread", "mutation", "correction"), start=1):
+            item = _evidence(
+                f"timeline-{index}",
+                url=f"https://timeline-{index}.example/article",
+            ) | {
+                "published_at": f"2026-08-{9 + index:02d}",
+                "stance": "context",
+                "source_level": "C",
+                "timeline_only": True,
+                "timeline_event_type": event_type,
+                "claim_variant": f"传播版本{index}",
+                "change_summary": "传播表述发生变化" if index == 2 else "",
+            }
+            items.append(item)
+        return {
+            "status": "ok",
+            "evidence": items,
+            "rejected_evidence": [],
+            "observed_urls": [item["url"] for item in items],
+            "notes": "",
+        }
 
     async def review_evidence(self, claim_context, evidence, config):
         return build_evidence_review(claim_context, evidence, supplement_count=0)
@@ -160,9 +200,107 @@ def _modelscope_server(response_label: str = "No"):
 
 def test_domain_router_forces_professional_domains():
     assert detect_claim_domain("这种疫苗可以治疗疾病")[0] == "medical"
+    assert detect_claim_domain("榴莲不能吃，被人浸黄色药水的有害")[0] == "medical"
     assert detect_claim_domain("根据刑法和最高法司法解释")[0] == "legal"
     assert detect_claim_domain("证监会发布上市公司监管公告")[0] == "finance"
     assert detect_claim_domain("某地今天下雨")[0] == "general"
+    assert detect_claim_domain("管道疏通剂中的强碱遇热水会剧烈放热")[0] == "science"
+
+
+def test_compound_cleaner_claim_is_split_and_question_suffix_removed():
+    context = repair_claim_context(
+        ClaimContext(
+            normalized_claim="疏通剂，洁厕灵等强碱类的一律不能碰热水，可能爆射让人毁容这是谣言吗",
+            subclaims=[
+                Subclaim(
+                    id="claim-1",
+                    text="疏通剂，洁厕灵等强碱类的一律不能碰热水，可能爆射让人毁容这是谣言吗",
+                )
+            ],
+        )
+    )
+
+    assert context.normalized_claim.endswith("毁容")
+    assert context.domain.value == "science"
+    assert [item.id for item in context.subclaims] == ["claim-1", "claim-2"]
+    assert "热水" in context.subclaims[0].text
+    assert context.subclaims[1].text == "洁厕灵属于强碱类清洁剂"
+
+
+def test_historical_markers_override_medical_domain_words():
+    tuskegee = repair_claim_context(
+        ClaimContext(
+            normalized_claim="美国政府曾让患梅毒的人长期得不到正常治疗，以观察疾病发展",
+            subclaims=[Subclaim(id="claim-1", text="美国政府曾实施未治疗梅毒研究")],
+            temporality="unknown",
+            domain="medical",
+        )
+    )
+    mkultra = repair_claim_context(
+        ClaimContext(
+            normalized_claim="CIA秘密拿普通人做精神控制和致幻药物实验",
+            subclaims=[Subclaim(id="claim-1", text="CIA实施MKULTRA药物实验")],
+            temporality="unknown",
+            domain="science",
+        )
+    )
+
+    assert tuskegee.temporality.value == "event_bound"
+    assert tuskegee.temporality_basis == "historical_marker"
+    assert mkultra.temporality.value == "event_bound"
+    assert mkultra.temporality_basis == "historical_marker"
+
+
+def test_domain_words_alone_do_not_turn_unknown_claim_into_current_status():
+    context = repair_claim_context(
+        ClaimContext(
+            normalized_claim="某机构进行药物治疗实验",
+            subclaims=[Subclaim(id="claim-1", text="某机构进行药物治疗实验")],
+            temporality="unknown",
+        )
+    )
+    assert context.temporality.value == "unknown"
+
+
+def test_research_plan_routes_known_entities_to_locked_authority_queries():
+    tuskegee = build_research_plan(
+        {
+            "normalized_claim": "美国公共卫生署曾开展塔斯基吉梅毒研究",
+            "subclaims": [{"id": "claim-1", "text": "美国公共卫生署开展塔斯基吉研究"}],
+            "temporality": "event_bound",
+            "domain": "medical",
+        }
+    )
+    mkultra = build_research_plan(
+        {
+            "normalized_claim": "CIA曾开展MKULTRA致幻药物实验",
+            "subclaims": [{"id": "claim-1", "text": "CIA开展MKULTRA"}],
+            "temporality": "event_bound",
+            "domain": "science",
+        }
+    )
+    nasa = build_research_plan(
+        {
+            "normalized_claim": "NASA发现历史上凭空少了一天",
+            "subclaims": [{"id": "claim-1", "text": "NASA发现少了一天"}],
+            "domain": "science",
+        }
+    )
+    unknown_general = build_research_plan(
+        {
+            "normalized_claim": "某项没有明确机构的公开事实",
+            "subclaims": [{"id": "claim-1", "text": "某项公开事实"}],
+            "domain": "general",
+        }
+    )
+
+    assert "site:cdc.gov" in tuskegee["queries"]["authority"]
+    assert "Tuskegee" in tuskegee["queries"]["authority"]
+    assert "site:cia.gov" in mkultra["queries"]["authority"]
+    assert "MKULTRA" in mkultra["queries"]["authority"]
+    assert "site:nasa.gov" in nasa["queries"]["authority"]
+    assert "missing day" in nasa["queries"]["authority"]
+    assert unknown_general["queries"]["authority"] == ""
 
 
 def test_url_only_instruction_is_not_mistaken_for_a_claim():
@@ -377,6 +515,7 @@ def test_v3_uses_real_modelscope_http_adapter_and_keeps_rule_binding(monkeypatch
 def test_fetch_provenance_comes_from_successful_fetch_tool_not_model_output():
     evidence = _evidence("web-1", url="https://example.com/article")
     evidence["fetched_at"] = None
+    evidence["excerpt"] = "正文"
     research = {"status": "ok", "evidence": [evidence]}
     tool_messages = [
         {
@@ -392,7 +531,41 @@ def test_fetch_provenance_comes_from_successful_fetch_tool_not_model_output():
     enriched, fetched_urls = apply_verified_fetch_provenance(research, tool_messages)
 
     assert enriched["evidence"][0]["fetched_at"] == "2026-08-12T12:30:00+00:00"
+    assert enriched["evidence"][0]["fetch_status"] == "fetched"
+    assert enriched["evidence"][0]["extraction_status"] == "ok"
+    assert enriched["evidence"][0]["document_hash"]
     assert fetched_urls == ["https://example.com/article"]
+
+
+def test_fetch_provenance_downgrades_unverified_or_irrelevant_excerpt():
+    evidence = _evidence("nasa", url="https://science.nasa.gov/unrelated") | {
+        "stance": "refute",
+        "excerpt": "NGC 4372 is a distant star cluster.",
+        "summary": "该页面未提及NASA发现少了一天",
+    }
+    research = {"status": "ok", "evidence": [evidence]}
+    messages = [
+        {
+            "name": "web_fetch",
+            "content": json.dumps(
+                {
+                    "source_url": evidence["url"],
+                    "requested_url": evidence["url"],
+                    "fetched_at": "2026-08-14T00:00:00+00:00",
+                    "content": "NGC 4372 is a distant star cluster.",
+                }
+            ),
+        }
+    ]
+
+    enriched, _ = apply_verified_fetch_provenance(
+        research,
+        messages,
+        relevance_terms=["missing day", "lost day", "少了一天"],
+    )
+
+    assert enriched["evidence"][0]["directness"] == "indirect"
+    assert enriched["evidence"][0]["extraction_status"] == "absence_only"
 
 
 def test_failed_or_search_only_result_cannot_claim_fetch_provenance():
@@ -418,10 +591,10 @@ def test_failed_or_search_only_result_cannot_claim_fetch_provenance():
     assert fetched_urls == []
 
 
-def test_parallel_dispatch_uses_langgraph_send_for_four_branches():
+def test_parallel_dispatch_uses_langgraph_send_for_five_branches():
     sends = make_parallel_sends({"messages": [HumanMessage(content="请核验公开事实")]})
-    assert [send.node for send in sends] == ["rag", "web", "classifier", "authority"]
-    assert len({id(send.arg) for send in sends}) == 4
+    assert [send.node for send in sends] == ["rag", "web", "classifier", "authority", "timeline_research"]
+    assert len({id(send.arg) for send in sends}) == 5
 
 
 def test_merge_rejects_unobserved_urls_and_deduplicates_ids():
@@ -438,6 +611,23 @@ def test_merge_rejects_unobserved_urls_and_deduplicates_ids():
     )
     assert [item["url"] for item in evidence] == [observed["url"]]
     assert rejected[0]["reason_code"] == "url_not_observed"
+
+
+def test_timeline_branch_is_code_locked_out_of_adjudication():
+    item = _evidence("timeline-1", url="https://timeline.example/one")
+    evidence, rejected = merge_research_branches(
+        {
+            "timeline": {
+                "status": "ok",
+                "evidence": [item],
+                "observed_urls": [item["url"]],
+            }
+        }
+    )
+
+    assert rejected == []
+    assert evidence[0]["timeline_only"] is True
+    assert evidence[0]["stance"] == "context"
 
 
 def test_critic_can_request_only_one_supplement_for_missing_material_claim():
@@ -469,6 +659,27 @@ def test_critic_requests_one_supplement_when_coverage_exists_but_threshold_fails
     assert review["threshold_gap"] is True
     assert review["supplement_needed"] is True
     assert "裁决门槛" in review["notes"]
+
+
+def test_critic_does_not_claim_coverage_from_snippets_or_timeline_material():
+    context = {
+        "normalized_claim": "榴莲被黄色药水浸泡后有害",
+        "subclaims": [{"id": "claim-1", "text": "榴莲被黄色药水浸泡后有害", "material": True}],
+    }
+    snippet = _evidence("snippet", url="https://www.samr.gov.cn/example") | {
+        "directness": "snippet_only",
+        "extraction_status": "snippet_only",
+    }
+    timeline = _evidence("timeline", url="https://example.com/timeline") | {
+        "timeline_only": True,
+        "stance": "context",
+    }
+
+    review = build_evidence_review(context, [snippet, timeline], supplement_count=0)
+
+    assert review["coverage_by_claim"]["claim-1"] == "missing"
+    assert review["missing_claim_ids"] == ["claim-1"]
+    assert review["supplement_needed"] is True
 
 
 def test_critic_does_not_supplement_when_one_authoritative_a_meets_threshold():
@@ -503,12 +714,62 @@ def test_explicit_graph_runs_parallel_branches_and_binds_rule_verdict():
     assert report["schema_version"] == "rumorbuster-report-v3"
     assert report["domain_route"]["domain"] == "medical"
     assert report["research_branches"]["authority"]["status"] == "completed"
+    assert report["research_branches"]["timeline_research"]["status"] == "completed"
     assert report["decision"]["verdict"] == "非谣言"
+    assert report["timeline"]["timeline_status"] == "ready"
+    assert len(report["timeline"]["events"]) >= 3
+    propagation_events = [
+        event for event in report["timeline"]["events"] if event["evidence_id"].startswith("timeline-")
+    ]
+    assert len(propagation_events) == 3
+    assert all(not event["used_for_decision"] for event in propagation_events)
     assert result["rumor_workflow"]["stage"] == "report"
 
     intervals = {name: (start, end) for name, start, end in services.calls}
     assert intervals["web"][0] < intervals["classifier"][1]
     assert intervals["classifier"][0] < intervals["web"][1]
+
+
+def test_declarative_fact_claim_does_not_require_verification_magic_words():
+    is_verification, reason = detect_verification_intent(
+        "榴莲不能吃，被人浸黄色药水的有害",
+        source_url=None,
+        initial_claim="榴莲不能吃，被人浸黄色药水的有害",
+    )
+
+    assert is_verification is True
+    assert reason == "factual_assertion"
+
+
+def test_declarative_fact_claim_enters_the_verification_graph():
+    services = FakeServices()
+    graph = build_rumor_graph_v3(services)
+    result = asyncio.run(
+        graph.ainvoke(
+            {"messages": [HumanMessage(content="榴莲不能吃，被人浸黄色药水的有害")]},
+            config={"configurable": {"thread_id": "v3-bare-claim"}},
+        )
+    )
+
+    assert result["rumor_workflow"]["routing_reason"] == "factual_assertion"
+    assert result["rumor_report"]["schema_version"] == "rumorbuster-report-v3"
+    assert any(name == "web" for name, _started, _finished in services.calls)
+
+
+def test_clear_opinion_and_greeting_remain_conversational():
+    opinion = detect_verification_intent(
+        "我觉得榴莲的味道很难闻",
+        source_url=None,
+        initial_claim="我觉得榴莲的味道很难闻",
+    )
+    greeting = detect_verification_intent(
+        "你好，你能做什么",
+        source_url=None,
+        initial_claim="你好，你能做什么",
+    )
+
+    assert opinion == (False, "personal_opinion")
+    assert greeting == (False, "conversation_request")
 
 
 def test_graph_skips_external_verification_for_non_factual_input():
@@ -535,7 +796,26 @@ def test_one_parallel_branch_failure_does_not_cancel_adjudication():
     )
     assert result["rumor_report"]["research_branches"]["web"]["status"] == "unavailable"
     assert result["rumor_report"]["decision"]["verdict"] == "证据不足"
+    assert result["rumor_report"]["timeline"]["timeline_status"] == "ready"
     assert "web_research_unavailable" in result["rumor_report"]["limitations"]
+
+
+def test_rag_failure_produces_a_schema_valid_degraded_report():
+    services = FakeServices(fail_rag=True)
+    graph = build_rumor_graph_v3(services)
+    result = asyncio.run(
+        graph.ainvoke(
+            {"messages": [HumanMessage(content="请核验某项公开事实")]},
+            config={"configurable": {"thread_id": "v3-rag-degraded"}},
+        )
+    )
+
+    rag = KnowledgeRetrievalResult.model_validate(result["rumor_report"]["rag"])
+    assert rag.status == "unavailable"
+    assert rag.query == "某项公开事实"
+    assert rag.threshold == 0.0
+    assert result["rumor_report"]["decision"]["verdict"] == "证据不足"
+    assert "rag_unavailable" in result["rumor_report"]["limitations"]
 
 
 def test_branch_timestamps_are_iso_8601():
