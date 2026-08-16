@@ -180,21 +180,21 @@ class SubagentExecutor:
                 exit_behavior="end",
             )
         )
-        if self.config.max_tool_calls is not None:
-            middlewares.append(
-                ToolCallLimitMiddleware(
-                    run_limit=self.config.max_tool_calls,
-                    exit_behavior="continue",
-                )
-            )
-        for tool_name, run_limit in self.config.tool_call_limits.items():
-            middlewares.append(
-                ToolCallLimitMiddleware(
-                    tool_name=tool_name,
-                    run_limit=run_limit,
-                    exit_behavior="continue",
-                )
-            )
+        # if self.config.max_tool_calls is not None:
+        #     middlewares.append(
+        #         ToolCallLimitMiddleware(
+        #             run_limit=self.config.max_tool_calls,
+        #             exit_behavior="continue",
+        #         )
+        #     )
+        # for tool_name, run_limit in self.config.tool_call_limits.items():
+        #     middlewares.append(
+        #         ToolCallLimitMiddleware(
+        #             tool_name=tool_name,
+        #             run_limit=run_limit,
+        #             exit_behavior="continue",
+        #         )
+        #     )
 
         return create_agent(
             model=model,
@@ -202,6 +202,7 @@ class SubagentExecutor:
             middleware=middlewares,
             system_prompt=self.config.system_prompt,
             state_schema=ThreadState,
+            checkpointer=False,
         )
 
     def _build_initial_state(self, task: str) -> dict[str, Any]:
@@ -281,7 +282,6 @@ class SubagentExecutor:
             }
             context = {}
             if self.thread_id:
-                run_config["configurable"] = {"thread_id": self.thread_id}
                 context["thread_id"] = self.thread_id
 
             logger.info(f"[trace={self.trace_id}] Subagent {self.config.name} starting async execution with max_turns={self.config.max_turns}")
@@ -295,6 +295,26 @@ class SubagentExecutor:
                 # Extract AI messages from the current state
                 messages = chunk.get("messages", [])
                 if messages:
+                    logger.warning(
+                        "SUBAGENT_MESSAGE_STATE=%s",
+                        [
+                            {
+                                "index": i,
+                                "type": type(m).__name__,
+                                "id": getattr(m, "id", None),
+                                "tool_calls": [
+                                    tc.get("id")
+                                    if isinstance(tc, dict)
+                                    else getattr(tc, "id", None)
+                                    for tc in (getattr(m, "tool_calls", None) or [])
+                                ],
+                                "tool_call_id": getattr(m, "tool_call_id", None),
+                                "name": getattr(m, "name", None),
+                            }
+                            for i, m in enumerate(messages)
+                        ],
+                    )
+
                     last_message = messages[-1]
                     # Check if this is a new AI message
                     if isinstance(last_message, AIMessage):
