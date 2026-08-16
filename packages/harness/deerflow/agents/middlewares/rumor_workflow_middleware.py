@@ -83,12 +83,54 @@ def parse_research_result(text: str) -> tuple[ResearchResult, list[dict[str, str
         raw_evidence = []
         rejected.append({"reason_code": "invalid_evidence_list", "explanation": "evidence字段不是数组"})
     for index, raw in enumerate(raw_evidence):
+        candidate = raw
+
+        # Research subagents occasionally return fetch_attempts as a list of
+        # URL strings, while EvidenceItem requires list[dict].
+        #
+        # Normalize this model-generated field before strict Pydantic validation.
+        # The values here are only temporary provenance hints; graph_v3 later
+        # replaces them with provenance derived from the actual web_fetch
+        # ToolMessages.
+        if isinstance(raw, dict):
+            candidate = dict(raw)
+            attempts = candidate.get("fetch_attempts")
+
+            if isinstance(attempts, list):
+                normalized_attempts: list[dict[str, Any]] = []
+
+                for attempt in attempts:
+                    if isinstance(attempt, dict):
+                        normalized_attempts.append(attempt)
+                    elif isinstance(attempt, str) and attempt.strip():
+                        normalized_attempts.append(
+                            {
+                                "url": attempt.strip(),
+                                "final_url": None,
+                                "status": "reported_by_model",
+                            }
+                        )
+
+                candidate["fetch_attempts"] = normalized_attempts
+
+            elif attempts is None:
+                candidate["fetch_attempts"] = []
+
+            else:
+                # Invalid non-list model output should not make an otherwise
+                # usable evidence item fail before verified provenance is applied.
+                candidate["fetch_attempts"] = []
+
         try:
-            valid.append(EvidenceItem.model_validate(raw))
+            valid.append(EvidenceItem.model_validate(candidate))
         except Exception as exc:
             rejected.append(
                 {
-                    "evidence_id": raw.get("id", f"invalid-{index + 1}") if isinstance(raw, dict) else f"invalid-{index + 1}",
+                    "evidence_id": (
+                        raw.get("id", f"invalid-{index + 1}")
+                        if isinstance(raw, dict)
+                        else f"invalid-{index + 1}"
+                    ),
                     "reason_code": "invalid_schema",
                     "explanation": f"证据字段非法：{exc}",
                 }

@@ -27,7 +27,7 @@ type MessageGroup =
   | AssistantSubagentGroup;
 
 export function groupMessages<T>(
-  messages: Message[],
+  messages: Array<Message | null | undefined>,
   mapper: (group: MessageGroup) => T,
 ): T[] {
   if (messages.length === 0) {
@@ -49,9 +49,47 @@ export function groupMessages<T>(
       return last;
     }
     return null;
+
+  }
+
+  // Find the group that actually owns a ToolMessage by matching tool_call_id.
+  // Tool results may arrive out of order when multiple graph branches or tools
+  // run concurrently, so the most recent group is not always the correct one.
+  function findToolCallGroup(toolCallId: string | undefined) {
+    if (!toolCallId) {
+      return null;
+    }
+
+    for (let index = groups.length - 1; index >= 0; index--) {
+      const group = groups[index];
+      if (!group) {
+        continue;
+      }
+
+      const ownsToolCall = group.messages.some((candidate) => {
+        if (candidate.type !== "ai") {
+          return false;
+        }
+
+        const aiMessage = candidate as AIMessage;
+
+        return (aiMessage.tool_calls ?? []).some(
+          (toolCall) => toolCall.id === toolCallId,
+        );
+      });
+
+      if (ownsToolCall) {
+        return group;
+      }
+    }
+
+    return null;
   }
 
   for (const message of messages) {
+    if (!message) {
+      continue;
+    }
     if (message.name === "todo_reminder") {
       continue;
     }
@@ -61,29 +99,55 @@ export function groupMessages<T>(
       continue;
     }
 
-    if (message.type === "tool") {
-      if (isClarificationToolMessage(message)) {
-        // Add to the preceding processing group to preserve tool-call association,
-        // then also open a standalone clarification group for prominent display.
-        lastOpenGroup()?.messages.push(message);
-        groups.push({
-          id: message.id,
-          type: "assistant:clarification",
-          messages: [message],
-        });
+  if (message.type === "tool") {
+    const matchingGroup = findToolCallGroup(message.tool_call_id);
+
+    if (isClarificationToolMessage(message)) {
+      // Prefer the group that issued this exact tool call.
+      // Fall back to the previous behavior for legacy clarification messages.
+      const targetGroup = matchingGroup ?? lastOpenGroup();
+
+      targetGroup?.messages.push(message);
+
+      groups.push({
+        id: message.id,
+        type: "assistant:clarification",
+        messages: [message],
+      });
+    } else {
+      if (matchingGroup) {
+        matchingGroup.messages.push(message);
       } else {
-        const open = lastOpenGroup();
-        if (open) {
-          open.messages.push(message);
-        } else {
-          console.error(
-            "Unexpected tool message outside a processing group",
-            message,
-          );
-        }
+        console.warn(
+          "Unexpected tool message outside a processing group:\n" +
+            JSON.stringify(
+              {
+                toolCallId: message.tool_call_id,
+                name: message.name,
+                messageId: message.id,
+                groups: groups.map((group) => ({
+                  type: group.type,
+                  id: group.id,
+                  toolCallIds: group.messages.flatMap((candidate) => {
+                    if (!candidate || candidate.type !== "ai") {
+                      return [];
+                    }
+
+                    return ((candidate as AIMessage).tool_calls ?? [])
+                      .map((toolCall) => toolCall.id)
+                      .filter(Boolean);
+                  }),
+                })),
+              },
+              null,
+              2,
+            ),
+        );
       }
-      continue;
     }
+
+    continue;
+  }
 
     if (message.type === "ai") {
       if (hasPresentFiles(message)) {

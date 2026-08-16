@@ -11,9 +11,9 @@ export interface TokenUsage {
  * The field is added by the backend (PR #1218) but not typed in the SDK.
  */
 function getUsageMetadata(
-  message: Message,
+  message: Message | null | undefined,
 ): TokenUsage | null {
-  if (message.type !== "ai") {
+  if (!message ||message.type !== "ai") {
     return null;
   }
   const usage = (message as Record<string, unknown>).usage_metadata as

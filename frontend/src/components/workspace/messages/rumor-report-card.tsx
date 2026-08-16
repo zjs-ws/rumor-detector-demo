@@ -454,6 +454,19 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
     if (filter === "excluded") return view.excludedById.has(item.id);
     return true;
   });
+
+
+  // 有些证据在研究阶段就被拒绝，因此没有进入 report.evidence。
+  // 这些记录只有 evidenceId / reasonCode / explanation。
+  const orphanExcludedEvidence = view.excludedEvidence.filter(
+    (item) => item.evidence === null,
+  );
+
+  const visibleOrphanExcluded =
+    filter === "accepted" ? [] : orphanExcludedEvidence;
+
+  const totalEvidenceCount =
+    view.allEvidence.length + orphanExcludedEvidence.length;
   const filterOptions: Array<[EvidenceFilter, string, number]> = [
     ["all", "全部", view.allEvidence.length],
     ["accepted", "用于裁决", view.acceptedEvidence.length],
@@ -570,7 +583,7 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
                   ))}
                 </div>
               </div>
-              {visibleEvidence.length > 0 ? (
+              {visibleEvidence.length > 0 || visibleOrphanExcluded.length > 0 ? (
                 <div className="grid gap-3">
                   {visibleEvidence.map((item) => (
                     <EvidenceCard
@@ -583,6 +596,33 @@ export function RumorReportCard({ report }: { report: RumorReport }) {
                         !view.acceptedIds.has(item.id)
                       }
                     />
+                  ))}
+
+                  {visibleOrphanExcluded.map((item) => (
+                    <article
+                      key={`excluded-${item.evidenceId}`}
+                      className="bg-muted/20 rounded-xl border p-4"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Badge variant="secondary">已排除</Badge>
+
+                        <Badge variant="outline">
+                          {item.evidenceId || "未知证据"}
+                        </Badge>
+
+                        {item.reasonCode && (
+                          <Badge variant="outline">{item.reasonCode}</Badge>
+                        )}
+                      </div>
+
+                      <p className="mt-3 text-sm leading-6">
+                        {item.explanation || "该候选证据未通过证据准入校验。"}
+                      </p>
+
+                      <p className="text-muted-foreground mt-2 text-xs">
+                        该候选项在进入正式证据列表前已被排除，因此没有完整的标题、正文或来源字段。
+                      </p>
+                    </article>
                   ))}
                 </div>
               ) : (

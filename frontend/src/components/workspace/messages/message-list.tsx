@@ -48,7 +48,12 @@ export function MessageList({
   const finalReportMessageId = thread.values.rumor_report
     ? [...messages]
         .reverse()
-        .find((message) => message.type === "ai" && hasContent(message))?.id
+        .find(
+          (message) =>
+            message != null &&
+            message.type === "ai" &&
+            hasContent(message),
+        )?.id
     : undefined;
   if (thread.isThreadLoading && messages.length === 0) {
     return <MessageListSkeleton />;
