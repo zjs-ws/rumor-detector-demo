@@ -43,7 +43,7 @@
 - 30 条已复核种子记录，以及符合课程链路的 Document 加载、中文分块、HuggingFace Embedding、Chroma 持久化和 TF-IDF 混合检索；历史知识仍不参与当前证据门槛
 - 结构化证据、A/B/C/D 来源分级、独立性/直接性/时效性校验与确定性裁决
 - 受控官方来源职权表包含 WHO、政府/监管机构及气候领域 NASA/IPCC；官方域名仍必须与当前主张职权匹配才可升为 A 级
-- V3 显式 LangGraph `StateGraph`：通过 `Send` 并行运行本地 RAG、普通网页研究、可选分类器和专业权威研究，以 reducer 汇合后再审查与裁决
+- V3 显式 LangGraph `StateGraph`：通过 `Send` 并行运行本地 RAG、普通网页研究、可选分类器、专业权威研究和默认关闭的确定性时间线研究，以 reducer 汇合后再审查与裁决
 - V2 串行阶段门控图以 `rumor_agent_v2` 保留，可用于回归比较和故障回退
 - ModelScope `/v1/chat` 与 OpenAI Chat 双协议微调模型适配；最多三个子主张顺序分类，精确映射 `Yes/No/Unknown`，记录脱敏审计信息，标签仅作辅助信号
 - 六类可追溯文本风险线索、核验目标与搜索提示；风险线索不会进入证据门槛
@@ -55,14 +55,21 @@
 - CIA/MKULTRA、塔斯基吉研究与 NASA 等已登记实体生成受控权威域名查询；模型可以建议查询词，但不能指定或提升官方来源
 - 直接网页证据必须同时具有成功抓取状态、正文哈希和可在抓取内容中反查的连续原文引文，否则不能进入“一条 A / 两条独立 B”的裁决门槛
 - 按本轮实际证据的发布日期生成“证据发布时间序列”，用于比较材料新旧，不宣称识别首发、转载关系或传播路径
+- 确定性时间线研究分支（`RUMOR_TIMELINE_ENABLED=true` 开启）：代码执行 1 次搜索加最多 5 个并发抓取，不运行模型循环；条目被代码锁定 `timeline_only=true`，不能参与裁决门槛；至少 3 条不同日期的已抓取记录才显示就绪时间线，否则与不足裁决并列展示并明确标注“时间线证据不足”
+- 30 条真实联网验收评估脚本与 2026-08-14 失败基线（`evaluate_real_factchecks.py`），统计明确判定率、已判准确率、虚构 URL、正文引文与规则绑定
 - 结构化证据卡片、排除原因、Markdown/JSON 下载和打印
 - Chrome 浏览器划词核验入口
 - “证据实验室”亮暗双主题界面：首屏突出规则结论、证据强度与可追溯来源，技术审计默认折叠
-- V3 七阶段执行进度和 RAG、普通网页、权威来源、LoRA 四类主要并行能力状态
+- V3 七阶段执行进度和 RAG、普通网页、权威来源、LoRA 四类常开并行能力状态；开启时间线研究后追加“传播脉络研究”分支状态
 - 三个带真实运行日期的历史实测案例；存档结果与实时核验明确区分并复用同一报告组件
 - 浏览器扩展可在设置页修改 RumorBuster 地址，默认使用生产编排入口 `http://localhost:8080`
 - 正式 Markdown/JSON 导出不包含模型 reasoning、工具参数、系统提示词、密钥或服务地址
 - Apple Silicon Docker 环境
+
+截至 2026-08-16 的增量验证：
+
+- 谣言智能体相关 72 项测试在 Docker 一次性容器中通过（含新增的时间线研究与向量 RAG 测试）；
+- 前端 TypeScript typecheck、`compose.yaml` 与 `compose.prod.yaml` 配置校验通过。
 
 继续开发中：
 
@@ -289,6 +296,7 @@ python3 scripts/check_production_ready.py
 - `scripts/evaluate_rumorbuster.py`：确定性回归、对比与消融评测
 - `scripts/build_rag_index.py`：校验复核语料，使用HuggingFace Embedding构建版本化Chroma索引
 - `scripts/evaluate_rag_retrieval.py`：输出TF-IDF或混合RAG的Recall@1/3、MRR和负例拒绝率
+- `scripts/sync_rag_sources.py`：按精确允许清单把 URL 抓取到未复核 RAG staging，等待人工复核
 - `scripts/evaluate_finetuned_classifier.py`：通过真实 `/v1/chat` 运行冻结的早期预警集与对抗集，不生成 Mock 指标
 - `scripts/run_classifier_smoke.py`：在 GPU 隧道建立后运行 9 条、每条两次的真实模型冒烟验收
 - `scripts/run_demo_cases.py`：独立线程运行固定案例，保存 V2/V3 报告、trace、分支耗时、抓取溯源和校验摘要
@@ -299,6 +307,7 @@ python3 scripts/check_production_ready.py
 - `docs/WORKFLOW_V2_IMPLEMENTATION.md`：阶段门控、来源规则、时间线和答辩实验留痕
 - `docs/WORKFLOW_V3_IMPLEMENTATION.md`：显式 StateGraph、并行汇合、受限子 Agent、回退策略与学习留痕
 - `docs/RAG_IMPLEMENTATION.md`：课程标准向量 RAG 的 Loader、切片、Embedding、Chroma、混合召回、降级与答辩边界
+- `docs/REAL_FACTCHECK_ACCEPTANCE.md`：2026-08-14 真实测试暴露问题的修复链路与 30 条联网验收标准
 - `docs/PRODUCTION_DEPLOYMENT.md`：云主机部署、统一 API、备份恢复与故障处理
 - `docs/MODELSCOPE_CLASSIFIER_DEPLOYMENT.md`：短租 GPU、SSH 隧道、真实模型调用与验收
 - `docs/SOCIAL_CONTEXT_FUTURE.md`：未启用的评论质证扩展边界和 Fixture
@@ -308,7 +317,7 @@ python3 scripts/check_production_ready.py
 
 1. 默认只配置 DeepSeek 主模型。
 2. 微调分类模型服务不打包进 RumorBuster Compose；需在 GPU 主机独立启动并通过 SSH 隧道接入。没有真实 GPU 日志前不得把适配测试写成模型评测结果。
-3. 每个可核验主张最多运行一次普通发现检索（最多3次正文抓取）和一次受控权威检索（最多2次正文抓取）；没有匹配到注册机构时，权威分支不会自由选择域名。当前取消第三次模型自由补检。搜索摘要只作线索，不能凑正式证据门槛。实验性传播检索默认关闭（`RUMOR_TIMELINE_ENABLED=false`）；没有平台转发关系或可靠新闻档案数据时，不宣称具备传播溯源能力。
+3. 每个可核验主张最多运行一次普通发现检索（最多3次正文抓取）和一次受控权威检索（最多2次正文抓取）；没有匹配到注册机构时，权威分支不会自由选择域名。当前取消第三次模型自由补检。搜索摘要只作线索，不能凑正式证据门槛。时间线研究分支默认关闭（`RUMOR_TIMELINE_ENABLED=false`）；开启后代码执行 1 次搜索与最多 5 个并发抓取，条目锁定 `timeline_only=true` 不参与裁决，至少 3 条不同日期的已抓取记录才显示就绪时间线。没有平台转发关系或可靠新闻档案数据时，不宣称具备传播溯源能力。
 4. 智能体已加入模型/工具调用上限，后续仍需补齐真实证据源后的复杂流程测试。
 5. 当前智能体服务使用本地开发模式和无鉴权配置。
 6. 注册登录尚未接入；浏览器扩展当前为本地加载版，默认连接 `http://localhost:8080`，可在扩展设置中更换为未来的云端地址。
