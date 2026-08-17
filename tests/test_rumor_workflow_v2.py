@@ -299,6 +299,22 @@ def test_research_json_skips_stray_fragments_and_requires_expected_keys():
     assert rejected[0]["reason_code"] == "invalid_research_json"
 
 
+def test_invalid_timeline_event_type_is_dropped_not_rejected():
+    payload = json.dumps(
+        {
+            "status": "ok",
+            "evidence": [_item("context-type", url="https://media.example/context") | {"timeline_event_type": "context"}],
+            "notes": "done",
+        },
+        ensure_ascii=False,
+    )
+    result, rejected = parse_research_result(payload)
+
+    assert result.status == "ok"
+    assert result.evidence[0].timeline_event_type is None
+    assert not any(item["reason_code"] == "invalid_schema" for item in rejected)
+
+
 def test_scripted_full_workflow_reaches_binding_decision_and_timeline():
     claim = "某地发布了停课通知"
     context = {

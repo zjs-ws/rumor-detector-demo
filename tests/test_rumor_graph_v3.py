@@ -359,6 +359,17 @@ def test_research_plan_routes_known_entities_to_locked_authority_queries():
     assert "site:cdc.gov" in tuskegee["queries"]["authority"]
     assert "Tuskegee" in tuskegee["queries"]["authority"]
     assert "site:cia.gov" in mkultra["queries"]["authority"]
+
+    nsa = build_research_plan(
+        {
+            "normalized_claim": "美国官方监督文件确认NSA曾运行大规模电话元数据收集项目，此事在Snowden披露后被公开",
+            "subclaims": [{"id": "claim-1", "text": "NSA曾运行大规模电话元数据收集项目"}],
+            "temporality": "event_bound",
+            "domain": "general",
+        }
+    )
+    assert "site:dni.gov" in nsa["queries"]["authority"]
+    assert "NSA" in nsa["queries"]["authority"]
     assert "MKULTRA" in mkultra["queries"]["authority"]
     assert "site:nasa.gov" in nasa["queries"]["authority"]
     assert "missing day" in nasa["queries"]["authority"]

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import uuid
 from collections.abc import Awaitable, Callable
@@ -14,12 +15,15 @@ from langchain.agents.middleware.types import ModelRequest, ModelResponse, ToolC
 from langchain_core.messages import SystemMessage, ToolMessage
 from langgraph.runtime import Runtime
 
+logger = logging.getLogger(__name__)
+
 from deerflow.agents.rumor_agent.evidence import decide_evidence, observed_evidence_urls
 from deerflow.agents.rumor_agent.schemas import (
     Checkability,
     ClaimContext,
     EvidenceItem,
     ResearchResult,
+    TimelineEventType,
 )
 from deerflow.agents.rumor_agent.source_policy import normalize_evidence_items
 from deerflow.agents.rumor_agent.timeline import build_timeline
@@ -85,6 +89,10 @@ def parse_research_result(text: str) -> tuple[ResearchResult, list[dict[str, str
     """Parse a subagent JSON result without asking the main model to copy it."""
     payload = _json_object(text, required_keys=_EXPECTED_TOP_LEVEL_KEYS)
     if payload is None:
+        logger.warning(
+            "RESEARCH_RESULT_PARSE_FAILED raw text head: %s",
+            str(text).strip()[:500],
+        )
         return ResearchResult(status="unavailable", notes="研究结果不是合法JSON"), [{"reason_code": "invalid_research_json", "explanation": "研究子Agent未返回合法JSON对象"}]
 
     valid: list[EvidenceItem] = []
@@ -134,6 +142,13 @@ def parse_research_result(text: str) -> tuple[ResearchResult, list[dict[str, str
                 # Invalid non-list model output should not make an otherwise
                 # usable evidence item fail before verified provenance is applied.
                 candidate["fetch_attempts"] = []
+
+            # Models sometimes invent a timeline_event_type on ordinary web
+            # evidence (e.g. "context").  The field only matters for the
+            # code-built timeline branch, so drop invalid values instead of
+            # rejecting the whole item.
+            if candidate.get("timeline_event_type") not in {item.value for item in TimelineEventType}:
+                candidate["timeline_event_type"] = None
 
         try:
             valid.append(EvidenceItem.model_validate(candidate))

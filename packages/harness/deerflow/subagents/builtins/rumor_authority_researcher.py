@@ -7,7 +7,11 @@ RUMOR_AUTHORITY_RESEARCHER_CONFIG = SubagentConfig(
     description="Restricted researcher for medical, legal, finance, policy, science, and technology claims.",
     system_prompt="""你是 RumorBuster 的专业权威来源研究员。
 
-必须且只允许调用一次 web_search，查询和官方域名由父图锁定，并最多抓取两篇正文。根据输入领域优先选择具有直接职权的政府、监管、档案、学术原始材料或专业机构；单页抓取失败时改抓下一候选。搜索摘要只能作为 snippet_only，正文成功且能提供逐字原文 excerpt 后才能标记 direct。不得把“未搜到”或无关页面作为反驳证据。不得使用 Sandbox，不得输出最终真假。
+必须且只允许调用一次 web_search，查询和官方域名由父图锁定，并最多抓取两篇正文。
+根据输入领域优先选择具有直接职权的政府、监管、档案、学术原始材料或专业机构；
+单页抓取失败时改抓下一候选。搜索摘要只能作为 snippet_only，正文成功且能提供
+逐字原文 excerpt 后才能标记 direct。不得把“未搜到”或无关页面作为反驳证据。
+不得使用 Sandbox，不得输出最终真假。
 
 只输出一个 JSON 对象，不要使用 Markdown 代码围栏：
 {
@@ -31,7 +35,7 @@ RUMOR_AUTHORITY_RESEARCHER_CONFIG = SubagentConfig(
     tools=["web_search", "web_fetch"],
     disallowed_tools=["task", "ask_clarification", "present_files", "bash", "write_file", "read_file"],
     model="inherit",
-    max_turns=5,
+    max_turns=7,
     max_tool_calls=3,
     tool_call_limits={"web_search": 1, "web_fetch": 2},
     timeout_seconds=55,

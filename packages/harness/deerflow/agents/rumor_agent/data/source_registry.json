@@ -1,214 +1,684 @@
 {
   "official_sources": [
     {
-      "domains": ["who.int", "nhc.gov.cn", "cdc.gov"],
-      "scope_keywords": ["卫生", "健康", "疾病", "传染病", "天花", "根除", "医疗", "诊疗", "治疗", "指南", "药物", "抗生素", "疫苗", "新冠", "covid"]
+      "domains": [
+        "who.int",
+        "nhc.gov.cn",
+        "cdc.gov"
+      ],
+      "scope_keywords": [
+        "卫生",
+        "健康",
+        "疾病",
+        "传染病",
+        "天花",
+        "根除",
+        "医疗",
+        "诊疗",
+        "治疗",
+        "指南",
+        "药物",
+        "抗生素",
+        "疫苗",
+        "新冠",
+        "covid"
+      ]
     },
     {
-      "domains": ["fda.gov", "samr.gov.cn"],
-      "scope_keywords": ["药品", "食品", "产品", "市场监管", "质量", "召回", "广告", "医疗器械"]
+      "domains": [
+        "fda.gov",
+        "samr.gov.cn"
+      ],
+      "scope_keywords": [
+        "药品",
+        "食品",
+        "产品",
+        "市场监管",
+        "质量",
+        "召回",
+        "广告",
+        "医疗器械"
+      ]
     },
     {
-      "domains": ["mem.gov.cn", "119.gov.cn"],
-      "scope_keywords": ["安全生产", "应急管理", "消防", "危险化学品", "化学品", "腐蚀", "灼伤", "爆炸", "管道疏通剂", "洁厕灵"]
+      "domains": [
+        "mem.gov.cn",
+        "119.gov.cn"
+      ],
+      "scope_keywords": [
+        "安全生产",
+        "应急管理",
+        "消防",
+        "危险化学品",
+        "化学品",
+        "腐蚀",
+        "灼伤",
+        "爆炸",
+        "管道疏通剂",
+        "洁厕灵"
+      ]
     },
     {
-      "domains": ["mps.gov.cn"],
-      "scope_keywords": ["公安", "治安", "犯罪", "诈骗", "交通", "户籍", "警方"]
+      "domains": [
+        "mps.gov.cn"
+      ],
+      "scope_keywords": [
+        "公安",
+        "治安",
+        "犯罪",
+        "诈骗",
+        "交通",
+        "户籍",
+        "警方"
+      ]
     },
     {
-      "domains": ["un.org"],
-      "scope_keywords": ["联合国", "国际", "人道", "维和", "制裁"]
+      "domains": [
+        "un.org"
+      ],
+      "scope_keywords": [
+        "联合国",
+        "国际",
+        "人道",
+        "维和",
+        "制裁"
+      ]
     },
     {
-      "domains": ["gov.cn"],
-      "scope_keywords": ["国务院", "中央政府", "国家政策", "政策", "行政法规"]
+      "domains": [
+        "gov.cn"
+      ],
+      "scope_keywords": [
+        "国务院",
+        "中央政府",
+        "国家政策",
+        "政策",
+        "行政法规"
+      ]
     },
     {
-      "domains": ["npc.gov.cn", "court.gov.cn", "spp.gov.cn"],
-      "scope_keywords": ["法律", "法规", "司法解释", "法院", "检察院", "判决", "刑法", "民法", "民法典", "成年人", "十八周岁"]
+      "domains": [
+        "npc.gov.cn",
+        "court.gov.cn",
+        "spp.gov.cn"
+      ],
+      "scope_keywords": [
+        "法律",
+        "法规",
+        "司法解释",
+        "法院",
+        "检察院",
+        "判决",
+        "刑法",
+        "民法",
+        "民法典",
+        "成年人",
+        "十八周岁"
+      ]
     },
     {
-      "domains": ["pbc.gov.cn", "csrc.gov.cn", "stats.gov.cn"],
-      "scope_keywords": ["金融", "货币", "利率", "证券", "上市公司", "经济", "统计", "监管", "中国人民银行", "中央银行"]
+      "domains": [
+        "pbc.gov.cn",
+        "csrc.gov.cn",
+        "stats.gov.cn"
+      ],
+      "scope_keywords": [
+        "金融",
+        "货币",
+        "利率",
+        "证券",
+        "上市公司",
+        "经济",
+        "统计",
+        "监管",
+        "中国人民银行",
+        "中央银行"
+      ]
     },
     {
-      "domains": ["ipcc.ch"],
-      "scope_keywords": ["气候", "全球变暖", "地球", "大气", "海洋", "温室气体", "climate", "warming"]
+      "domains": [
+        "ipcc.ch"
+      ],
+      "scope_keywords": [
+        "气候",
+        "全球变暖",
+        "地球",
+        "大气",
+        "海洋",
+        "温室气体",
+        "climate",
+        "warming"
+      ]
     },
     {
-      "domains": ["nasa.gov"],
-      "scope_keywords": ["NASA", "美国国家航空航天局", "行星", "轨迹", "天文", "太空", "航天", "月球", "宇航员", "登月", "阿波罗", "长城", "全球气候", "missing day", "lost day"]
+      "domains": [
+        "nasa.gov"
+      ],
+      "scope_keywords": [
+        "NASA",
+        "美国国家航空航天局",
+        "行星",
+        "轨迹",
+        "天文",
+        "太空",
+        "航天",
+        "月球",
+        "宇航员",
+        "登月",
+        "阿波罗",
+        "长城",
+        "全球气候",
+        "missing day",
+        "lost day"
+      ]
     },
     {
-      "domains": ["cia.gov", "senate.gov", "archives.gov"],
-      "scope_keywords": ["CIA", "中央情报局", "MKULTRA", "MK-ULTRA", "精神控制", "行为控制", "致幻药物"]
+      "domains": [
+        "cia.gov",
+        "senate.gov",
+        "archives.gov"
+      ],
+      "scope_keywords": [
+        "CIA",
+        "中央情报局",
+        "MKULTRA",
+        "MK-ULTRA",
+        "精神控制",
+        "行为控制",
+        "致幻药物"
+      ]
     },
     {
-      "domains": ["cdc.gov", "hhs.gov", "archives.gov"],
-      "scope_keywords": ["塔斯基吉", "Tuskegee", "USPHS", "美国公共卫生署", "梅毒研究", "untreated syphilis"]
+      "domains": [
+        "cdc.gov",
+        "hhs.gov",
+        "archives.gov"
+      ],
+      "scope_keywords": [
+        "塔斯基吉",
+        "Tuskegee",
+        "USPHS",
+        "美国公共卫生署",
+        "梅毒研究",
+        "untreated syphilis"
+      ]
     },
     {
-      "domains": ["nih.gov", "nlm.nih.gov"],
-      "scope_keywords": ["HIV", "艾滋病", "青霉素", "弗莱明", "血液", "静脉血", "口香糖", "消化", "抗生素", "病毒感染", "生物医学"]
+      "domains": [
+        "nih.gov",
+        "nlm.nih.gov"
+      ],
+      "scope_keywords": [
+        "HIV",
+        "艾滋病",
+        "青霉素",
+        "弗莱明",
+        "血液",
+        "静脉血",
+        "口香糖",
+        "消化",
+        "抗生素",
+        "病毒感染",
+        "生物医学"
+      ]
     },
     {
-      "domains": ["iaea.org"],
-      "scope_keywords": ["切尔诺贝利", "Chernobyl", "核电站", "反应堆", "核事故"]
+      "domains": [
+        "iaea.org"
+      ],
+      "scope_keywords": [
+        "切尔诺贝利",
+        "Chernobyl",
+        "核电站",
+        "反应堆",
+        "核事故"
+      ]
     },
     {
-      "domains": ["unep.org"],
-      "scope_keywords": ["蒙特利尔议定书", "Montreal Protocol", "臭氧层", "消耗臭氧层物质"]
+      "domains": [
+        "unep.org"
+      ],
+      "scope_keywords": [
+        "蒙特利尔议定书",
+        "Montreal Protocol",
+        "臭氧层",
+        "消耗臭氧层物质"
+      ]
     },
     {
-      "domains": ["noaa.gov", "weather.gov"],
-      "scope_keywords": ["闪电", "雷电", "lightning", "天气", "气象"]
+      "domains": [
+        "noaa.gov",
+        "weather.gov"
+      ],
+      "scope_keywords": [
+        "闪电",
+        "雷电",
+        "lightning",
+        "天气",
+        "气象"
+      ]
     },
     {
-      "domains": ["usgs.gov", "si.edu"],
-      "scope_keywords": ["蝙蝠", "bat", "哺乳动物", "野生动物"]
+      "domains": [
+        "usgs.gov",
+        "si.edu"
+      ],
+      "scope_keywords": [
+        "蝙蝠",
+        "bat",
+        "哺乳动物",
+        "野生动物"
+      ]
     },
     {
-      "domains": ["archives.gov", "senate.gov"],
-      "scope_keywords": ["水门事件", "Watergate", "尼克松", "Nixon", "总统辞职"]
+      "domains": [
+        "archives.gov",
+        "senate.gov"
+      ],
+      "scope_keywords": [
+        "水门事件",
+        "Watergate",
+        "尼克松",
+        "Nixon",
+        "总统辞职"
+      ]
+    },
+    {
+      "domains": [
+        "dni.gov",
+        "odni.gov",
+        "nsa.gov",
+        "icontherecord.tumblr.com"
+      ],
+      "scope_keywords": [
+        "NSA",
+        "斯诺登",
+        "Snowden",
+        "棱镜",
+        "PRISM",
+        "元数据",
+        "电话监听",
+        "监控项目",
+        "大规模监控",
+        "情报监控"
+      ]
     }
   ],
   "authority_entities": [
     {
       "canonical_name": "USPHS Tuskegee Syphilis Study",
-      "aliases": ["塔斯基吉", "Tuskegee", "Tuskegee Syphilis Study", "Untreated Syphilis Study", "USPHS", "美国公共卫生署"],
-      "evidence_terms": ["塔斯基吉", "Tuskegee", "Untreated Syphilis", "USPHS"],
-      "domains": ["cdc.gov", "hhs.gov", "archives.gov"],
+      "aliases": [
+        "塔斯基吉",
+        "Tuskegee",
+        "Tuskegee Syphilis Study",
+        "Untreated Syphilis Study",
+        "USPHS",
+        "美国公共卫生署"
+      ],
+      "evidence_terms": [
+        "塔斯基吉",
+        "Tuskegee",
+        "Untreated Syphilis",
+        "USPHS"
+      ],
+      "domains": [
+        "cdc.gov",
+        "hhs.gov",
+        "archives.gov"
+      ],
       "role": "美国公共卫生与国家档案机构",
       "scope": "塔斯基吉未治疗梅毒研究的官方历史、档案与伦理记录"
     },
     {
       "canonical_name": "CIA MKULTRA",
-      "aliases": ["MKULTRA", "MK-ULTRA", "CIA", "中央情报局", "精神控制", "致幻药物实验"],
-      "evidence_terms": ["MKULTRA", "MK-ULTRA", "behavior modification", "unwitting", "精神控制", "致幻药物"],
-      "domains": ["cia.gov", "senate.gov", "archives.gov"],
+      "aliases": [
+        "MKULTRA",
+        "MK-ULTRA",
+        "CIA",
+        "中央情报局",
+        "精神控制",
+        "致幻药物实验"
+      ],
+      "evidence_terms": [
+        "MKULTRA",
+        "MK-ULTRA",
+        "behavior modification",
+        "unwitting",
+        "精神控制",
+        "致幻药物"
+      ],
+      "domains": [
+        "cia.gov",
+        "senate.gov",
+        "archives.gov"
+      ],
       "role": "美国情报机构、国会监督与国家档案机构",
       "scope": "MKULTRA、行为控制、药物实验及解密调查记录"
     },
     {
       "canonical_name": "NASA",
-      "aliases": ["NASA", "美国国家航空航天局", "missing day", "lost day", "Joshua long day", "凭空少了一天", "阿波罗11号", "Apollo 11", "月球上用肉眼", "长城", "全球气候正在变暖"],
-      "evidence_terms": ["missing day", "lost day", "Joshua", "凭空少了一天", "Apollo 11", "Great Wall", "climate warming evidence"],
-      "domains": ["nasa.gov"],
+      "aliases": [
+        "NASA",
+        "美国国家航空航天局",
+        "missing day",
+        "lost day",
+        "Joshua long day",
+        "凭空少了一天",
+        "阿波罗11号",
+        "Apollo 11",
+        "月球上用肉眼",
+        "长城",
+        "全球气候正在变暖"
+      ],
+      "evidence_terms": [
+        "missing day",
+        "lost day",
+        "Joshua",
+        "凭空少了一天",
+        "Apollo 11",
+        "Great Wall",
+        "climate warming evidence"
+      ],
+      "domains": [
+        "nasa.gov"
+      ],
       "role": "美国国家航空航天机构",
       "scope": "NASA公开声明、天文计算与航天记录"
     },
     {
       "canonical_name": "WHO smallpox programme",
-      "aliases": ["天花已在全球", "天花被根除", "smallpox eradicated", "世界卫生大会在1980年"],
-      "evidence_terms": ["smallpox eradication", "1980", "World Health Assembly"],
-      "domains": ["who.int"],
+      "aliases": [
+        "天花已在全球",
+        "天花被根除",
+        "smallpox eradicated",
+        "世界卫生大会在1980年"
+      ],
+      "evidence_terms": [
+        "smallpox eradication",
+        "1980",
+        "World Health Assembly"
+      ],
+      "domains": [
+        "who.int"
+      ],
       "role": "世界卫生组织",
       "scope": "全球传染病根除计划与正式决议"
     },
     {
       "canonical_name": "US National Archives Watergate records",
-      "aliases": ["水门事件", "尼克松", "Watergate", "Nixon"],
-      "evidence_terms": ["Watergate", "Nixon resignation", "1974"],
-      "domains": ["archives.gov", "senate.gov"],
+      "aliases": [
+        "水门事件",
+        "尼克松",
+        "Watergate",
+        "Nixon"
+      ],
+      "evidence_terms": [
+        "Watergate",
+        "Nixon resignation",
+        "1974"
+      ],
+      "domains": [
+        "archives.gov",
+        "senate.gov"
+      ],
       "role": "美国国家档案与国会记录",
       "scope": "水门事件调查与总统辞职历史记录"
     },
     {
       "canonical_name": "IAEA Chernobyl records",
-      "aliases": ["切尔诺贝利", "Chernobyl", "4号反应堆"],
-      "evidence_terms": ["Chernobyl", "Unit 4", "1986 accident"],
-      "domains": ["iaea.org", "un.org"],
+      "aliases": [
+        "切尔诺贝利",
+        "Chernobyl",
+        "4号反应堆"
+      ],
+      "evidence_terms": [
+        "Chernobyl",
+        "Unit 4",
+        "1986 accident"
+      ],
+      "domains": [
+        "iaea.org",
+        "un.org"
+      ],
       "role": "国际原子能机构",
       "scope": "核事故事实、反应堆与安全记录"
     },
     {
       "canonical_name": "Penicillin discovery records",
-      "aliases": ["弗莱明", "青霉素发现", "Fleming", "penicillin"],
-      "evidence_terms": ["Alexander Fleming", "penicillin", "1928"],
-      "domains": ["nih.gov", "nobelprize.org"],
+      "aliases": [
+        "弗莱明",
+        "青霉素发现",
+        "Fleming",
+        "penicillin"
+      ],
+      "evidence_terms": [
+        "Alexander Fleming",
+        "penicillin",
+        "1928"
+      ],
+      "domains": [
+        "nih.gov",
+        "nobelprize.org"
+      ],
       "role": "生物医学档案与诺贝尔奖历史资料",
       "scope": "青霉素发现与医学史原始记录"
     },
     {
       "canonical_name": "HIV scientific record",
-      "aliases": ["HIV是导致艾滋病", "HIV导致艾滋病", "AIDS virus", "艾滋病的病毒"],
-      "evidence_terms": ["HIV causes AIDS", "human immunodeficiency virus", "1980s"],
-      "domains": ["nih.gov", "who.int"],
+      "aliases": [
+        "HIV是导致艾滋病",
+        "HIV导致艾滋病",
+        "AIDS virus",
+        "艾滋病的病毒"
+      ],
+      "evidence_terms": [
+        "HIV causes AIDS",
+        "human immunodeficiency virus",
+        "1980s"
+      ],
+      "domains": [
+        "nih.gov",
+        "who.int"
+      ],
       "role": "生物医学研究与全球卫生机构",
       "scope": "HIV病原学与艾滋病科学资料"
     },
     {
       "canonical_name": "UNEP Montreal Protocol",
-      "aliases": ["蒙特利尔议定书", "Montreal Protocol", "消耗臭氧层"],
-      "evidence_terms": ["Montreal Protocol", "ozone-depleting substances", "1987"],
-      "domains": ["unep.org", "un.org"],
+      "aliases": [
+        "蒙特利尔议定书",
+        "Montreal Protocol",
+        "消耗臭氧层"
+      ],
+      "evidence_terms": [
+        "Montreal Protocol",
+        "ozone-depleting substances",
+        "1987"
+      ],
+      "domains": [
+        "unep.org",
+        "un.org"
+      ],
       "role": "联合国环境规划署",
       "scope": "蒙特利尔议定书与臭氧层保护条约资料"
     },
     {
       "canonical_name": "US Surgeon General smoking report",
-      "aliases": ["卫生总监在1964", "吸烟会导致肺癌", "1964 smoking report", "Surgeon General"],
-      "evidence_terms": ["1964 Surgeon General report", "smoking lung cancer"],
-      "domains": ["hhs.gov", "cdc.gov"],
+      "aliases": [
+        "卫生总监在1964",
+        "吸烟会导致肺癌",
+        "1964 smoking report",
+        "Surgeon General"
+      ],
+      "evidence_terms": [
+        "1964 Surgeon General report",
+        "smoking lung cancer"
+      ],
+      "domains": [
+        "hhs.gov",
+        "cdc.gov"
+      ],
       "role": "美国卫生与公共卫生机构",
       "scope": "吸烟健康危害与卫生总监历史报告"
     },
     {
       "canonical_name": "WHO COVID myth guidance",
-      "aliases": ["高度白酒可以杀死", "5G移动通信网络会传播新冠", "5G传播新冠", "alcohol kills coronavirus"],
-      "evidence_terms": ["alcohol does not kill coronavirus", "5G networks do not spread COVID-19", "mythbusters"],
-      "domains": ["who.int", "cdc.gov"],
+      "aliases": [
+        "高度白酒可以杀死",
+        "5G移动通信网络会传播新冠",
+        "5G传播新冠",
+        "alcohol kills coronavirus"
+      ],
+      "evidence_terms": [
+        "alcohol does not kill coronavirus",
+        "5G networks do not spread COVID-19",
+        "mythbusters"
+      ],
+      "domains": [
+        "who.int",
+        "cdc.gov"
+      ],
       "role": "全球与国家公共卫生机构",
       "scope": "新冠病毒传播、预防与虚假健康信息"
     },
     {
       "canonical_name": "COVID vaccine safety authorities",
-      "aliases": ["疫苗植入", "可追踪微芯片", "vaccine microchip", "疫苗通过针头"],
-      "evidence_terms": ["vaccines do not contain microchips", "COVID-19 vaccine ingredients"],
-      "domains": ["cdc.gov", "who.int"],
+      "aliases": [
+        "疫苗植入",
+        "可追踪微芯片",
+        "vaccine microchip",
+        "疫苗通过针头"
+      ],
+      "evidence_terms": [
+        "vaccines do not contain microchips",
+        "COVID-19 vaccine ingredients"
+      ],
+      "domains": [
+        "cdc.gov",
+        "who.int"
+      ],
       "role": "疫苗安全与公共卫生机构",
       "scope": "疫苗成分、安全性与接种虚假信息"
     },
     {
       "canonical_name": "Digestive health references",
-      "aliases": ["口香糖会在人的胃里停留七年", "口香糖停留七年", "gum stays seven years"],
-      "evidence_terms": ["swallowed gum", "seven years", "digestive system"],
-      "domains": ["nih.gov", "mayoclinic.org"],
+      "aliases": [
+        "口香糖会在人的胃里停留七年",
+        "口香糖停留七年",
+        "gum stays seven years"
+      ],
+      "evidence_terms": [
+        "swallowed gum",
+        "seven years",
+        "digestive system"
+      ],
+      "domains": [
+        "nih.gov",
+        "mayoclinic.org"
+      ],
       "role": "医学研究与专业医疗机构",
       "scope": "消化系统与吞咽口香糖健康资料"
     },
     {
       "canonical_name": "Blood physiology references",
-      "aliases": ["静脉中的血液", "血液在接触空气以前是蓝色", "blood is blue"],
-      "evidence_terms": ["blood is never blue", "venous blood", "hemoglobin"],
-      "domains": ["nih.gov"],
+      "aliases": [
+        "静脉中的血液",
+        "血液在接触空气以前是蓝色",
+        "blood is blue"
+      ],
+      "evidence_terms": [
+        "blood is never blue",
+        "venous blood",
+        "hemoglobin"
+      ],
+      "domains": [
+        "nih.gov"
+      ],
       "role": "生物医学研究机构",
       "scope": "人体血液颜色与血红蛋白生理资料"
     },
     {
       "canonical_name": "Bat biology authorities",
-      "aliases": ["所有蝙蝠", "蝙蝠都是完全看不见", "bats are blind"],
-      "evidence_terms": ["bats are not blind", "bat eyesight", "echolocation"],
-      "domains": ["si.edu", "usgs.gov"],
+      "aliases": [
+        "所有蝙蝠",
+        "蝙蝠都是完全看不见",
+        "bats are blind"
+      ],
+      "evidence_terms": [
+        "bats are not blind",
+        "bat eyesight",
+        "echolocation"
+      ],
+      "domains": [
+        "si.edu",
+        "usgs.gov"
+      ],
       "role": "自然史与野生动物科学机构",
       "scope": "蝙蝠视觉、回声定位与生物学资料"
     },
     {
       "canonical_name": "NOAA lightning safety",
-      "aliases": ["闪电绝不会两次", "闪电不会两次击中", "lightning never strikes twice"],
-      "evidence_terms": ["lightning strikes twice", "lightning myths"],
-      "domains": ["weather.gov", "noaa.gov"],
+      "aliases": [
+        "闪电绝不会两次",
+        "闪电不会两次击中",
+        "lightning never strikes twice"
+      ],
+      "evidence_terms": [
+        "lightning strikes twice",
+        "lightning myths"
+      ],
+      "domains": [
+        "weather.gov",
+        "noaa.gov"
+      ],
       "role": "美国气象与海洋机构",
       "scope": "雷电科学与天气安全资料"
     },
     {
       "canonical_name": "Antibiotic use authorities",
-      "aliases": ["抗生素可以直接杀死", "抗生素不能治疗病毒", "antibiotics kill viruses"],
-      "evidence_terms": ["antibiotics do not work on viruses", "antibiotic use"],
-      "domains": ["cdc.gov", "who.int"],
+      "aliases": [
+        "抗生素可以直接杀死",
+        "抗生素不能治疗病毒",
+        "antibiotics kill viruses"
+      ],
+      "evidence_terms": [
+        "antibiotics do not work on viruses",
+        "antibiotic use"
+      ],
+      "domains": [
+        "cdc.gov",
+        "who.int"
+      ],
       "role": "公共卫生与抗微生物药物管理机构",
       "scope": "抗生素适应症、病毒感染与耐药性资料"
+    },
+    {
+      "canonical_name": "NSA bulk telephony metadata program",
+      "aliases": [
+        "NSA",
+        "斯诺登",
+        "Snowden",
+        "棱镜",
+        "PRISM",
+        "电话元数据",
+        "元数据收集",
+        "大规模监控"
+      ],
+      "evidence_terms": [
+        "NSA",
+        "bulk telephony metadata",
+        "Section 215",
+        "PRISM",
+        "电话元数据"
+      ],
+      "domains": [
+        "dni.gov",
+        "odni.gov",
+        "nsa.gov",
+        "icontherecord.tumblr.com"
+      ],
+      "role": "美国国家情报总监办公室与国家安全局官方解密与透明度记录",
+      "scope": "NSA 电话元数据收集与大规模监控项目的官方解密文件、国会监督报告与公开声明"
     }
   ],
   "professional_hosts": [
@@ -231,5 +701,12 @@
     "mayoclinic.org",
     "nobelprize.org"
   ],
-  "personal_host_keywords": ["blog", "weibo", "zhihu", "douyin", "twitter", "x.com"]
+  "personal_host_keywords": [
+    "blog",
+    "weibo",
+    "zhihu",
+    "douyin",
+    "twitter",
+    "x.com"
+  ]
 }

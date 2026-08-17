@@ -180,21 +180,25 @@ class SubagentExecutor:
                 exit_behavior="end",
             )
         )
-        # if self.config.max_tool_calls is not None:
-        #     middlewares.append(
-        #         ToolCallLimitMiddleware(
-        #             run_limit=self.config.max_tool_calls,
-        #             exit_behavior="continue",
-        #         )
-        #     )
-        # for tool_name, run_limit in self.config.tool_call_limits.items():
-        #     middlewares.append(
-        #         ToolCallLimitMiddleware(
-        #             tool_name=tool_name,
-        #             run_limit=run_limit,
-        #             exit_behavior="continue",
-        #         )
-        #     )
+        # Enforce per-tool budgets with denial-and-continue: the model receives
+        # an error ToolMessage and must proceed to its final answer within the
+        # remaining turns.  Without these, the model burns every turn calling
+        # web_fetch and never emits its JSON result.
+        if self.config.max_tool_calls is not None:
+            middlewares.append(
+                ToolCallLimitMiddleware(
+                    run_limit=self.config.max_tool_calls,
+                    exit_behavior="continue",
+                )
+            )
+        for tool_name, run_limit in self.config.tool_call_limits.items():
+            middlewares.append(
+                ToolCallLimitMiddleware(
+                    tool_name=tool_name,
+                    run_limit=run_limit,
+                    exit_behavior="continue",
+                )
+            )
 
         return create_agent(
             model=model,
