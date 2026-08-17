@@ -101,6 +101,7 @@ def build_research_plan(context: ClaimContext | Mapping[str, Any]) -> dict[str, 
     entities: list[dict[str, Any]] = []
     targets: list[dict[str, Any]] = []
     aliases_for_query: list[str] = []
+    matched_keywords_for_query: list[str] = []
 
     for entry in registry.get("authority_entities", []):
         aliases = [_safe_term(item, limit=80) for item in entry.get("aliases", [])]
@@ -138,8 +139,9 @@ def build_research_plan(context: ClaimContext | Mapping[str, Any]) -> dict[str, 
     if not targets:
         lowered_claim = claim_for_matching.casefold()
         for entry in registry.get("official_sources", []):
-            keywords = [str(item).casefold() for item in entry.get("scope_keywords", [])]
-            if not any(keyword and keyword in lowered_claim for keyword in keywords):
+            raw_keywords = [str(item) for item in entry.get("scope_keywords", [])]
+            matched_keywords = [item for item in raw_keywords if item and item.casefold() in lowered_claim]
+            if not matched_keywords:
                 continue
             domains = [str(item).lower().strip() for item in entry.get("domains", []) if str(item).strip()]
             if not domains:
@@ -151,6 +153,7 @@ def build_research_plan(context: ClaimContext | Mapping[str, Any]) -> dict[str, 
                     "scope": "由受控职权关键词匹配",
                 }
             )
+            matched_keywords_for_query.extend(matched_keywords)
             if len(targets) >= 2:
                 break
 
@@ -179,7 +182,10 @@ def build_research_plan(context: ClaimContext | Mapping[str, Any]) -> dict[str, 
         )
     )[:3]
     site_clause = " OR ".join(f"site:{domain}" for domain in target_domains)
-    authority_terms = alias_terms[:4]
+    # Site-restricted searches fail badly on long claim sentences; prefer the
+    # concise terms that matched the registry (entity aliases / scope
+    # keywords), and only fall back to the full claim when no terms exist.
+    authority_terms = list(dict.fromkeys(alias_terms + matched_keywords_for_query))[:4]
     authority_query = ""
     if site_clause:
         authority_query = " ".join(
@@ -187,7 +193,7 @@ def build_research_plan(context: ClaimContext | Mapping[str, Any]) -> dict[str, 
             for part in (
                 f"({site_clause})" if len(target_domains) > 1 else site_clause,
                 *authority_terms,
-                claim,
+                claim if not authority_terms else "",
             )
             if part
         )[:500]

@@ -315,6 +315,22 @@ def test_invalid_timeline_event_type_is_dropped_not_rejected():
     assert not any(item["reason_code"] == "invalid_schema" for item in rejected)
 
 
+def test_invalid_temporal_relevance_is_normalized_not_rejected():
+    payload = json.dumps(
+        {
+            "status": "ok",
+            "evidence": [_item("recent-type", url="https://media.example/recent") | {"temporal_relevance": "recent"}],
+            "notes": "done",
+        },
+        ensure_ascii=False,
+    )
+    result, rejected = parse_research_result(payload)
+
+    assert result.status == "ok"
+    assert result.evidence[0].temporal_relevance.value == "unknown"
+    assert not any(item["reason_code"] == "invalid_schema" for item in rejected)
+
+
 def test_scripted_full_workflow_reaches_binding_decision_and_timeline():
     claim = "某地发布了停课通知"
     context = {

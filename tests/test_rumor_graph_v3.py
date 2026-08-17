@@ -35,13 +35,23 @@ from deerflow.agents.rumor_agent.schemas import ClaimContext, KnowledgeRetrieval
 
 
 @pytest.fixture(autouse=True)
-def _disable_rescue_in_graph_tests(monkeypatch):
-    """Graph-level tests must never issue real rescue fetches."""
+def _disable_rescue_in_graph_tests(monkeypatch, request):
+    """Graph-level tests must never issue real rescue/sweep fetches.
+
+    The dedicated sweep tests re-stub the fetch tool themselves and need the
+    real function, so they opt out by name.
+    """
+    if request.function.__name__.startswith("test_sweep"):
+        return
 
     async def _noop(*_args, **_kwargs):
         return 0
 
+    async def _noop_list(*_args, **_kwargs):
+        return []
+
     monkeypatch.setattr(graph_v3_module, "rescue_unverified_evidence", _noop)
+    monkeypatch.setattr(graph_v3_module, "sweep_observed_candidates", _noop_list)
 
 
 def _evidence(evidence_id: str, *, url: str, claim_ids: list[str] | None = None) -> dict:
@@ -1093,3 +1103,124 @@ def test_rescue_retries_transient_fetch_failure(monkeypatch):
     assert flaky.calls == 2
     assert rescued == 1
     assert item["fetch_status"] == "fetched"
+
+
+def test_authority_query_prefers_matched_keywords_over_full_claim():
+    plan = build_research_plan(
+        {
+            "normalized_claim": "锂离子电池会随着循环次数、温度和时间等因素逐渐老化。",
+            "subclaims": [{"id": "claim-1", "text": "锂离子电池老化"}],
+            "temporality": "general",
+            "domain": "technology",
+        }
+    )
+    query = plan["queries"]["authority"]
+    assert "site:apple.com" in query
+    assert "锂离子电池" in query
+    assert "逐渐老化" not in query
+
+
+def _stub_sweep_tool(monkeypatch, url_results: dict[str, str]):
+    class FakeTool:
+        def __init__(self, results):
+            self.results = results
+
+        def invoke(self, args):
+            return self.results.get(args["url"], "Error: unavailable in test")
+
+    import deerflow.config as config_module
+    import deerflow.reflection as reflection_module
+
+    monkeypatch.setattr(
+        config_module,
+        "get_app_config",
+        lambda: type("Config", (), {"get_tool_config": lambda _self, _name: type("ToolConfig", (), {"use": "fake:tool"})()})(),
+    )
+    monkeypatch.setattr(reflection_module, "resolve_variable", lambda _use: FakeTool(url_results))
+
+
+def test_sweep_adopts_a_grade_page_with_verbatim_excerpt(monkeypatch):
+    content = "维生素C缺乏会导致坏血病，表现为牙龈出血和皮肤瘀斑。"
+    _stub_sweep_tool(
+        monkeypatch,
+        {
+            "https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/": json.dumps(
+                {
+                    "source_url": "https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/",
+                    "fetched_at": "2026-08-18T00:00:00+00:00",
+                    "content": content,
+                }
+            )
+        },
+    )
+    context = ClaimContext(
+        normalized_claim="维生素C缺乏可导致坏血病",
+        subclaims=[Subclaim(id="claim-1", text="维生素C缺乏可导致坏血病")],
+    )
+
+    adopted = asyncio.run(
+        graph_v3_module.sweep_observed_candidates(
+            context,
+            ["https://ods.od.nih.gov/factsheets/VitaminC-HealthProfessional/"],
+            set(),
+        )
+    )
+
+    assert len(adopted) == 1
+    assert adopted[0]["source_level"] == "A"
+    assert adopted[0]["excerpt"] in content
+    assert adopted[0]["fetch_attempts"][0]["via"] == "deterministic_sweep"
+
+
+def test_sweep_skips_negated_sentences_and_low_grade_pages(monkeypatch):
+    _stub_sweep_tool(
+        monkeypatch,
+        {
+            "https://www.who.int/a": json.dumps(
+                {
+                    "source_url": "https://www.who.int/a",
+                    "fetched_at": "2026-08-18T00:00:00+00:00",
+                    "content": "维生素C缺乏并不会导致坏血病。",
+                }
+            ),
+            "https://blog.example.com/a": json.dumps(
+                {
+                    "source_url": "https://blog.example.com/a",
+                    "fetched_at": "2026-08-18T00:00:00+00:00",
+                    "content": "维生素C缺乏可导致坏血病。",
+                }
+            ),
+        },
+    )
+    context = ClaimContext(
+        normalized_claim="维生素C缺乏可导致坏血病",
+        subclaims=[Subclaim(id="claim-1", text="维生素C缺乏可导致坏血病")],
+    )
+
+    adopted = asyncio.run(
+        graph_v3_module.sweep_observed_candidates(
+            context,
+            ["https://www.who.int/a", "https://blog.example.com/a"],
+            set(),
+        )
+    )
+
+    assert adopted == []
+
+
+def test_sweep_skips_already_used_urls(monkeypatch):
+    _stub_sweep_tool(monkeypatch, {})
+    context = ClaimContext(
+        normalized_claim="维生素C缺乏可导致坏血病",
+        subclaims=[Subclaim(id="claim-1", text="维生素C缺乏可导致坏血病")],
+    )
+
+    adopted = asyncio.run(
+        graph_v3_module.sweep_observed_candidates(
+            context,
+            ["https://www.who.int/a"],
+            {"https://www.who.int/a"},
+        )
+    )
+
+    assert adopted == []

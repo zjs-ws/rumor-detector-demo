@@ -834,3 +834,24 @@ class TestCleanupBackgroundTask:
 
         # Should be removed because completed_at is set
         assert task_id not in executor_module._background_tasks
+
+
+def test_tool_budget_wrapper_denies_calls_after_budget(classes):
+    from langchain_core.tools import tool as make_tool
+
+    from deerflow.subagents.executor import _wrap_tool_with_call_budget
+
+    calls = {"n": 0}
+
+    @make_tool("fake_search")
+    def fake_search(query: str) -> str:
+        """Search the fake web for a query."""
+        calls["n"] += 1
+        return "result"
+
+    bounded = _wrap_tool_with_call_budget(fake_search, 1)
+
+    assert bounded.invoke({"query": "a"}) == "result"
+    assert calls["n"] == 1
+    assert bounded.invoke({"query": "b"}).startswith("Error:")
+    assert calls["n"] == 1

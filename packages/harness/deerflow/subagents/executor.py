@@ -12,7 +12,7 @@ from enum import Enum
 from typing import Any
 
 from langchain.agents import create_agent
-from langchain.agents.middleware import ModelCallLimitMiddleware, ToolCallLimitMiddleware
+from langchain.agents.middleware import ModelCallLimitMiddleware
 from langchain.tools import BaseTool
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_core.runnables import RunnableConfig
@@ -109,6 +109,47 @@ def _filter_tools(
     return filtered
 
 
+def _wrap_tool_with_call_budget(tool: BaseTool, budget: int) -> BaseTool:
+    """Bound a tool's call count per subagent run without middleware.
+
+    After the budget is spent, further calls return an error string instead
+    of executing, so the model is forced to finalize its answer within the
+    remaining turns.  A plain tool wrapper avoids the intermittent crashes
+    observed with ToolCallLimitMiddleware (deny-and-continue).
+    """
+    from langchain_core.tools import StructuredTool
+
+    calls = {"count": 0}
+
+    def _bounded(**kwargs: Any) -> str:
+        """Delegate to the wrapped tool until its per-run budget is spent."""
+        if calls["count"] >= budget:
+            return (
+                f"Error: {tool.name} 已达到本轮 {budget} 次调用上限，"
+                "请基于已有信息立即整理并输出最终 JSON 结果，不要再次调用工具。"
+            )
+        calls["count"] += 1
+        return tool.invoke(kwargs)
+
+    async def _abounded(**kwargs: Any) -> str:
+        """Async delegate for the wrapped tool."""
+        if calls["count"] >= budget:
+            return (
+                f"Error: {tool.name} 已达到本轮 {budget} 次调用上限，"
+                "请基于已有信息立即整理并输出最终 JSON 结果，不要再次调用工具。"
+            )
+        calls["count"] += 1
+        return await tool.ainvoke(kwargs)
+
+    return StructuredTool.from_function(
+        func=_bounded,
+        coroutine=_abounded,
+        name=tool.name,
+        description=tool.description or f"Bounded {tool.name}",
+        args_schema=tool.args_schema,
+    )
+
+
 def _get_model_name(config: SubagentConfig, parent_model: str | None) -> str | None:
     """Resolve the model name for a subagent.
 
@@ -180,29 +221,37 @@ class SubagentExecutor:
                 exit_behavior="end",
             )
         )
-        # Enforce per-tool budgets with denial-and-continue: the model receives
-        # an error ToolMessage and must proceed to its final answer within the
-        # remaining turns.  Without these, the model burns every turn calling
-        # web_fetch and never emits its JSON result.
-        if self.config.max_tool_calls is not None:
-            middlewares.append(
-                ToolCallLimitMiddleware(
-                    run_limit=self.config.max_tool_calls,
-                    exit_behavior="continue",
-                )
-            )
-        for tool_name, run_limit in self.config.tool_call_limits.items():
-            middlewares.append(
-                ToolCallLimitMiddleware(
-                    tool_name=tool_name,
-                    run_limit=run_limit,
-                    exit_behavior="continue",
-                )
-            )
+        # NOTE: ToolCallLimitMiddleware (deny-and-continue) made subagent
+        # execution crash intermittently (branch unavailable without notes),
+        # so per-tool budgets are enforced by wrapping the tools instead:
+        # after the budget is spent, further calls return an error string and
+        # the model must finish within the remaining turns.
+        # if self.config.max_tool_calls is not None:
+        #     middlewares.append(
+        #         ToolCallLimitMiddleware(
+        #             run_limit=self.config.max_tool_calls,
+        #             exit_behavior="continue",
+        #         )
+        #     )
+        # for tool_name, run_limit in self.config.tool_call_limits.items():
+        #     middlewares.append(
+        #         ToolCallLimitMiddleware(
+        #             tool_name=tool_name,
+        #             run_limit=run_limit,
+        #             exit_behavior="continue",
+        #         )
+        #     )
+
+        bounded_tools = [
+            _wrap_tool_with_call_budget(tool, self.config.tool_call_limits[tool.name])
+            if tool.name in self.config.tool_call_limits
+            else tool
+            for tool in self.tools
+        ]
 
         return create_agent(
             model=model,
-            tools=self.tools,
+            tools=bounded_tools,
             middleware=middlewares,
             system_prompt=self.config.system_prompt,
             state_schema=ThreadState,

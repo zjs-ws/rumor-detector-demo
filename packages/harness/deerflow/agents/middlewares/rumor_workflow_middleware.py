@@ -15,18 +15,19 @@ from langchain.agents.middleware.types import ModelRequest, ModelResponse, ToolC
 from langchain_core.messages import SystemMessage, ToolMessage
 from langgraph.runtime import Runtime
 
-logger = logging.getLogger(__name__)
-
 from deerflow.agents.rumor_agent.evidence import decide_evidence, observed_evidence_urls
 from deerflow.agents.rumor_agent.schemas import (
     Checkability,
     ClaimContext,
     EvidenceItem,
     ResearchResult,
+    TemporalRelevance,
     TimelineEventType,
 )
 from deerflow.agents.rumor_agent.source_policy import normalize_evidence_items
 from deerflow.agents.rumor_agent.timeline import build_timeline
+
+logger = logging.getLogger(__name__)
 
 _URL_RE = re.compile(r"https?://[^\s\]<>\)\"']+")
 _VERIFY_INTENT_RE = re.compile(r"(?:核验|查证|真假|谣言|可信|是否属实|是真的吗|分析.*网页|读取.*网页)")
@@ -149,6 +150,10 @@ def parse_research_result(text: str) -> tuple[ResearchResult, list[dict[str, str
             # rejecting the whole item.
             if candidate.get("timeline_event_type") not in {item.value for item in TimelineEventType}:
                 candidate["timeline_event_type"] = None
+            # Same leniency for temporal_relevance: the model occasionally
+            # writes values outside the enum (or an empty string).
+            if candidate.get("temporal_relevance") not in {item.value for item in TemporalRelevance}:
+                candidate["temporal_relevance"] = "unknown"
 
         try:
             valid.append(EvidenceItem.model_validate(candidate))

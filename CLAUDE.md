@@ -65,10 +65,12 @@ three fallbacks. A model may reduce a subagent's `max_turns`, but must never
 increase the configured limit. Ordinary research has a 55-second timeout,
 `web_search=1`, and `web_fetch<=4`; authority research has 55 seconds,
 `web_search=1`, and `web_fetch<=2`; classifier timeout is 12 seconds.
-Per-tool budgets are enforced by `ToolCallLimitMiddleware` (deny-and-
-continue: the model receives an error ToolMessage and must emit its final
-JSON within the remaining turns), so the model cannot burn every turn on
-tool calls and leave no parseable result. Timeline
+Per-tool budgets are currently enforced by the researcher prompts and
+bounded by `max_turns` (hard `ModelCallLimitMiddleware`) and the 55-second
+timeout.  Do not re-enable `ToolCallLimitMiddleware` (deny-and-continue):
+it made subagent execution crash intermittently (branch unavailable with
+no notes), which is why the tool-call limits are commented out in
+`subagents/executor.py`. Timeline
 research does not run a model loop: code performs `web_search=1` followed by
 up to five concurrent `web_fetch` calls; every returned item is code-locked to `timeline_only=true` and cannot participate in
 adjudication. A ready timeline requires at least three distinct, dated,

@@ -17,6 +17,7 @@ import uuid
 from collections.abc import Mapping
 from datetime import UTC, date, datetime
 from typing import Annotated, Any, NotRequired
+from urllib.parse import urlsplit
 
 from langchain_core.messages import AIMessage
 from langchain_core.runnables import RunnableConfig
@@ -272,7 +273,9 @@ def apply_verified_fetch_provenance(
 
 _SENTENCE_SPLIT_RE = re.compile(r"(?<=[。！？!?；;\n])")
 _MAX_RESCUE_FETCHES = 2
+_MAX_SWEEP_FETCHES = 4
 _RESCUE_ELIGIBLE_LEVELS = {"A", "B"}
+_NEGATION_RE = re.compile(r"(?:不|没有|并非|无|未|否认|辟谣|不实|假的)")
 _rescue_logger = logging.getLogger(__name__)
 
 
@@ -413,6 +416,113 @@ async def rescue_unverified_evidence(
         )
         rescued += 1
     return rescued
+
+
+async def sweep_observed_candidates(
+    claim_context,
+    observed_urls: list[str],
+    existing_urls: set[str],
+    *,
+    max_fetches: int = _MAX_SWEEP_FETCHES,
+) -> list[dict[str, Any]]:
+    """Deterministically fetch observed-but-unused URLs and quote matches.
+
+    Research models frequently pick the wrong document from their own search
+    results.  This sweep walks every URL the branches actually observed but
+    never turned into usable evidence: it fetches the page, grades the source
+    deterministically via the registry, and selects a verbatim claim-matching
+    sentence.  The first A-grade hit (or the first two B-grade hits) become
+    direct evidence; negated sentences are never adopted as support.
+    """
+    from deerflow.agents.rumor_agent.schemas import EvidenceItem
+    from deerflow.agents.rumor_agent.source_policy import grade_source
+    from deerflow.config import get_app_config
+    from deerflow.reflection import resolve_variable
+
+    candidates = [url for url in observed_urls if url and normalize_url(url) not in existing_urls]
+    if not candidates:
+        return []
+    use = str(get_app_config().get_tool_config("web_fetch").use or "")
+    fetch_tool = resolve_variable(use) if use else None
+    fetch_fn = getattr(fetch_tool, "invoke", None)
+    if fetch_fn is None:
+        return []
+
+    claim_texts = [claim_context.normalized_claim]
+    claim_texts.extend(item.text for item in claim_context.subclaims if item.material)
+    claim_ids = [item.id for item in claim_context.subclaims if item.material] or ["claim-1"]
+
+    adopted: list[dict[str, Any]] = []
+    a_hits = 0
+    b_hits = 0
+    for url in candidates:
+        if a_hits >= 1 or b_hits >= 2 or len(adopted) >= max_fetches:
+            break
+        try:
+            raw = await asyncio.to_thread(fetch_fn, {"url": url})
+        except Exception as exc:
+            _rescue_logger.warning("sweep fetch failed for %s: %s", url, exc)
+            continue
+        if not isinstance(raw, str) or raw.lstrip().startswith("Error:"):
+            continue
+        try:
+            payload = json.loads(raw)
+        except (TypeError, ValueError):
+            continue
+        if not isinstance(payload, Mapping):
+            continue
+        content = str(payload.get("content") or "").strip()
+        if not content:
+            continue
+        excerpt = _select_verbatim_excerpt(content, claim_texts)
+        if excerpt is None or _NEGATION_RE.search(excerpt):
+            continue
+        observed_at = _valid_observed_at(payload.get("fetched_at"))
+        if observed_at is None:
+            continue
+        final_url = str(payload.get("source_url") or url)
+        item = EvidenceItem.model_validate(
+            {
+                "id": f"sweep-{len(adopted) + 1}",
+                "title": str(payload.get("title") or urlsplit(url).hostname or "Untitled"),
+                "url": final_url,
+                "publisher": urlsplit(url).hostname or url,
+                "stance": "support",
+                "source_level": "C",
+                "claimed_source_level": None,
+                "directness": "direct",
+                "authority_scope": False,
+                "temporal_relevance": "unknown",
+                "current_validity_confirmed": False,
+                "fetched_at": str(observed_at),
+                "excerpt": excerpt,
+                "document_hash": hashlib.sha256(content.encode("utf-8")).hexdigest(),
+                "fetch_status": "fetched",
+                "fetch_attempts": [
+                    {"url": url, "final_url": final_url, "status": "fetched", "via": "deterministic_sweep"}
+                ],
+                "content_type": str(payload.get("content_type") or ""),
+                "final_url": final_url,
+                "extraction_status": "ok",
+                "claim_ids": claim_ids,
+                "summary": excerpt,
+                "provenance": "web",
+            }
+        )
+        grade = grade_source(item, claim_context)
+        verified = grade.verified.value
+        if verified == "A":
+            a_hits += 1
+        elif verified == "B":
+            b_hits += 1
+        else:
+            continue
+        item_dict = item.model_dump(mode="json")
+        item_dict["source_level"] = verified
+        item_dict["authority_scope"] = grade.authority_scope
+        item_dict["authority_reason"] = grade.authority_reason or grade.reason
+        adopted.append(item_dict)
+    return adopted
 
 
 def _latest_human(state: Mapping[str, Any]) -> object | None:
@@ -1649,6 +1759,17 @@ def build_rumor_graph_v3(services: RumorV3Services):
                 await rescue_unverified_evidence(evidence, context, observed_urls)
             except Exception as exc:
                 _rescue_logger.warning("deterministic rescue step failed: %s", exc)
+            try:
+                existing_urls = {
+                    normalize_url(str(item.get("url") or ""))
+                    for item in evidence
+                    if isinstance(item, dict) and item.get("url")
+                }
+                swept = await sweep_observed_candidates(context, list(observed_urls), existing_urls)
+                if swept:
+                    evidence.extend(swept)
+            except Exception as exc:
+                _rescue_logger.warning("deterministic sweep step failed: %s", exc)
         parsed_evidence: list[EvidenceItem] = []
         for index, item in enumerate(evidence):
             try:
