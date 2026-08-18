@@ -101,6 +101,14 @@ sequenceDiagram
 
 这里没有“多个模型投票”。研究角色只提供候选证据或缺口检查，最终真假只能由 fan-in 后的确定性规则节点产生。
 
+## 成员归属
+
+上述"团队新增或修改"列到成员个人的映射、DeerFlow 框架改造清单与两人工作
+归属矩阵（含 git 提交依据），见 [团队贡献与成员分工](TEAM_CONTRIBUTIONS.md)。
+简要分工：成员一 zjswz111 负责智能体与后端（rumor_agent、中间件、子智能体、
+信息源工具、统一核验 API、评测与部署）；成员二 baitea 负责子智能体执行
+稳定化与证据-前端衔接。
+
 ## 实现入口
 
 - V3 主图：`packages/harness/deerflow/agents/rumor_agent/graph_v3.py`
