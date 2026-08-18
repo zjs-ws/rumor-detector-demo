@@ -105,9 +105,10 @@ sequenceDiagram
 
 上述"团队新增或修改"列到成员个人的映射、DeerFlow 框架改造清单与两人工作
 归属矩阵（含 git 提交依据），见 [团队贡献与成员分工](TEAM_CONTRIBUTIONS.md)。
-简要分工：成员一 zjswz111 负责智能体与后端（rumor_agent、中间件、子智能体、
-信息源工具、统一核验 API、评测与部署）；成员二 baitea 负责子智能体执行
-稳定化与证据-前端衔接。
+简要分工：成员一 zjswz111 负责智能体与后端核心工作流（rumor_agent、中间件、
+子智能体、信息源工具、统一核验 API、部署）；成员二 baitea 负责子智能体执行
+稳定化、证据-前端衔接，以及测试维护、bug 修复与答辩材料整理。贡献比目标约
+6:4，以小组工作日志投入时间为准（模板见 [WORK_LOG_TEMPLATE.md](WORK_LOG_TEMPLATE.md)）。
 
 ## 实现入口
 
