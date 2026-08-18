@@ -37,6 +37,7 @@
 |---|---|---|---|
 | 07-13 | fork 基线整理：Docker 部署文档、快速启动脚本 | zjswz111 | compose/Dockerfile.local/quickstart（zjs-ws 上游文档基础） |
 | 07-13~08-11 | RumorBuster 核心开发：V3 证据链、前端核验工作区、浏览器扩展 | zjswz111 | c115de8、938276e、88c8e65 等 |
+| 07 下旬~08 上旬 | LoRA 微调训练（LLaMA-Factory）与系统接入调试（ModelScope 适配、标签映射、安全降级） | zjswz111（训练）/ baitea（接入调试） | `模型微调/` 产物、`rumor_agent/tools.py` 适配器 |
 | 08-12 | 三个演示案例运行与 40 条离线评测清单 | zjswz111 | `evaluation/demo_runs/20260812-*`、evaluate_rumorbuster.py |
 | 08-14 | 30 条真实联网验收暴露三类问题，记录失败基线 | zjswz111 | `evaluation/real_failure_baseline_20260814.json`、REAL_FACTCHECK_ACCEPTANCE.md |
 | 08-15 | 时态修正、权威查询定向、正文引文校验修复 | zjswz111 | 96a875c |
