@@ -11,8 +11,8 @@
 
 代码中的 V2/V3 名称属于工作流代号，为保持 API、评测和历史报告兼容而不做重命名。
 
-课程项目已于 2026-08-25 结项，当前归档版本位于
-`feature/import-mcp-frontend`。课程开发与评测记录见
+课程项目已于 2026-08-25 结项，RumorBuster V2.1 已归档到 GitHub 默认分支
+`enhanced_one`，并与开发分支 `feature/import-mcp-frontend` 保持同步。课程开发与评测记录见
 [课程项目计划](docs/COURSE_PROJECT_PLAN.md)，架构归属和实现边界见
 [工程交接文档](docs/CLAUDE_HANDOFF.md)。仓库继续保留复现实验与二次开发所需的
 源码、配置模板、测试、评测清单和答辩文档。
