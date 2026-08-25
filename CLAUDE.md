@@ -26,6 +26,12 @@ root), even though some upstream sections below still describe the historical
 `backend/` layout. `compose.yaml` starts the Next.js frontend on port 3000,
 LangGraph on 2024, and the Gateway on 8001.
 
+Product release numbering is separate from the internal graph identifiers:
+RumorBuster **V2.0** maps to the preserved `rumor_agent_v2` stage-gated graph,
+while RumorBuster **V2.1** maps to the current default V3 explicit
+`StateGraph`, registered as `rumor_agent`. Keep the V2/V3 graph and report
+identifiers unchanged for API, evaluation, and archived-report compatibility.
+
 The frontend Dockerfile copies dependency manifests before application source,
 so ordinary UI edits reuse the cached dependency-install layer.
 
