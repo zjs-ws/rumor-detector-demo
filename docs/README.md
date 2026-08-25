@@ -11,6 +11,16 @@ This directory contains detailed documentation for the DeerFlow backend.
 | [CONFIGURATION.md](CONFIGURATION.md) | Configuration options |
 | [SETUP.md](SETUP.md) | Quick setup guide |
 
+## RumorBuster Defense
+
+| Document | Description |
+|----------|-------------|
+| [DEFENSE_A_STUDY_PACK.md](DEFENSE_A_STUDY_PACK.md) | Searchable online-defense Q&A for member A |
+| [DEFENSE_A_MOCKS.md](DEFENSE_A_MOCKS.md) | Online question practice and answer checklist |
+| [DEFENSE_A_DAY_OF_CARD.md](DEFENSE_A_DAY_OF_CARD.md) | One-page desktop reference for online defense |
+| [DEFENSE_STUDY_GUIDE.md](DEFENSE_STUDY_GUIDE.md) | Shared LangGraph/DeerFlow study guide |
+| [FINETUNED_3B_EVALUATION.md](FINETUNED_3B_EVALUATION.md) | Qwen2.5-3B LoRA offline evaluation metrics and limits |
+
 ## Feature Documentation
 
 | Document | Description |

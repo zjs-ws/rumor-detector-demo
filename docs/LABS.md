@@ -40,7 +40,7 @@ uv run pytest tests/test_rumor_model_tool.py tests/test_rumor_rag.py tests/test_
 开启调试日志并执行一个需要搜索的主张。日志中确认：
 
 - `rag`、`web`、`classifier` 与专业场景的 `authority` 开始和结束区间存在重叠；
-- 普通研究员只有 `web_search` 和 `web_fetch` 权限，搜索最多 1 次、抓取最多 4 次；
+- 普通研究员只有 `web_search` 和 `web_fetch` 权限，搜索最多 1 次、抓取最多 3 次；
 - 权威研究员搜索最多 1 次、抓取最多 2 次；critic 没有工具；
 - 任一分支失败时其他分支正常完成，最终仍进入规则裁决；
 - 子 Agent 返回严格 JSON 和实际 ToolMessage；最终 verdict 只来自 fan-in 后的规则节点。

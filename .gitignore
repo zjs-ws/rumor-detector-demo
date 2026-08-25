@@ -37,5 +37,11 @@ runtime/
 local-backups/
 .DS_Store
 
+# Local large artifacts. Keep source and reproducible metadata in Git; store
+# full model weights and course reference files in dedicated artifact storage.
+final_result/
+rag/
+题库.zip
+
 # Local paper references; do not publish copyrighted documents.
 模型微调/*.docx

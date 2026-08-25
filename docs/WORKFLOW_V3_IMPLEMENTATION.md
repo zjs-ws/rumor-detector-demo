@@ -54,7 +54,7 @@ flowchart TD
 
 | 角色 | 工具与预算 | 允许做什么 | 明确禁止 |
 |---|---|---|---|
-| `web-researcher` | `web_search ×1`、`web_fetch ×0..4`，55 秒 | 收集普通公开网页并返回严格 JSON | 输出 verdict、提升来源等级 |
+| `web-researcher` | `web_search ×1`、`web_fetch ×0..3`，55 秒 | 收集普通公开网页并返回严格 JSON | 输出 verdict、提升来源等级 |
 | `authority-researcher` | `web_search ×1`、`web_fetch ×0..2`，55 秒 | 专业领域按受控权威域名取证 | 充当专业向量 RAG、使用 Sandbox、裁决真假 |
 | `evidence-critic` | 无工具，20 秒 | 检查覆盖、答非所问、冲突和转载；代码同步预判裁决门槛并决定是否补检 | 新增 URL、证据、等级或 verdict |
 
