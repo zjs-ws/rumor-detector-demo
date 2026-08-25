@@ -2,7 +2,7 @@
 
 ## 分支与环境
 
-- `enhanced_one` 是 RumorBuster V2.1 结项归档和 GitHub 默认分支；
+- `main` 是 RumorBuster V2.1 结项归档和 GitHub 默认分支；
 - 新工作从默认分支创建独立功能分支，不直接提交运行数据库、密钥或模型权重；
 - Python 要求 3.12 及以上；前端使用 Node.js 22、Corepack 和 pnpm；
 - Docker 快速启动走 `compose.prod.yaml`，统一入口为 `http://localhost:8080`。

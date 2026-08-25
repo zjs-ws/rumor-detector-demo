@@ -1,6 +1,6 @@
 # Contributing to RumorBuster
 
-感谢参与 RumorBuster V2.1。默认分支 `enhanced_one` 是课程结项归档；新改动应从默认分支创建独立功能分支。
+感谢参与 RumorBuster V2.1。默认分支 `main` 是课程结项归档；新改动应从默认分支创建独立功能分支。
 
 ## 开始开发
 
