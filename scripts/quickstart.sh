@@ -4,10 +4,17 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
-echo "== Rumor Detector Quick Start =="
+echo "== RumorBuster V2.1 Quick Start =="
+
+COMPOSE=(docker compose -f compose.prod.yaml)
 
 command -v docker >/dev/null 2>&1 || {
   echo "❌ 未安装 Docker"
+  exit 1
+}
+
+command -v curl >/dev/null 2>&1 || {
+  echo "❌ 未安装 curl"
   exit 1
 }
 
@@ -16,7 +23,7 @@ docker info >/dev/null 2>&1 || {
   exit 1
 }
 
-docker compose version >/dev/null 2>&1 || {
+"${COMPOSE[@]}" version >/dev/null 2>&1 || {
   echo "❌ Docker Compose 不可用"
   exit 1
 }
@@ -49,24 +56,30 @@ fi
 mkdir -p runtime/checkpoints
 chmod 755 runtime runtime/checkpoints
 
-docker compose config -q
-docker compose up -d --build
+"${COMPOSE[@]}" config -q
+"${COMPOSE[@]}" up -d --build
+
+HTTP_PORT="$("${COMPOSE[@]}" port nginx 80 2>/dev/null | sed -E 's/.*:([0-9]+)$/\1/' | tail -n 1)"
+if [[ ! "$HTTP_PORT" =~ ^[0-9]+$ ]]; then
+  HTTP_PORT=8080
+fi
+BASE_URL="http://127.0.0.1:${HTTP_PORT}"
 
 echo "等待服务启动……"
-for _ in $(seq 1 60); do
-  if curl -fsS http://localhost:8001/health >/dev/null 2>&1 &&
-     curl -fsS http://localhost:2024/docs >/dev/null 2>&1 &&
-     curl -fsS http://localhost:3000/workspace/chats/new >/dev/null 2>&1; then
+for _ in $(seq 1 90); do
+  if curl -fsS "${BASE_URL}/healthz" >/dev/null 2>&1 &&
+     curl -fsS "${BASE_URL}/workspace/chats/new" >/dev/null 2>&1; then
     echo "✅ 启动成功"
-    docker compose ps
-    echo "RumorBuster: http://localhost:3000"
-    echo "Gateway: http://localhost:8001/health"
-    echo "API Docs: http://localhost:8001/docs"
+    "${COMPOSE[@]}" ps
+    echo "RumorBuster: ${BASE_URL}/workspace/chats/new"
+    echo "健康检查: ${BASE_URL}/healthz"
+    echo "统一核验 API: ${BASE_URL}/api/v1/checks"
     exit 0
   fi
   sleep 2
 done
 
 echo "❌ 服务未在规定时间内通过健康检查"
-docker compose logs --tail=120 langgraph gateway frontend
+"${COMPOSE[@]}" ps
+"${COMPOSE[@]}" logs --tail=120 nginx frontend gateway langgraph
 exit 1

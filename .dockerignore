@@ -10,10 +10,21 @@ __pycache__
 .mypy_cache
 .DS_Store
 
-.env
-frontend/.env.local
+# Never bake local secrets into images. Keep only public templates in context.
+.env*
+!.env.example
+!.env.production.example
+frontend/.env*
+.claude
+.agents
+.deer-flow
 config.yaml
 runtime
+local-backups
+final_result
+rag
+题库.zip
+模型微调/*.docx
 *.db
 *.sqlite
 *.sqlite3

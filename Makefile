@@ -1,3 +1,7 @@
+COMPOSE_PROD := docker compose -f compose.prod.yaml
+
+.PHONY: install dev gateway test lint format check up stop ps logs frontend-check
+
 install:
 	uv sync
 
@@ -15,3 +19,24 @@ lint:
 
 format:
 	uvx ruff check . --fix && uvx ruff format .
+
+check:
+	./scripts/doctor.sh
+	$(COMPOSE_PROD) config -q
+
+up:
+	$(COMPOSE_PROD) up -d --build
+
+stop:
+	$(COMPOSE_PROD) down
+
+ps:
+	$(COMPOSE_PROD) ps
+
+logs:
+	$(COMPOSE_PROD) logs -f
+
+frontend-check:
+	corepack pnpm --dir frontend test
+	corepack pnpm --dir frontend lint
+	corepack pnpm --dir frontend typecheck

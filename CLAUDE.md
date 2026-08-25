@@ -12,9 +12,12 @@ the key into this file, README, `.claude/settings.json`, logs, tests, or Git
 history. The default primary model is `deepseek-v4-pro[1m]`; lightweight and
 subagent calls use `deepseek-v4-flash`.
 
-For the current milestone order and takeover checkpoint, read
-`docs/CLAUDE_HANDOFF.md`. The project skills `/continue-rumorbuster` and
-`/validate-rumorbuster` provide the standard resume and pre-commit workflows.
+The course project is archived as RumorBuster V2.1. Read
+`docs/PROJECT_STATUS.md` for the verified baseline and remaining productization
+boundaries, `docs/DEVELOPMENT.md` for current commands, and
+`docs/CLAUDE_HANDOFF.md` only for historical takeover context. The project
+skills `/continue-rumorbuster` and `/validate-rumorbuster` remain available for
+resume and pre-commit workflows.
 
 ## Project Overview
 
@@ -34,6 +37,13 @@ identifiers unchanged for API, evaluation, and archived-report compatibility.
 
 The frontend Dockerfile copies dependency manifests before application source,
 so ordinary UI edits reuse the cached dependency-install layer.
+
+`scripts/quickstart.sh` always uses `compose.prod.yaml` and validates the Nginx
+single entry point (port 8080 by default). Keep README quickstart URLs and all
+beginner-facing Docker commands aligned with that production compose file.
+`Dockerfile.local` copies the repository build context, so `.dockerignore` must
+exclude every real `.env*`, local agent settings, runtime/checkpoint data,
+model weights, course reference files, and dependency/build directories.
 
 `rumor_agent` is the V3 explicit `StateGraph`; `rumor_agent_v2` preserves the
 previous `create_agent` plus workflow-gate implementation for regression and
